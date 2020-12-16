@@ -1,0 +1,1029 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="RPq-fT-T5Q">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Choose Session-->
+        <scene sceneID="jn0-lE-7q2">
+            <objects>
+                <tableViewController id="Tth-op-JR7" customClass="SessionListViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="j7F-hC-veb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Cell" textLabel="WEM-PW-XTU" detailTextLabel="Cdu-se-HPy" style="IBUITableViewCellStyleSubtitle" id="TcC-K1-hQe" customClass="SessionCell" customModule="TwitchKitTester_iOS" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="55.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TcC-K1-hQe" id="Dzw-Y8-Pb9">
+                                    <rect key="frame" x="0.0" y="0.0" width="383" height="55.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WEM-PW-XTU">
+                                            <rect key="frame" x="20" y="10" width="33" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Cdu-se-HPy">
+                                            <rect key="frame" x="20" y="31.5" width="33" height="14.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Tth-op-JR7" id="O0v-4N-F4z"/>
+                            <outlet property="delegate" destination="Tth-op-JR7" id="0Og-fR-524"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Choose Session" id="7h9-09-gj0">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Qt5-xL-hgW">
+                            <connections>
+                                <action selector="createNewSession:" destination="Tth-op-JR7" id="bSG-DB-cW5"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="EP6-Y3-VC6" kind="show" identifier="ShowClientSession" id="rSb-C9-858"/>
+                        <segue destination="qae-t1-n4l" kind="show" identifier="ShowUserServerSession" id="0q3-eb-YdH"/>
+                        <segue destination="gZ2-Vh-O7d" kind="show" identifier="ShowAppServerSession" id="esk-u1-8tR"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nMt-eK-UJ0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="51" y="75"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="dNC-a3-iKZ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="RPq-fT-T5Q" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ZEC-d8-JtS">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Tth-op-JR7" kind="relationship" relationship="rootViewController" id="3C3-mP-5fH"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NVS-en-tgM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="51" y="-722"/>
+        </scene>
+        <!--Client API Session-->
+        <scene sceneID="zfX-Uj-55C">
+            <objects>
+                <viewController id="EP6-Y3-VC6" customClass="ClientFeatureListViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tRs-7T-XfM">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="PdI-2N-NmX">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Cell" textLabel="3Ol-pR-9fh" style="IBUITableViewCellStyleDefault" id="a02-qS-iwt">
+                                        <rect key="frame" x="20" y="55.5" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="a02-qS-iwt" id="6a4-oG-NG5">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3Ol-pR-9fh">
+                                                    <rect key="frame" x="20" y="0.0" width="315" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="EP6-Y3-VC6" id="cER-au-HQj"/>
+                                    <outlet property="delegate" destination="EP6-Y3-VC6" id="XhC-H8-4ek"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Ej9-Gb-xY1"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="PdI-2N-NmX" firstAttribute="top" secondItem="tRs-7T-XfM" secondAttribute="top" id="0Lh-VO-LT4"/>
+                            <constraint firstAttribute="trailing" secondItem="PdI-2N-NmX" secondAttribute="trailing" id="2Cr-uJ-V18"/>
+                            <constraint firstAttribute="bottom" secondItem="PdI-2N-NmX" secondAttribute="bottom" id="6xC-D2-X9v"/>
+                            <constraint firstItem="PdI-2N-NmX" firstAttribute="leading" secondItem="tRs-7T-XfM" secondAttribute="leading" id="Ygi-7G-iVP"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Client API Session" id="5Yx-L4-7Ga"/>
+                    <connections>
+                        <outlet property="tableView" destination="PdI-2N-NmX" id="ibE-ji-Rua"/>
+                        <segue destination="xz3-zg-eF9" kind="show" identifier="ShowEmbedding" id="4qE-g4-jue"/>
+                        <segue destination="pB1-Be-0DS" kind="show" identifier="ShowDeepLinks" id="5DZ-Rg-TeU"/>
+                        <segue destination="M71-a7-z7K" kind="show" identifier="ShowAuth" id="gd8-Yg-T3T"/>
+                        <segue destination="IGm-pS-dcv" kind="show" identifier="ShowEndpoints" id="OoK-nW-uoH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xkf-r8-znZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-859" y="899"/>
+        </scene>
+        <!--Embedding Twitch-->
+        <scene sceneID="uoB-X2-u76">
+            <objects>
+                <tableViewController id="xz3-zg-eF9" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="aSo-lh-4Mj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <sections>
+                            <tableViewSection id="zBY-1w-DRs">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="hSn-75-YoM" style="IBUITableViewCellStyleDefault" id="eUX-43-FWm">
+                                        <rect key="frame" x="20" y="18" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eUX-43-FWm" id="7Ei-jT-IWB">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Twitch Player" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hSn-75-YoM">
+                                                    <rect key="frame" x="20" y="0.0" width="315" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="ySm-G0-WnT" kind="show" id="Op2-Ip-1qZ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="tNr-O6-OqD" style="IBUITableViewCellStyleDefault" id="eWz-ZV-I8H">
+                                        <rect key="frame" x="20" y="61.5" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eWz-ZV-I8H" id="4wA-Ft-0aB">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Twitch Chat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tNr-O6-OqD">
+                                                    <rect key="frame" x="20" y="0.0" width="315" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="jdz-hc-rXB" kind="show" id="EJq-pe-q7d"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="4Gg-cr-8IM" style="IBUITableViewCellStyleDefault" id="kCm-ge-ryr">
+                                        <rect key="frame" x="20" y="105" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kCm-ge-ryr" id="def-Q6-Cga">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Twitch Clip" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4Gg-cr-8IM">
+                                                    <rect key="frame" x="20" y="0.0" width="315" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="1Og-DU-x9P" kind="show" id="lMw-Ws-FGm"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="xz3-zg-eF9" id="pvm-8O-3iM"/>
+                            <outlet property="delegate" destination="xz3-zg-eF9" id="Jhh-tP-p4h"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Embedding Twitch" id="cTh-Ed-iSB"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5Zq-5e-aHB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4809" y="1977"/>
+        </scene>
+        <!--User Server API Session-->
+        <scene sceneID="dzz-qy-KdQ">
+            <objects>
+                <viewController id="qae-t1-n4l" customClass="UserServerFeatureListViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uLZ-oY-z01">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="0cq-K1-heW">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Cell" textLabel="1qG-Ec-Wde" style="IBUITableViewCellStyleDefault" id="gch-9e-D09">
+                                        <rect key="frame" x="20" y="55.5" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gch-9e-D09" id="b0T-jD-qrm">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1qG-Ec-Wde">
+                                                    <rect key="frame" x="20" y="0.0" width="315" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="qae-t1-n4l" id="m22-ga-WhS"/>
+                                    <outlet property="delegate" destination="qae-t1-n4l" id="cjq-4e-07J"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="IHy-MB-4Ku"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="0cq-K1-heW" secondAttribute="trailing" id="2Gp-0L-8CU"/>
+                            <constraint firstAttribute="bottom" secondItem="0cq-K1-heW" secondAttribute="bottom" id="DWV-bF-Je3"/>
+                            <constraint firstItem="0cq-K1-heW" firstAttribute="top" secondItem="uLZ-oY-z01" secondAttribute="top" id="FZO-Ci-WQK"/>
+                            <constraint firstItem="0cq-K1-heW" firstAttribute="leading" secondItem="uLZ-oY-z01" secondAttribute="leading" id="jQw-hN-Ymz"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="User Server API Session" id="cnh-ND-In2"/>
+                    <connections>
+                        <outlet property="tableView" destination="0cq-K1-heW" id="dGL-ha-TgN"/>
+                        <segue destination="xz3-zg-eF9" kind="show" identifier="ShowEmbedding" id="BmN-16-4ca"/>
+                        <segue destination="pB1-Be-0DS" kind="show" identifier="ShowDeepLinks" id="R1F-TX-Uqa"/>
+                        <segue destination="zPr-vc-W5a" kind="show" identifier="ShowChatbot" id="x6k-6M-MKw"/>
+                        <segue destination="7ax-wE-ZQk" kind="show" identifier="ShowAuth" id="1Lw-lQ-2kW"/>
+                        <segue destination="yog-bx-cQB" kind="show" identifier="ShowEndpoints" id="xVb-CW-Xav"/>
+                        <segue destination="6cw-Y2-Dyw" kind="show" identifier="ShowPubSub" id="HWg-Qd-9Cs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bjV-uP-7nj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="52" y="899"/>
+        </scene>
+        <!--App Server API Session-->
+        <scene sceneID="SWv-TO-tyk">
+            <objects>
+                <viewController id="gZ2-Vh-O7d" customClass="AppServerFeatureListViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Gw3-qF-lvd">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="t8M-3e-2jL">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Cell" textLabel="Aiv-EQ-kzr" style="IBUITableViewCellStyleDefault" id="JxS-0n-TXG">
+                                        <rect key="frame" x="20" y="55.5" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JxS-0n-TXG" id="Mj8-Lp-IfI">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Aiv-EQ-kzr">
+                                                    <rect key="frame" x="20" y="0.0" width="315" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="gZ2-Vh-O7d" id="zcd-Iz-czX"/>
+                                    <outlet property="delegate" destination="gZ2-Vh-O7d" id="2L7-Ds-1Gy"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="prG-qJ-BJ3"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="t8M-3e-2jL" secondAttribute="bottom" id="IO8-Rx-E2Y"/>
+                            <constraint firstItem="t8M-3e-2jL" firstAttribute="leading" secondItem="Gw3-qF-lvd" secondAttribute="leading" id="TAc-4U-ANs"/>
+                            <constraint firstItem="t8M-3e-2jL" firstAttribute="top" secondItem="Gw3-qF-lvd" secondAttribute="top" id="TCh-bG-3Th"/>
+                            <constraint firstAttribute="trailing" secondItem="t8M-3e-2jL" secondAttribute="trailing" id="qgL-Cq-nRi"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="App Server API Session" id="XfO-mR-B5o"/>
+                    <connections>
+                        <outlet property="tableView" destination="t8M-3e-2jL" id="eik-6m-uLC"/>
+                        <segue destination="xz3-zg-eF9" kind="show" identifier="ShowEmbedding" id="D7y-Ue-Zky"/>
+                        <segue destination="pB1-Be-0DS" kind="show" identifier="ShowDeepLinks" id="rwc-If-oPM"/>
+                        <segue destination="7WR-oi-Br6" kind="show" identifier="ShowAuth" id="bNd-EY-J3x"/>
+                        <segue destination="2ED-1G-0BE" kind="show" identifier="ShowEndpoints" id="t42-St-8iv"/>
+                        <segue destination="TDw-q4-TOC" kind="show" identifier="ShowEventSub" id="wF5-gC-75m"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="b0j-a7-duA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="977" y="899"/>
+        </scene>
+        <!--Twitch Player-->
+        <scene sceneID="VY8-Jj-V0B">
+            <objects>
+                <viewController id="ySm-G0-WnT" customClass="EmbeddedTwitchPlayerViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Hbs-bn-MHf">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Channel Name" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Aj4-2g-blb">
+                                <rect key="frame" x="20" y="118" width="374" height="28.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="ySm-G0-WnT" id="Mgz-8B-nnR"/>
+                                </connections>
+                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KvL-tb-TMV" customClass="TwitchPlayerView" customModule="TwitchKit">
+                                <rect key="frame" x="0.0" y="176.5" width="414" height="719.5"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="oQP-Q1-Y3Q"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Aj4-2g-blb" firstAttribute="top" secondItem="oQP-Q1-Y3Q" secondAttribute="top" constant="30" id="8BZ-1p-7Kq"/>
+                            <constraint firstAttribute="bottom" secondItem="KvL-tb-TMV" secondAttribute="bottom" id="HsQ-aH-YYf"/>
+                            <constraint firstItem="KvL-tb-TMV" firstAttribute="top" secondItem="Aj4-2g-blb" secondAttribute="bottom" constant="30" id="NqG-Vd-sRY"/>
+                            <constraint firstItem="Aj4-2g-blb" firstAttribute="leading" secondItem="oQP-Q1-Y3Q" secondAttribute="leading" constant="20" id="OPM-1q-Ioj"/>
+                            <constraint firstItem="oQP-Q1-Y3Q" firstAttribute="trailing" secondItem="Aj4-2g-blb" secondAttribute="trailing" constant="20" id="Sb1-Cf-RP1"/>
+                            <constraint firstItem="KvL-tb-TMV" firstAttribute="trailing" secondItem="oQP-Q1-Y3Q" secondAttribute="trailing" id="vBW-oO-sEZ"/>
+                            <constraint firstItem="KvL-tb-TMV" firstAttribute="leading" secondItem="oQP-Q1-Y3Q" secondAttribute="leading" id="w9z-hY-nrr"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Twitch Player" id="Bi4-Cc-0If"/>
+                    <connections>
+                        <outlet property="playerView" destination="KvL-tb-TMV" id="aQ7-q0-NtG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kbc-nt-Jh5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5736.2318840579719" y="2757.5892857142858"/>
+        </scene>
+        <!--Twitch Chat-->
+        <scene sceneID="4h7-s6-OYk">
+            <objects>
+                <viewController id="jdz-hc-rXB" customClass="EmbeddedTwitchChatViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="VwV-JS-8o3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Channel Name" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="A5S-nv-5Qr">
+                                <rect key="frame" x="20" y="118" width="374" height="28.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="jdz-hc-rXB" id="eys-2C-zDQ"/>
+                                </connections>
+                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0DR-aY-D2O" customClass="TwitchChatView" customModule="TwitchKit">
+                                <rect key="frame" x="0.0" y="176.5" width="414" height="719.5"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="8xQ-DD-sS1"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="0DR-aY-D2O" firstAttribute="trailing" secondItem="VwV-JS-8o3" secondAttribute="trailing" id="0d2-Eb-rN1"/>
+                            <constraint firstItem="A5S-nv-5Qr" firstAttribute="top" secondItem="8xQ-DD-sS1" secondAttribute="top" constant="30" id="94d-9D-c1W"/>
+                            <constraint firstItem="0DR-aY-D2O" firstAttribute="leading" secondItem="VwV-JS-8o3" secondAttribute="leading" id="9qe-Qb-yWK"/>
+                            <constraint firstItem="0DR-aY-D2O" firstAttribute="top" secondItem="A5S-nv-5Qr" secondAttribute="bottom" constant="30" id="Tv4-Zp-VDt"/>
+                            <constraint firstItem="8xQ-DD-sS1" firstAttribute="trailing" secondItem="A5S-nv-5Qr" secondAttribute="trailing" constant="20" id="aDz-R9-GDz"/>
+                            <constraint firstItem="A5S-nv-5Qr" firstAttribute="leading" secondItem="8xQ-DD-sS1" secondAttribute="leading" constant="20" id="dy6-gX-78m"/>
+                            <constraint firstAttribute="bottom" secondItem="0DR-aY-D2O" secondAttribute="bottom" id="h72-yO-hNT"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Twitch Chat" id="pi2-db-lUs"/>
+                    <connections>
+                        <outlet property="chatView" destination="0DR-aY-D2O" id="cU9-68-WrM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NoS-fP-5oT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4809" y="2758"/>
+        </scene>
+        <!--Twitch Clip-->
+        <scene sceneID="Cqz-Q3-iB3">
+            <objects>
+                <viewController id="1Og-DU-x9P" customClass="EmbeddedTwitchClipViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="h9b-u6-Bdf">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="InventiveDarkPuppyCeilingCat" borderStyle="bezel" placeholder="Clip Slug" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="eN5-HW-fxz">
+                                <rect key="frame" x="20" y="118" width="374" height="28.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="1Og-DU-x9P" id="YWX-1A-4xf"/>
+                                </connections>
+                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k2D-0z-mfR" customClass="TwitchClipView" customModule="TwitchKit">
+                                <rect key="frame" x="0.0" y="176.5" width="414" height="233"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="k2D-0z-mfR" secondAttribute="height" multiplier="16:9" id="GKY-Ty-1Og"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="LMc-CT-xfQ"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="eN5-HW-fxz" firstAttribute="leading" secondItem="LMc-CT-xfQ" secondAttribute="leading" constant="20" id="1jt-Gp-wFO"/>
+                            <constraint firstItem="k2D-0z-mfR" firstAttribute="leading" secondItem="LMc-CT-xfQ" secondAttribute="leading" id="AFR-72-qe7"/>
+                            <constraint firstItem="k2D-0z-mfR" firstAttribute="trailing" secondItem="LMc-CT-xfQ" secondAttribute="trailing" id="gHW-2b-GhQ"/>
+                            <constraint firstItem="LMc-CT-xfQ" firstAttribute="trailing" secondItem="eN5-HW-fxz" secondAttribute="trailing" constant="20" id="kNF-mh-hTQ"/>
+                            <constraint firstItem="k2D-0z-mfR" firstAttribute="top" secondItem="eN5-HW-fxz" secondAttribute="bottom" constant="30" id="ohp-ct-6L9"/>
+                            <constraint firstItem="eN5-HW-fxz" firstAttribute="top" secondItem="LMc-CT-xfQ" secondAttribute="top" constant="30" id="slR-wy-q18"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Twitch Clip" id="sa8-YD-RPO"/>
+                    <connections>
+                        <outlet property="clipView" destination="k2D-0z-mfR" id="ZkV-gd-uy1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sxa-Bi-huF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3897" y="2758"/>
+        </scene>
+        <!--Deep Links-->
+        <scene sceneID="DTF-dV-cQO">
+            <objects>
+                <tableViewController id="pB1-Be-0DS" customClass="DeepLinkListViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="5kx-If-iE1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Cell" textLabel="FbC-2m-TDv" style="IBUITableViewCellStyleDefault" id="XWT-iA-i7z">
+                                <rect key="frame" x="20" y="55.5" width="374" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XWT-iA-i7z" id="X9U-me-Ppa">
+                                    <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Deep Link" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="FbC-2m-TDv">
+                                            <rect key="frame" x="20" y="0.0" width="315" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="pB1-Be-0DS" id="xkg-Yh-E5K"/>
+                            <outlet property="delegate" destination="pB1-Be-0DS" id="33G-LS-cVQ"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Deep Links" id="mEh-Uv-OVc"/>
+                    <connections>
+                        <segue destination="ODp-2c-Goy" kind="show" identifier="ShowDeepLink" id="sX4-YB-4IT"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tMb-C3-V3S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2826" y="1977"/>
+        </scene>
+        <!--Deep Link-->
+        <scene sceneID="nJ2-cU-8Py">
+            <objects>
+                <viewController id="ODp-2c-Goy" customClass="DeepLinkViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5hl-cR-eBM">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="coq-Uz-a17">
+                                <rect key="frame" x="20" y="118" width="374" height="66.5"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Deep Link Name" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="FIf-7s-7nB">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="28.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="ODp-2c-Goy" id="aNG-zZ-UvH"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1DU-Yh-fbl">
+                                        <rect key="frame" x="132" y="36.5" width="110" height="30"/>
+                                        <state key="normal" title="Open Deep Link"/>
+                                        <connections>
+                                            <action selector="openDeepLink:" destination="ODp-2c-Goy" eventType="touchUpInside" id="hT7-zt-lht"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="FIf-7s-7nB" firstAttribute="leading" secondItem="coq-Uz-a17" secondAttribute="leading" id="n7j-60-7Ir"/>
+                                    <constraint firstAttribute="trailing" secondItem="FIf-7s-7nB" secondAttribute="trailing" id="w5Y-0z-h3X"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="4Tp-Nb-5Gq"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="coq-Uz-a17" firstAttribute="leading" secondItem="4Tp-Nb-5Gq" secondAttribute="leading" constant="20" id="BUo-3x-RDf"/>
+                            <constraint firstItem="4Tp-Nb-5Gq" firstAttribute="trailing" secondItem="coq-Uz-a17" secondAttribute="trailing" constant="20" id="kUl-9d-Fdx"/>
+                            <constraint firstItem="coq-Uz-a17" firstAttribute="top" secondItem="4Tp-Nb-5Gq" secondAttribute="top" constant="30" id="qMD-T5-bic"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Deep Link" id="1HQ-FU-kOr"/>
+                    <connections>
+                        <outlet property="textField" destination="FIf-7s-7nB" id="49s-S9-47p"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ntu-1x-j29" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2826" y="2757"/>
+        </scene>
+        <!--Client Auth-->
+        <scene sceneID="xht-eo-is7">
+            <objects>
+                <viewController id="M71-a7-z7K" customClass="ClientAuthViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fDs-Iq-Ap2">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jIw-tm-OSX">
+                                <rect key="frame" x="20" y="108" width="374" height="240"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7DQ-KG-ziK">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Token:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6wb-1K-iOO">
+                                                <rect key="frame" x="0.0" y="0.0" width="109.5" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="unknown" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysk-1d-lcm">
+                                                <rect key="frame" x="117.5" y="0.0" width="256.5" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="ltk-we-wB5"/>
+                                        </constraints>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mHK-xQ-Bim">
+                                        <rect key="frame" x="125.5" y="30" width="123" height="30"/>
+                                        <state key="normal" title="Get Access Token"/>
+                                        <connections>
+                                            <action selector="getAccessToken:" destination="M71-a7-z7K" eventType="touchUpInside" id="plT-cB-Z2U"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uYZ-ru-iGF">
+                                        <rect key="frame" x="79" y="60" width="216" height="30"/>
+                                        <state key="normal" title="Get Id Token And Access Token"/>
+                                        <connections>
+                                            <action selector="getIdTokenAndAccessToken:" destination="M71-a7-z7K" eventType="touchUpInside" id="Aao-bD-kEf"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LU2-vx-MU0">
+                                        <rect key="frame" x="143.5" y="90" width="87" height="30"/>
+                                        <state key="normal" title="Get Id Token"/>
+                                        <connections>
+                                            <action selector="getIdToken:" destination="M71-a7-z7K" eventType="touchUpInside" id="gbd-84-xgk"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhS-r1-iht">
+                                        <rect key="frame" x="107.5" y="120" width="159" height="30"/>
+                                        <state key="normal" title="Get Auth Code (OAuth)"/>
+                                        <connections>
+                                            <action selector="getAuthCodeUsingOAuth:" destination="M71-a7-z7K" eventType="touchUpInside" id="zXZ-2q-usO"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qtP-zh-gu2">
+                                        <rect key="frame" x="110.5" y="150" width="153" height="30"/>
+                                        <state key="normal" title="Get Auth Code (OIDC)"/>
+                                        <connections>
+                                            <action selector="getAuthCodeUsingOIDC:" destination="M71-a7-z7K" eventType="touchUpInside" id="fxx-NW-alQ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ktq-WF-C68">
+                                        <rect key="frame" x="113" y="180" width="148" height="30"/>
+                                        <state key="normal" title="Revoke Access Token"/>
+                                        <connections>
+                                            <action selector="revokeAccessToken:" destination="M71-a7-z7K" eventType="touchUpInside" id="7za-oN-w8a"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DxA-Yv-abW">
+                                        <rect key="frame" x="120" y="210" width="134" height="30"/>
+                                        <state key="normal" title="Clear Access Token"/>
+                                        <connections>
+                                            <action selector="clearAccessToken:" destination="M71-a7-z7K" eventType="touchUpInside" id="SYf-no-fcR"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="7DQ-KG-ziK" secondAttribute="trailing" id="EcE-6d-2Hn"/>
+                                    <constraint firstItem="7DQ-KG-ziK" firstAttribute="leading" secondItem="jIw-tm-OSX" secondAttribute="leading" id="fFH-fa-2hY"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="tUh-4G-xRp"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="jIw-tm-OSX" firstAttribute="top" secondItem="tUh-4G-xRp" secondAttribute="top" constant="20" id="gnO-vT-umz"/>
+                            <constraint firstItem="tUh-4G-xRp" firstAttribute="trailing" secondItem="jIw-tm-OSX" secondAttribute="trailing" constant="20" id="jJG-ZQ-mW5"/>
+                            <constraint firstItem="jIw-tm-OSX" firstAttribute="leading" secondItem="tUh-4G-xRp" secondAttribute="leading" constant="20" id="tb0-ce-QJ9"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Client Auth" id="bNB-Tt-7xL"/>
+                    <connections>
+                        <outlet property="accessTokenLabel" destination="ysk-1d-lcm" id="fR5-Zd-ulh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TAh-9y-9kB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1694" y="1977"/>
+        </scene>
+        <!--Chatbot-->
+        <scene sceneID="uty-Gh-ojM">
+            <objects>
+                <viewController id="zPr-vc-W5a" customClass="ChatbotViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JqI-y9-qb6">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Channel Name" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="84w-9a-Q4z">
+                                <rect key="frame" x="20" y="108" width="374" height="28.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="zPr-vc-W5a" id="EtF-mj-cQG"/>
+                                </connections>
+                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ukj-z5-rqf" customClass="TwitchChatView" customModule="TwitchKit">
+                                <rect key="frame" x="0.0" y="156.5" width="414" height="739.5"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="5w3-uh-crd"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Ukj-z5-rqf" secondAttribute="bottom" id="7rD-xx-zss"/>
+                            <constraint firstItem="84w-9a-Q4z" firstAttribute="leading" secondItem="5w3-uh-crd" secondAttribute="leading" constant="20" id="NJ6-Xs-2rY"/>
+                            <constraint firstItem="Ukj-z5-rqf" firstAttribute="leading" secondItem="JqI-y9-qb6" secondAttribute="leading" id="SyJ-OR-t1b"/>
+                            <constraint firstItem="84w-9a-Q4z" firstAttribute="top" secondItem="5w3-uh-crd" secondAttribute="top" constant="20" id="Tso-9T-IOc"/>
+                            <constraint firstAttribute="trailing" secondItem="Ukj-z5-rqf" secondAttribute="trailing" id="Wly-VD-8rP"/>
+                            <constraint firstItem="5w3-uh-crd" firstAttribute="trailing" secondItem="84w-9a-Q4z" secondAttribute="trailing" constant="20" id="Ytf-lm-cgj"/>
+                            <constraint firstItem="Ukj-z5-rqf" firstAttribute="top" secondItem="84w-9a-Q4z" secondAttribute="bottom" constant="20" id="ef0-a7-7ZP"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Chatbot" id="b78-PD-GZ8"/>
+                    <connections>
+                        <outlet property="chatView" destination="Ukj-z5-rqf" id="aRt-lT-XL7"/>
+                        <outlet property="textField" destination="84w-9a-Q4z" id="Tp5-yq-GTq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dZp-Hp-FY5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="977" y="1977"/>
+        </scene>
+        <!--User Server Auth-->
+        <scene sceneID="Xhl-LC-jk6">
+            <objects>
+                <viewController id="7ax-wE-ZQk" customClass="UserServerAuthViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OaJ-Nc-pE7">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="GoW-Ps-mxK">
+                                <rect key="frame" x="20" y="108" width="374" height="210"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="lg9-p7-ydd">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Token:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A6t-NG-Dm4">
+                                                <rect key="frame" x="0.0" y="0.0" width="109.5" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="unknown" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KNW-xP-NNf">
+                                                <rect key="frame" x="117.5" y="0.0" width="256.5" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="zK7-ej-qlm"/>
+                                        </constraints>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ara-5s-rno">
+                                        <rect key="frame" x="0.0" y="30" width="374" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refresh Token:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZKX-Ui-WFs">
+                                                <rect key="frame" x="0.0" y="0.0" width="113" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="unknown" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ypr-0M-Vw8">
+                                                <rect key="frame" x="121" y="0.0" width="253" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="3dD-84-h6z"/>
+                                        </constraints>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R50-dx-y6t">
+                                        <rect key="frame" x="75" y="60" width="224" height="30"/>
+                                        <state key="normal" title="Continue Sign In With Auth Code"/>
+                                        <connections>
+                                            <action selector="continueSignInWithAuthCode:" destination="7ax-wE-ZQk" eventType="touchUpInside" id="666-r0-jyt"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g7C-3K-YzH">
+                                        <rect key="frame" x="111.5" y="90" width="151" height="30"/>
+                                        <state key="normal" title="Refresh Access Token"/>
+                                        <connections>
+                                            <action selector="refreshAccessToken:" destination="7ax-wE-ZQk" eventType="touchUpInside" id="n0N-w5-3zX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eNZ-7a-KcM">
+                                        <rect key="frame" x="113" y="120" width="148" height="30"/>
+                                        <state key="normal" title="Revoke Access Token"/>
+                                        <connections>
+                                            <action selector="revokeAccessToken:" destination="7ax-wE-ZQk" eventType="touchUpInside" id="FN7-K7-xhc"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jEr-du-Mqf">
+                                        <rect key="frame" x="120" y="150" width="134" height="30"/>
+                                        <state key="normal" title="Clear Access Token"/>
+                                        <connections>
+                                            <action selector="clearAccessToken:" destination="7ax-wE-ZQk" eventType="touchUpInside" id="yII-oJ-9I0"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mld-0S-pBg">
+                                        <rect key="frame" x="118" y="180" width="138" height="30"/>
+                                        <state key="normal" title="Clear Refresh Token"/>
+                                        <connections>
+                                            <action selector="clearRefreshToken:" destination="7ax-wE-ZQk" eventType="touchUpInside" id="oqz-xx-dE3"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="lg9-p7-ydd" firstAttribute="leading" secondItem="GoW-Ps-mxK" secondAttribute="leading" id="BE6-nF-sy3"/>
+                                    <constraint firstItem="ara-5s-rno" firstAttribute="leading" secondItem="GoW-Ps-mxK" secondAttribute="leading" id="JRQ-yG-5J7"/>
+                                    <constraint firstAttribute="trailing" secondItem="lg9-p7-ydd" secondAttribute="trailing" id="Pzo-UE-PBH"/>
+                                    <constraint firstAttribute="trailing" secondItem="ara-5s-rno" secondAttribute="trailing" id="a2l-JX-4bz"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="lHI-5c-EgW"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="GoW-Ps-mxK" firstAttribute="leading" secondItem="lHI-5c-EgW" secondAttribute="leading" constant="20" id="DVr-Nf-VdQ"/>
+                            <constraint firstItem="GoW-Ps-mxK" firstAttribute="top" secondItem="lHI-5c-EgW" secondAttribute="top" constant="20" id="kvn-TT-VDN"/>
+                            <constraint firstItem="lHI-5c-EgW" firstAttribute="trailing" secondItem="GoW-Ps-mxK" secondAttribute="trailing" constant="20" id="mLB-J1-SUo"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="User Server Auth" id="etX-mb-dC3"/>
+                    <connections>
+                        <outlet property="accessTokenLabel" destination="KNW-xP-NNf" id="wj3-3j-u9t"/>
+                        <outlet property="continueSignInButton" destination="R50-dx-y6t" id="ucz-y4-nU4"/>
+                        <outlet property="refreshTokenLabel" destination="ypr-0M-Vw8" id="J3u-bI-Be4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cn9-T7-yyG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-362" y="1977"/>
+        </scene>
+        <!--PubSub-->
+        <scene sceneID="Txr-F9-h95">
+            <objects>
+                <viewController id="6cw-Y2-Dyw" customClass="PubSubViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="KBW-Wm-r8I">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="26k-2e-5Bb"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="PubSub" id="5fT-iE-kdz"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qpu-89-Ykb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1654" y="1977"/>
+        </scene>
+        <!--App Server Auth-->
+        <scene sceneID="p58-36-ENn">
+            <objects>
+                <viewController id="7WR-oi-Br6" customClass="AppServerAuthViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cIg-aA-zCO">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ngz-ka-3ge">
+                                <rect key="frame" x="20" y="108" width="374" height="120"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fte-Cn-dDP">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Token:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="57d-1C-zQ0">
+                                                <rect key="frame" x="0.0" y="0.0" width="109.5" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="unknown" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8F-fy-K3l">
+                                                <rect key="frame" x="117.5" y="0.0" width="256.5" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="cCV-Ru-bx1"/>
+                                        </constraints>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QZR-BR-JAl">
+                                        <rect key="frame" x="125.5" y="30" width="123" height="30"/>
+                                        <state key="normal" title="Get Access Token"/>
+                                        <connections>
+                                            <action selector="getAccessToken:" destination="7WR-oi-Br6" eventType="touchUpInside" id="w7J-e2-8I2"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NiB-GY-Z9e">
+                                        <rect key="frame" x="113" y="60" width="148" height="30"/>
+                                        <state key="normal" title="Revoke Access Token"/>
+                                        <connections>
+                                            <action selector="revokeAccessToken:" destination="7WR-oi-Br6" eventType="touchUpInside" id="av5-g6-LLv"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FTo-3G-PjD">
+                                        <rect key="frame" x="120" y="90" width="134" height="30"/>
+                                        <state key="normal" title="Clear Access Token"/>
+                                        <connections>
+                                            <action selector="clearAccessToken:" destination="7WR-oi-Br6" eventType="touchUpInside" id="Szn-WQ-dko"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="fte-Cn-dDP" secondAttribute="trailing" id="8G2-6e-Yv1"/>
+                                    <constraint firstItem="fte-Cn-dDP" firstAttribute="leading" secondItem="ngz-ka-3ge" secondAttribute="leading" id="CFr-hL-sO8"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Lbd-PR-yhZ"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ngz-ka-3ge" firstAttribute="leading" secondItem="Lbd-PR-yhZ" secondAttribute="leading" constant="20" id="1ji-sM-EuD"/>
+                            <constraint firstItem="ngz-ka-3ge" firstAttribute="top" secondItem="Lbd-PR-yhZ" secondAttribute="top" constant="20" id="53T-fC-YBr"/>
+                            <constraint firstItem="Lbd-PR-yhZ" firstAttribute="trailing" secondItem="ngz-ka-3ge" secondAttribute="trailing" constant="20" id="sxm-eH-qam"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="App Server Auth" id="BMJ-N6-pts"/>
+                    <connections>
+                        <outlet property="accessTokenLabel" destination="M8F-fy-K3l" id="7rS-Rv-v0m"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LZg-3I-awf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2325" y="1977"/>
+        </scene>
+        <!--Client API Endpoints-->
+        <scene sceneID="yf3-aA-k0k">
+            <objects>
+                <tableViewController id="IGm-pS-dcv" customClass="ClientEndpointListViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="XWt-s6-yu6">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="hhF-fo-U8J">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hhF-fo-U8J" id="8hI-AC-yaX">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="IGm-pS-dcv" id="cXa-1A-qw5"/>
+                            <outlet property="delegate" destination="IGm-pS-dcv" id="UVQ-Vy-PMq"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Client API Endpoints" id="Qqr-zV-3c5"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q8y-vY-4of" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1025" y="1977"/>
+        </scene>
+        <!--User Server API Endpoints-->
+        <scene sceneID="MP4-fl-A72">
+            <objects>
+                <tableViewController id="yog-bx-cQB" customClass="UserServerEndpointListViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="I2A-hf-Px9">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="aWG-ZZ-htL">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aWG-ZZ-htL" id="sMC-yp-JjN">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="yog-bx-cQB" id="21S-lb-Gam"/>
+                            <outlet property="delegate" destination="yog-bx-cQB" id="BiU-kh-EhJ"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="User Server API Endpoints" id="wtS-PN-SFe"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f9m-1W-LdC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="307" y="1977"/>
+        </scene>
+        <!--App Server API Endpoints-->
+        <scene sceneID="hDP-UM-Io6">
+            <objects>
+                <tableViewController id="2ED-1G-0BE" customClass="AppServerEndpointListViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="3Xp-hk-0nt">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="U4j-Ah-fML">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="U4j-Ah-fML" id="4cS-z4-1bU">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="2ED-1G-0BE" id="KSe-jb-rJS"/>
+                            <outlet property="delegate" destination="2ED-1G-0BE" id="ueQ-E6-tAV"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="App Server API Endpoints" id="QJc-FY-uuI"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IVp-oJ-0bo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2986" y="1977"/>
+        </scene>
+        <!--EventSub-->
+        <scene sceneID="VYU-B4-5et">
+            <objects>
+                <viewController id="TDw-q4-TOC" customClass="EventSubViewController" customModule="TwitchKitTester_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cD9-ia-F7X">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="wNc-nS-mcv"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="EventSub" id="syQ-gA-3jd"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OO4-IU-K2a" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3657" y="1977"/>
+        </scene>
+    </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="R1F-TX-Uqa"/>
+        <segue reference="BmN-16-4ca"/>
+    </inferredMetricsTieBreakers>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

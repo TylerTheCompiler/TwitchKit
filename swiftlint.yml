@@ -1,0 +1,68 @@
+disabled_rules:
+  - nesting
+  - inclusive_language
+  
+opt_in_rules:
+  - force_unwrapping
+  - file_header
+  
+force_unwrapping: error
+
+trailing_whitespace:
+  ignores_empty_lines: true
+  ignores_comments: false
+
+identifier_name:
+  max_length:
+    warning: 55
+    error: 60
+  excluded:
+    - id
+    - v1
+    - v2
+    - x1
+    - x1_5
+    - x2
+    - x3
+    - x4
+    - of
+
+type_name:
+  max_length:
+    warning: 70
+    error: 100
+    
+line_length:
+  ignores_comments: true
+  ignores_interpolated_strings: true
+
+file_length:
+  ignore_comment_only_lines: true
+  warning: 1000
+  error: 2000
+
+type_body_length:
+  warning: 400
+  error: 800
+  
+cyclomatic_complexity:
+  warning: 20
+  error: 30
+
+function_body_length:
+  warning: 60
+  error: 120
+
+large_tuple:
+  warning: 6
+  error: 8
+  
+file_header:
+  required_pattern:
+    '(SWIFTLINT_CURRENT_FILENAME)'
+
+custom_rules:
+  wrong_target_name:
+    name: "Wrong Target Name"
+    regex: "(TwitchKitProject)"
+    message: "Fix this!"
