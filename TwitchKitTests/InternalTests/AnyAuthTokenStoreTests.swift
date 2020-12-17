@@ -26,11 +26,18 @@ struct MockAuthToken: AuthToken {
 }
 
 class MockAuthTokenStore<Token>: AuthTokenStoring where Token: AuthToken {
+    var token: Token?
     var tokens = [String: Token]()
+    
     var shouldStoreFail = false
+    var shouldUseSingleToken = false
     
     func fetchAuthToken(forUserId userId: String?, completion: @escaping (Result<Token, Error>) -> Void) {
         if let userId = userId, let token = tokens[userId] {
+            DispatchQueue.main.async {
+                completion(.success(token))
+            }
+        } else if let token = token, shouldUseSingleToken {
             DispatchQueue.main.async {
                 completion(.success(token))
             }
@@ -42,8 +49,20 @@ class MockAuthTokenStore<Token>: AuthTokenStoring where Token: AuthToken {
     }
     
     func store(authToken: Token?, forUserId userId: String?, completion: ((Error?) -> Void)?) {
-        if let userId = userId, !shouldStoreFail {
+        if shouldStoreFail {
+            DispatchQueue.main.async {
+                completion?(NSError(domain: "MockAuthTokenStore Error", code: 0))
+            }
+            return
+        }
+        
+        if let userId = userId {
             tokens[userId] = authToken
+            DispatchQueue.main.async {
+                completion?(nil)
+            }
+        } else if shouldUseSingleToken {
+            token = authToken
             DispatchQueue.main.async {
                 completion?(nil)
             }

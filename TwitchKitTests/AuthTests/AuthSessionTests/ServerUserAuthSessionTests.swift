@@ -244,12 +244,9 @@ class ServerUserAuthSessionTests: XCTestCase {
             defer { requestCount += 1 }
             guard let url = request.url, url.host == "id.twitch.tv" else { throw URLError(.init(rawValue: 0)) }
             switch requestCount {
-            case 0:
-                throw URLError(.init(rawValue: 0))
-            case 1:
-                return (nil, refreshData)
-            default:
-                return (nil, validationData)
+            case 0: throw URLError(.init(rawValue: 0))
+            case 1: return (nil, refreshData)
+            default: return (nil, validationData)
             }
         }
         
@@ -298,7 +295,7 @@ class ServerUserAuthSessionTests: XCTestCase {
         wait(for: [taskToFinish], timeout: 1.0)
     }
     
-    func test_givenAccessTokenInAccessTokenStore_getAccessTokenReturnsCurrentAccessToken() {
+    func test_givenAccessTokenInAccessTokenStore_andAccessTokenIsRecent_getAccessTokenReturnsCurrentAccessToken() {
         let taskToFinish = expectation(description: "Expected task to finish")
         
         let expectedAccessTokenString = "MockAccessToken"
@@ -345,6 +342,156 @@ class ServerUserAuthSessionTests: XCTestCase {
                 date: Date()
             )
         )
+        
+        serverUserAuthSession.getAccessToken { response in
+            switch response.result {
+            case .success(let accessToken):
+                XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
+                XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
+                XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
+                XCTAssertEqual(accessToken.validation.login, self.userLogin, "Incorrect user login")
+                XCTAssertEqual(accessToken.validation.scopes, self.scopes, "Incorrect scopes")
+                
+            case .failure(let error):
+                XCTFail("Expected to not get error, got: \(error)")
+            }
+            
+            taskToFinish.fulfill()
+        }
+        
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_givenAccessTokenInAccessTokenStore_andAccessTokenIsNotRecent_getAccessTokenValidatesAndReturnsNewAccessToken() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+        
+        let expectedAccessTokenString = "MockAccessToken"
+        
+        let data = Data("""
+        {
+            "user_id": "\(userId)",
+            "login": "\(userLogin)",
+            "client_id": "\(clientId)",
+            "scopes": [\(scopes.map { "\"\($0.rawValue)\"" }.joined(separator: ","))]
+        }
+        """.utf8)
+        
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        ResponseProvider.requestHandler = { request in
+            guard let url = request.url, url.host == "id.twitch.tv" else { throw URLError(.init(rawValue: 0)) }
+            return (nil, data)
+        }
+        
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+        
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: userId,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        mockAccessTokenStore.tokens[userId] = .init(
+            stringValue: expectedAccessTokenString,
+            validation: .init(
+                userId: userId,
+                login: userLogin,
+                clientId: clientId,
+                scopes: scopes,
+                date: .distantPast
+            )
+        )
+        
+        serverUserAuthSession.getAccessToken { response in
+            switch response.result {
+            case .success(let accessToken):
+                XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
+                XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
+                XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
+                XCTAssertEqual(accessToken.validation.login, self.userLogin, "Incorrect user login")
+                XCTAssertEqual(accessToken.validation.scopes, self.scopes, "Incorrect scopes")
+                
+            case .failure(let error):
+                XCTFail("Expected to not get error, got: \(error)")
+            }
+            
+            taskToFinish.fulfill()
+        }
+        
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_givenAccessTokenInAccessTokenStore_andAccessTokenIsNotRecent_andValidationFails_getAccessTokenRefreshesAccessToken() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+        
+        let expectedAccessTokenString = "MockAccessToken"
+        
+        let refreshData = Data("""
+        {
+            "access_token": "\(expectedAccessTokenString)",
+            "refresh_token": "NewMockRefreshToken"
+        }
+        """.utf8)
+        
+        let validateData = Data("""
+        {
+            "user_id": "\(userId)",
+            "login": "\(userLogin)",
+            "client_id": "\(clientId)",
+            "scopes": [\(scopes.map { "\"\($0.rawValue)\"" }.joined(separator: ","))]
+        }
+        """.utf8)
+        
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        var requestCount = 0
+        
+        ResponseProvider.requestHandler = { request in
+            defer { requestCount += 1 }
+            guard let url = request.url, url.host == "id.twitch.tv" else { throw URLError(.init(rawValue: 0)) }
+            switch requestCount {
+            case 0: throw URLError(.init(rawValue: 0))
+            case 1: return (nil, refreshData)
+            default: return (nil, validateData)
+            }
+        }
+        
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+        
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: userId,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        mockAccessTokenStore.tokens[userId] = .init(
+            stringValue: expectedAccessTokenString,
+            validation: .init(
+                userId: userId,
+                login: userLogin,
+                clientId: clientId,
+                scopes: scopes,
+                date: .distantPast
+            )
+        )
+        
+        mockRefreshTokenStore.tokens[userId] = .init(rawValue: "MockRefreshToken")
         
         serverUserAuthSession.getAccessToken { response in
             switch response.result {

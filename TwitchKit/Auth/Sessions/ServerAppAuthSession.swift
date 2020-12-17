@@ -14,6 +14,9 @@ public class ServerAppAuthSession: InternalAuthSession {
     /// Your application's client ID.
     public let clientId: String
     
+    /// Your application's client secret.
+    public let clientSecret: String
+    
     /// The set of scopes the auth session requests when authorizing.
     public let scopes: Set<Scope>
     
@@ -92,7 +95,7 @@ public class ServerAppAuthSession: InternalAuthSession {
         accessTokenStore.fetchAuthToken(forUserId: nil) { result in
             switch result {
             case .success(let validatedAccessToken):
-                if validatedAccessToken.validation.date > Date() - 45 * 60 {
+                if validatedAccessToken.validation.isRecent {
                     completion(.init(validatedAccessToken))
                     return
                 }
@@ -187,7 +190,5 @@ public class ServerAppAuthSession: InternalAuthSession {
         urlSession.configuration
     }
     
-    internal let clientSecret: String
-    
-    private let accessTokenStore: AnyAuthTokenStore<ValidatedAppAccessToken>
+    internal let accessTokenStore: AnyAuthTokenStore<ValidatedAppAccessToken>
 }

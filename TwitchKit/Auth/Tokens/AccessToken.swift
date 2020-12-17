@@ -26,6 +26,14 @@ public protocol AccessTokenValidation: Equatable, Codable {
     var date: Date { get }
 }
 
+extension AccessTokenValidation {
+    
+    /// Whether the validation's access token was validated recently or not.
+    var isRecent: Bool {
+        date > Date() - 45 * 60
+    }
+}
+
 /// An access token that has been validated at some point.
 public protocol ValidatedAccessToken: AccessToken where ValidAccessTokenType == Self {
     

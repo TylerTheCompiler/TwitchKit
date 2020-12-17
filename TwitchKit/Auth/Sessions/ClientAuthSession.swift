@@ -211,7 +211,7 @@ public class ClientAuthSession: InternalAuthSession {
         accessTokenStore.fetchAuthToken(forUserId: userId) { result in
             switch result {
             case .success(let validatedAccessToken):
-                if validatedAccessToken.validation.date > Date() - 45 * 60 {
+                if validatedAccessToken.validation.isRecent {
                     completion(.init((validatedAccessToken, nil)))
                     return
                 }

@@ -17,6 +17,9 @@ public class ServerUserAuthSession: InternalAuthSession {
     /// Your application's client ID.
     public let clientId: String
     
+    /// Your application's client secret.
+    public let clientSecret: String
+    
     /// Your application's authorization redirect URL.
     public let redirectURL: URL
     
@@ -132,8 +135,13 @@ public class ServerUserAuthSession: InternalAuthSession {
     ) {
         accessTokenStore.fetchAuthToken(forUserId: userId) { result in
             switch result {
-            case .success(let accessToken):
-                self.validateAndStore(accessToken: accessToken.unvalidated, refreshToken: nil) { response in
+            case .success(let validatedAccessToken):
+                if validatedAccessToken.validation.isRecent {
+                    completion(.init(validatedAccessToken))
+                    return
+                }
+                
+                self.validateAndStore(accessToken: validatedAccessToken.unvalidated, refreshToken: nil) { response in
                     switch response.result {
                     case .success(let validatedAccessToken):
                         completion(.init(validatedAccessToken, response.httpURLResponse))
@@ -342,6 +350,4 @@ public class ServerUserAuthSession: InternalAuthSession {
     
     internal let accessTokenStore: AnyAuthTokenStore<ValidatedUserAccessToken>
     internal let refreshTokenStore: AnyAuthTokenStore<RefreshToken>
-    
-    private let clientSecret: String
 }
