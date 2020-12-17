@@ -85,7 +85,10 @@ public enum TwitchAppDeepLink {
         #endif
     }
     
-    /// Whether the native Twitch app is installed.
+    /// Whether the native Twitch app is installed or not.
+    ///
+    /// - Important: (iOS only) In order for this to ever return `true`, you must declare the "twitch" URL scheme
+    ///              in your app's Info.plist file. If you do not, then this always returns `false`.
     public static var isTwitchAppInstalled: Bool {
         #if os(macOS)
         return Self.workspace.urlForApplication(toOpen: login.url) != nil
