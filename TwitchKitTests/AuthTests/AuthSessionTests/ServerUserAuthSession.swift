@@ -161,7 +161,6 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         let validationData = Data("""
         {
-            "access_token": "\(expectedAccessTokenString)",
             "user_id": "\(userId)",
             "login": "\(userLogin)",
             "client_id": "\(clientId)",
@@ -232,7 +231,6 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         let validationData = Data("""
         {
-            "access_token": "\(expectedAccessTokenString)",
             "user_id": "\(userId)",
             "login": "\(userLogin)",
             "client_id": "\(clientId)",
@@ -307,7 +305,6 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         let data = Data("""
         {
-            "access_token": "\(expectedAccessTokenString)",
             "user_id": "\(userId)",
             "login": "\(userLogin)",
             "client_id": "\(clientId)",
@@ -376,10 +373,15 @@ class ServerUserAuthSessionTests: XCTestCase {
         let expectedAccessTokenString = "MockAccessToken"
         let expectedRefreshTokenString = "MockRefreshToken"
         
-        let data = Data("""
+        let authorizeData = Data("""
         {
             "access_token": "\(expectedAccessTokenString)",
-            "refresh_token": "\(expectedRefreshTokenString)",
+            "refresh_token": "\(expectedRefreshTokenString)"
+        }
+        """.utf8)
+        
+        let validateData = Data("""
+        {
             "user_id": "\(userId)",
             "login": "\(userLogin)",
             "client_id": "\(clientId)",
@@ -391,9 +393,16 @@ class ServerUserAuthSessionTests: XCTestCase {
             static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
         }
         
+        var requestCount = 0
+        
         ResponseProvider.requestHandler = { request in
+            defer { requestCount += 1 }
             guard let url = request.url, url.host == "id.twitch.tv" else { throw URLError(.init(rawValue: 0)) }
-            return (nil, data)
+            switch requestCount {
+            case 0: return (nil, authorizeData)
+            case 1: return (nil, validateData)
+            default: return (nil, nil)
+            }
         }
         
         let urlSessionConfig = URLSessionConfiguration.default
@@ -439,11 +448,16 @@ class ServerUserAuthSessionTests: XCTestCase {
         let expectedIdTokenString = generateIdTokenString(nonce: expectedNonce)
         let expectedRefreshTokenString = "MockRefreshToken"
 
-        let data = Data("""
+        let authorizeData = Data("""
         {
             "access_token": "\(expectedAccessTokenString)",
             "id_token": "\(expectedIdTokenString)",
-            "refresh_token": "\(expectedRefreshTokenString)",
+            "refresh_token": "\(expectedRefreshTokenString)"
+        }
+        """.utf8)
+        
+        let validateData = Data("""
+        {
             "user_id": "\(userId)",
             "login": "\(userLogin)",
             "client_id": "\(clientId)",
@@ -454,10 +468,17 @@ class ServerUserAuthSessionTests: XCTestCase {
         enum ResponseProvider: ResponseProviding {
             static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
         }
-
+        
+        var requestCount = 0
+        
         ResponseProvider.requestHandler = { request in
+            defer { requestCount += 1 }
             guard let url = request.url, url.host == "id.twitch.tv" else { throw URLError(.init(rawValue: 0)) }
-            return (nil, data)
+            switch requestCount {
+            case 0: return (nil, authorizeData)
+            case 1: return (nil, validateData)
+            default: return (nil, nil)
+            }
         }
 
         let urlSessionConfig = URLSessionConfiguration.default
@@ -495,16 +516,21 @@ class ServerUserAuthSessionTests: XCTestCase {
         wait(for: [taskToFinish], timeout: 1.0)
     }
     
-    func test_getRefreshAccessToken_returnsNewAccessToken() {
+    func test_refreshAccessToken_returnsNewAccessToken() {
         let taskToFinish = expectation(description: "Expected task to finish")
 
         let expectedAccessTokenString = "MockAccessToken"
         let expectedRefreshTokenString = "MockRefreshToken"
 
-        let data = Data("""
+        let authorizeData = Data("""
         {
             "access_token": "\(expectedAccessTokenString)",
             "refresh_token": "\(expectedRefreshTokenString)",
+        }
+        """.utf8)
+        
+        let validateData = Data("""
+        {
             "user_id": "\(userId)",
             "login": "\(userLogin)",
             "client_id": "\(clientId)",
@@ -515,10 +541,17 @@ class ServerUserAuthSessionTests: XCTestCase {
         enum ResponseProvider: ResponseProviding {
             static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
         }
-
+        
+        var requestCount = 0
+        
         ResponseProvider.requestHandler = { request in
+            defer { requestCount += 1 }
             guard let url = request.url, url.host == "id.twitch.tv" else { throw URLError(.init(rawValue: 0)) }
-            return (nil, data)
+            switch requestCount {
+            case 0: return (nil, authorizeData)
+            case 1: return (nil, validateData)
+            default: return (nil, nil)
+            }
         }
 
         let urlSessionConfig = URLSessionConfiguration.default
@@ -537,7 +570,7 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         mockRefreshTokenStore.tokens[userId] = .init(rawValue: expectedRefreshTokenString)
 
-        serverUserAuthSession.getRefreshedAccessToken { response in
+        serverUserAuthSession.refreshAccessToken { response in
             switch response.result {
             case .success(let accessToken):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
@@ -548,6 +581,76 @@ class ServerUserAuthSessionTests: XCTestCase {
 
             case .failure(let error):
                 XCTFail("Expected to not get error, got: \(error)")
+            }
+
+            taskToFinish.fulfill()
+        }
+
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_refreshAccessToken_ifFailsToStoreRefreshTokenInTokenStore_returnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+
+        let expectedAccessTokenString = "MockAccessToken"
+        let expectedRefreshTokenString = "MockRefreshToken"
+
+        let authorizeData = Data("""
+        {
+            "access_token": "\(expectedAccessTokenString)",
+            "refresh_token": "\(expectedRefreshTokenString)",
+        }
+        """.utf8)
+        
+        let validateData = Data("""
+        {
+            "user_id": "\(userId)",
+            "login": "\(userLogin)",
+            "client_id": "\(clientId)",
+            "scopes": [\(scopes.map { "\"\($0.rawValue)\"" }.joined(separator: ","))]
+        }
+        """.utf8)
+
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        var requestCount = 0
+        
+        ResponseProvider.requestHandler = { request in
+            defer { requestCount += 1 }
+            guard let url = request.url, url.host == "id.twitch.tv" else { throw URLError(.init(rawValue: 0)) }
+            switch requestCount {
+            case 0: return (nil, authorizeData)
+            case 1: return (nil, validateData)
+            default: return (nil, nil)
+            }
+        }
+
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: userId,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        mockRefreshTokenStore.tokens[userId] = .init(rawValue: expectedRefreshTokenString)
+        mockRefreshTokenStore.shouldStoreFail = true
+
+        serverUserAuthSession.refreshAccessToken { response in
+            switch response.result {
+            case .success:
+                XCTFail("Expected to get error")
+
+            case .failure:
+                break
             }
 
             taskToFinish.fulfill()
@@ -601,6 +704,372 @@ class ServerUserAuthSessionTests: XCTestCase {
             taskToFinish.fulfill()
         }
 
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_givenAccessTokenInTokenStore_revokeCurrentAccessToken_ifFailsDueToSomeReason_returnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+
+        ResponseProvider.requestHandler = { request in
+            throw URLError(.init(rawValue: 0))
+        }
+
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: userId,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        mockAccessTokenStore.tokens[userId] = .init(
+            stringValue: "MockAccessToken",
+            validation: .init(
+                userId: userId,
+                login: userLogin,
+                clientId: clientId,
+                scopes: scopes,
+                date: Date()
+            )
+        )
+
+        serverUserAuthSession.revokeCurrentAccessToken { result in
+            if result.error == nil {
+                XCTFail("Expected to get error")
+            }
+
+            taskToFinish.fulfill()
+        }
+
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_givenNoAccessTokenInTokenStore_revokeCurrentAccessToken_returnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+
+        ResponseProvider.requestHandler = { request in
+            throw URLError(.init(rawValue: 0))
+        }
+
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: userId,
+            urlSessionConfiguration: urlSessionConfig
+        )
+
+        serverUserAuthSession.revokeCurrentAccessToken { result in
+            if result.error == nil {
+                XCTFail("Expected to get error")
+            }
+
+            taskToFinish.fulfill()
+        }
+
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_getNewAccessToken_ifFailureHappens_returnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+        
+        let authCode = AuthCode(rawValue: "MockAuthCode")
+        
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        ResponseProvider.requestHandler = { request in
+            throw URLError(.init(rawValue: 0))
+        }
+        
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+        
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: nil,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        serverUserAuthSession.getNewAccessToken(withAuthCode: authCode) { response in
+            switch response.result {
+            case .success:
+                XCTFail("Expected to get error")
+                
+            case .failure:
+                break
+            }
+            
+            taskToFinish.fulfill()
+        }
+        
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_getNewAccessAndIdTokens_ifFailureHappens_returnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+        
+        let authCode = AuthCode(rawValue: "MockAuthCode")
+        let nonce = UUID().uuidString
+        
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        ResponseProvider.requestHandler = { request in
+            throw URLError(.init(rawValue: 0))
+        }
+        
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+        
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: nil,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        serverUserAuthSession.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { response in
+            switch response.result {
+            case .success:
+                XCTFail("Expected to get error")
+                
+            case .failure:
+                break
+            }
+            
+            taskToFinish.fulfill()
+        }
+        
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_getNewAccessAndIdTokens_ifFailureHappensDueToFailingToStoreValidatedAccessToken_returnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+        
+        let authCode = AuthCode(rawValue: "MockAuthCode")
+        let nonce = UUID().uuidString
+        let idToken = generateIdTokenString(nonce: nonce)
+        
+        let authorizeData = Data("""
+        {
+            "access_token": "MockAccessToken",
+            "refresh_token": "MockRefreshToken",
+            "id_token": "\(idToken)"
+        }
+        """.utf8)
+        
+        let validateData = Data("""
+        {
+            "user_id": "\(userId)",
+            "login": "\(userLogin)",
+            "client_id": "\(clientId)",
+            "scopes": [\(scopes.map { "\"\($0.rawValue)\"" }.joined(separator: ","))]
+        }
+        """.utf8)
+        
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        var requestCount = 0
+        
+        ResponseProvider.requestHandler = { request in
+            defer { requestCount += 1 }
+            guard let url = request.url, url.host == "id.twitch.tv" else { throw URLError(.init(rawValue: 0)) }
+            switch requestCount {
+            case 0: return (nil, authorizeData)
+            case 1: return (nil, validateData)
+            default: return (nil, nil)
+            }
+        }
+        
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+        
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: nil,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        mockAccessTokenStore.shouldStoreFail = true
+        
+        serverUserAuthSession.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { response in
+            switch response.result {
+            case .success:
+                XCTFail("Expected to get error")
+                
+            case .failure(let error):
+                print(error)
+            }
+            
+            taskToFinish.fulfill()
+        }
+        
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_refreshAccessToken_ifFailsDueTo401Error_deletesRefreshTokenFromTokenStore_andReturnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+        
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        ResponseProvider.requestHandler = { request in
+            return (HTTPURLResponse(url: request.url!, statusCode: 401, httpVersion: nil, headerFields: nil)!, nil)
+        }
+        
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+        
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: userId,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        mockRefreshTokenStore.tokens[userId] = RefreshToken(rawValue: "MockRefreshToken")
+        
+        serverUserAuthSession.refreshAccessToken { response in
+            switch response.result {
+            case .success:
+                XCTFail("Expected to get error")
+                
+            case .failure:
+                XCTAssertNil(self.mockRefreshTokenStore.tokens[self.userId], "Expected refresh token to be deleted")
+            }
+            
+            taskToFinish.fulfill()
+        }
+        
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_refreshAccessToken_ifFailsDueToSomeOtherError_doesNotDeletesRefreshTokenFromTokenStore_andReturnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+        
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        ResponseProvider.requestHandler = { request in
+            throw URLError(.init(rawValue: 0))
+        }
+        
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+        
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: userId,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        let expectedRefreshToken = RefreshToken(rawValue: "MockRefreshToken")
+        
+        mockRefreshTokenStore.tokens[userId] = expectedRefreshToken
+        
+        serverUserAuthSession.refreshAccessToken { response in
+            switch response.result {
+            case .success:
+                XCTFail("Expected to get error")
+                
+            case .failure:
+                XCTAssertEqual(self.mockRefreshTokenStore.tokens[self.userId], expectedRefreshToken,
+                               "Expected refresh token to not be deleted")
+            }
+            
+            taskToFinish.fulfill()
+        }
+        
+        wait(for: [taskToFinish], timeout: 1.0)
+    }
+    
+    func test_refreshAccessToken_ifFailsDueToNoRefreshTokenInTokenStore_returnsError() {
+        let taskToFinish = expectation(description: "Expected task to finish")
+        
+        enum ResponseProvider: ResponseProviding {
+            static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse?, Data?))?
+        }
+        
+        ResponseProvider.requestHandler = { request in
+            throw URLError(.init(rawValue: 0))
+        }
+        
+        let urlSessionConfig = URLSessionConfiguration.default
+        urlSessionConfig.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
+        
+        serverUserAuthSession = .init(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectURL: URL(string: redirectURLString)!,
+            scopes: scopes,
+            accessTokenStore: mockAccessTokenStore,
+            refreshTokenStore: mockRefreshTokenStore,
+            userId: userId,
+            urlSessionConfiguration: urlSessionConfig
+        )
+        
+        serverUserAuthSession.refreshAccessToken { response in
+            switch response.result {
+            case .success:
+                XCTFail("Expected to get error")
+                
+            case .failure:
+                break
+            }
+            
+            taskToFinish.fulfill()
+        }
+        
         wait(for: [taskToFinish], timeout: 1.0)
     }
     

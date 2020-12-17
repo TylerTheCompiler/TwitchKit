@@ -165,7 +165,7 @@ extension APISession where AuthSessionType == ServerUserAuthSession {
                         
                     case .failure(let error):
                         if response.httpURLResponse?.statusCode == 401 {
-                            self.authSession.getRefreshedAccessToken { response in
+                            self.authSession.refreshAccessToken { response in
                                 switch response.result {
                                 case .success(let validatedAccessToken):
                                     self.urlSession.apiTask(

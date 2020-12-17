@@ -139,12 +139,12 @@ public class ServerUserAuthSession: InternalAuthSession {
                         completion(.init(validatedAccessToken, response.httpURLResponse))
                         
                     case .failure:
-                        self.getRefreshedAccessToken(completion: completion)
+                        self.refreshAccessToken(completion: completion)
                     }
                 }
                 
             case .failure:
-                self.getRefreshedAccessToken(completion: completion)
+                self.refreshAccessToken(completion: completion)
             }
         }
     }
@@ -230,7 +230,7 @@ public class ServerUserAuthSession: InternalAuthSession {
     ///   - response: Contains the result of the operation and an `HTTPURLResponse` of the last HTTP request
     ///               made, if any. A successful result contains a validated user access token; an unsuccessdul
     ///               result contains the error that occurred.
-    public func getRefreshedAccessToken(
+    public func refreshAccessToken(
         completion: @escaping (_ response: HTTPResponse<ValidatedUserAccessToken, Error>) -> Void
     ) {
         refreshTokenStore.fetchAuthToken(forUserId: userId) { result in
@@ -249,7 +249,8 @@ public class ServerUserAuthSession: InternalAuthSession {
                                               completion: completion)
                         
                     case .failure(let error):
-                        if response.httpURLResponse?.statusCode == 401 || response.httpURLResponse?.statusCode == 400 {
+                        if let statusCode = response.httpURLResponse?.statusCode,
+                           (400...401).contains(statusCode) {
                             self.refreshTokenStore.removeAuthToken(forUserId: self.userId) { _ in
                                 completion(.init(error, response.httpURLResponse))
                             }

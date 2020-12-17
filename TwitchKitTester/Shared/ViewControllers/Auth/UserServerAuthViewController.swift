@@ -135,7 +135,7 @@ class UserServerAuthViewController: PlatformIndependentViewController {
     }
     
     @IBAction private func refreshAccessToken(_ sender: Any) {
-        settings?.authSession.getRefreshedAccessToken { response in
+        settings?.authSession.refreshAccessToken { response in
             switch response.result {
             case .success(let validatedAccessToken):
                 print("(Server) User access token:", validatedAccessToken.stringValue)
