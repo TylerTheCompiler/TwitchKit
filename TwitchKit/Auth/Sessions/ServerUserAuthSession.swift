@@ -143,8 +143,8 @@ public class ServerUserAuthSession: InternalAuthSession {
                     }
                 }
                 
-            case .failure(let error):
-                completion(.init(error))
+            case .failure:
+                self.getRefreshedAccessToken(completion: completion)
             }
         }
     }
@@ -339,7 +339,8 @@ public class ServerUserAuthSession: InternalAuthSession {
         urlSession.configuration
     }
     
+    internal let accessTokenStore: AnyAuthTokenStore<ValidatedUserAccessToken>
+    internal let refreshTokenStore: AnyAuthTokenStore<RefreshToken>
+    
     private let clientSecret: String
-    private let accessTokenStore: AnyAuthTokenStore<ValidatedUserAccessToken>
-    private let refreshTokenStore: AnyAuthTokenStore<RefreshToken>
 }
