@@ -339,4 +339,71 @@ class PropertyWrapperTests: XCTestCase {
         
         XCTAssertEqual(InternetDateWithOptionalFractionalSecondsConvertingStrategy.string(from: date), expectedDateString)
     }
+    
+    // MARK: - SafeURL Tests
+    
+    func test_safeURL_decodesFromNormalURLString() throws {
+        let expectedURLString = "https://www.example.com/this/is/an/example/url.json?query=Some%20query#fragment=1"
+        let data = Data("[\"\(expectedURLString)\"]".utf8)
+        
+        let safeURL = try JSONDecoder().decode([SafeURL].self, from: data).first
+        
+        XCTAssertEqual(safeURL?.wrappedValue?.absoluteString, expectedURLString, "Incorrect URL string")
+    }
+    
+    func test_safeURL_decodesFromBadURLString() throws {
+        let data = Data("[\"!@#$%^&*())_+\"]".utf8)
+        
+        let safeURL = try JSONDecoder().decode([SafeURL].self, from: data).first
+        
+        XCTAssertNotNil(safeURL, "Expected SafeURL to not be nil")
+        XCTAssertNil(safeURL?.wrappedValue, "Expected wrapped value to be nil")
+    }
+    
+    func test_safeURL_decodesFromEmptyURLString() throws {
+        let data = Data("[\"\"]".utf8)
+        
+        let safeURL = try JSONDecoder().decode([SafeURL].self, from: data).first
+        
+        XCTAssertNotNil(safeURL, "Expected SafeURL to not be nil")
+        XCTAssertNil(safeURL?.wrappedValue, "Expected wrapped value to be nil")
+    }
+    
+    func test_safeURL_decodesFromNilValue() throws {
+        let data = Data("[null]".utf8)
+        
+        let safeURL = try JSONDecoder().decode([SafeURL].self, from: data).first
+        
+        XCTAssertNotNil(safeURL, "Expected SafeURL to not be nil")
+        XCTAssertNil(safeURL?.wrappedValue, "Expected wrapped value to be nil")
+    }
+    
+    func test_safeURL_withNonNilWrappedValue_encodesToString() throws {
+        let expectedURLString = "https://www.example.com/this/is/an/example/url.json?query=Some%20query#fragment=1"
+        let safeURL = SafeURL(wrappedValue: URL(string: expectedURLString)!)
+        
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .withoutEscapingSlashes
+        let data = try encoder.encode(safeURL)
+        guard let urlString = String(data: data, encoding: .utf8) else {
+            XCTFail("Expected URL string to not be nil")
+            return
+        }
+        
+        XCTAssertEqual(urlString, "\"\(expectedURLString)\"", "Incorrect encoded value")
+    }
+    
+    func test_safeURL_withNilWrappedValue_encodesToString() throws {
+        let safeURL = SafeURL(wrappedValue: nil)
+        
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .withoutEscapingSlashes
+        let data = try encoder.encode(safeURL)
+        guard let urlString = String(data: data, encoding: .utf8) else {
+            XCTFail("Expected URL string to not be nil")
+            return
+        }
+        
+        XCTAssertEqual(urlString, "null", "Incorrect encoded value")
+    }
 }
