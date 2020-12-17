@@ -1,5 +1,5 @@
 //
-//  ClientWebAuthenticationSessionTests.swift
+//  WebAuthenticationSessionTests.swift
 //  TwitchKitTests
 //
 //  Created by Tyler Prevost on 12/10/20.
@@ -9,7 +9,7 @@ import XCTest
 import AuthenticationServices
 @testable import TwitchKit
 
-class MockWebAuthSession: WebAuthSessionProtocol {
+class MockASWebAuthSession: WebAuthSessionProtocol {
     var canStart = true
     var wasCancelled = false
     
@@ -56,10 +56,10 @@ class MockWebAuthSession: WebAuthSessionProtocol {
     }
 }
 
-class MockPresentationContextProvider: NSObject, SessionPresentationContextProviding, ClientAuthSessionPresentationContextProviding {
+class MockPresentationContextProvider: NSObject, WebAuthenticationSessionPresentationContextProviding, ClientAuthSessionPresentationContextProviding {
     var anchor: PresentationAnchor!
     
-    func presentationAnchor(for session: ClientWebAuthenticationSession) -> PresentationAnchor {
+    func presentationAnchor(for session: WebAuthenticationSession) -> PresentationAnchor {
         anchor
     }
     
@@ -68,25 +68,25 @@ class MockPresentationContextProvider: NSObject, SessionPresentationContextProvi
     }
 }
 
-class ClientWebAuthenticationSessionTests: XCTestCase {
+class WebAuthenticationSessionTests: XCTestCase {
     var mockPresentationContextProvider: MockPresentationContextProvider!
-    var clientWebAuthSession: ClientWebAuthenticationSession!
+    var webAuthSession: WebAuthenticationSession!
     
     override func setUp() {
         mockPresentationContextProvider = .init()
     }
     
     override func tearDown() {
-        clientWebAuthSession = nil
+        webAuthSession = nil
         mockPresentationContextProvider = nil
     }
     
     // MARK: - Starting and Cancelling
     
     func test_presentationContextProvider_returnsPreviouslySetValue() throws {
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -95,31 +95,31 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             flow: .accessToken { _ in }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        XCTAssertEqual(clientWebAuthSession.presentationContextProvider as? MockPresentationContextProvider,
+        XCTAssertEqual(webAuthSession.presentationContextProvider as? MockPresentationContextProvider,
                        mockPresentationContextProvider,
                        "Expected presentationContextProvider to be the test case")
         
-        clientWebAuthSession.presentationContextProvider = nil
+        webAuthSession.presentationContextProvider = nil
         
-        XCTAssertNil(clientWebAuthSession.presentationContextProvider,
+        XCTAssertNil(webAuthSession.presentationContextProvider,
                      "Expected presentationContextProvider to be set to nil")
         
-        clientWebAuthSession.presentationContextProvider = mockPresentationContextProvider
+        webAuthSession.presentationContextProvider = mockPresentationContextProvider
         
-        XCTAssertEqual(clientWebAuthSession.presentationContextProvider as? MockPresentationContextProvider,
+        XCTAssertEqual(webAuthSession.presentationContextProvider as? MockPresentationContextProvider,
                        mockPresentationContextProvider,
                        "Expected presentationContextProvider to be set to the test case again")
     }
     
     func test_given_noPresentationContextProvider_canStart_returnsFalse_and_startFails() throws {
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -128,42 +128,42 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             flow: .accessToken { _ in }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        XCTAssertFalse(clientWebAuthSession.canStart,
+        XCTAssertFalse(webAuthSession.canStart,
                        "Expected canStart to return false when presentationContextProvider is nil")
         
-        XCTAssertFalse(clientWebAuthSession.start(),
+        XCTAssertFalse(webAuthSession.start(),
                        "Expected start to return false when presentationContextProvider is nil")
     }
     
     func test_cancel_cancelsAuthFlow() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .accessToken(forceVerify: false) { _ in
-                XCTAssertTrue(webAuthSession.wasCancelled, "Expected web auth session to be cancelled")
+                XCTAssertTrue(mockASWebAuthSession.wasCancelled, "Expected web auth session to be cancelled")
                 authFlowToComplete.fulfill()
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            webAuthSession.shouldCallCompletionHandler = false
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            mockASWebAuthSession.shouldCallCompletionHandler = false
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
-        clientWebAuthSession.cancel()
+        webAuthSession.start()
+        webAuthSession.cancel()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -176,7 +176,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -196,22 +196,22 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#access_token=\(expectedAccessToken)&state=\(state)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_accessTokenFlow_invalidURLComponents_sessionDoesNotStart() throws {
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -224,28 +224,28 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         components.scheme = "https"
         components.host = "example"
         components.path = "badpath"
-        clientWebAuthSession.injectable.urlComponents = { _ in components }
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.urlComponents = { _ in components }
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        XCTAssertFalse(clientWebAuthSession.start(), "Expected client web auth session to not start")
+        XCTAssertFalse(webAuthSession.start(), "Expected client web auth session to not start")
     }
     
     func test_accessTokenFlow_forceVerify_isSetToTrue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .accessToken(forceVerify: true) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 XCTAssertTrue(queryItems.contains(.init(name: "force_verify", value: "true")),
                               "Expected \"force_verify\" query item to be \"true\"")
@@ -253,28 +253,28 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_accessTokenFlow_forceVerify_isSetToFalse() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .accessToken(forceVerify: false) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 XCTAssertTrue(queryItems.contains(.init(name: "force_verify", value: "false")),
                               "Expected \"force_verify\" query item to be \"false\"")
@@ -282,12 +282,12 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -296,7 +296,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         let expectedError = NSError(domain: "Test error", code: 0)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -316,13 +316,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackError = expectedError
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -330,7 +330,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
     func test_accessTokenFlow_missingOrInvalidCallbackURL_causesFailure() {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -343,7 +343,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingOrInvalidCallbackURL:
+                    case WebAuthenticationSession.Error.missingOrInvalidCallbackURL:
                         break
                         
                     default:
@@ -355,13 +355,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = nil
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -372,7 +372,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -385,7 +385,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.mismatchedState:
+                    case WebAuthenticationSession.Error.mismatchedState:
                         break
                         
                     default:
@@ -397,14 +397,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#access_token=\(accessToken)&state=someState")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -414,7 +414,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -427,7 +427,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingAccessToken:
+                    case WebAuthenticationSession.Error.missingAccessToken:
                         break
                         
                     default:
@@ -439,14 +439,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#state=\(state)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -461,7 +461,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let expectedState = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -484,23 +484,23 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { expectedState }
-        clientWebAuthSession.injectable.nonce = { expectedNonce }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { expectedState }
+        webAuthSession.injectable.nonce = { expectedNonce }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#id_token=\(expectedIdToken)&access_token=\(expectedAccessToken)&state=\(expectedState)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_idAndAccessTokenFlow_invalidURLComponents_sessionDoesNotStart() throws {
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -513,24 +513,24 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         components.scheme = "https"
         components.host = "example"
         components.path = "badpath"
-        clientWebAuthSession.injectable.urlComponents = { _ in components }
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.urlComponents = { _ in components }
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        XCTAssertFalse(clientWebAuthSession.start(), "Expected client web auth session to not start")
+        XCTAssertFalse(webAuthSession.start(), "Expected client web auth session to not start")
     }
     
     func test_idAndAccessTokenFlow_claims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let idTokenClaims = Set([Claim.email, .picture, .preferredUsername, .updatedAt])
         let userinfoClaims = Set([Claim.email, .emailVerified])
         let expectedClaims = Claims(idTokenClaims: idTokenClaims, userinfoClaims: userinfoClaims)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -539,7 +539,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             flow: .idAndAccessToken(claims: idTokenClaims.intersection(userinfoClaims),
                                     idTokenClaims: idTokenClaims,
                                     userinfoClaims: userinfoClaims) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -557,31 +557,31 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_idAndAccessTokenFlow_justIdTokenClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let claimsSet = Set([Claim.email, .emailVerified, .picture, .preferredUsername, .updatedAt])
         let expectedClaims = Claims(idTokenClaims: claimsSet, userinfoClaims: [])
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .idAndAccessToken(idTokenClaims: claimsSet) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -599,31 +599,31 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_idAndAccessTokenFlow_justUserinfoClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let claimsSet = Set([Claim.email, .emailVerified, .picture, .preferredUsername, .updatedAt])
         let expectedClaims = Claims(idTokenClaims: [], userinfoClaims: claimsSet)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .idAndAccessToken(userinfoClaims: claimsSet) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -641,28 +641,28 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_idAndAccessTokenFlow_emptyClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .idAndAccessToken { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -677,12 +677,12 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -691,7 +691,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         let expectedError = NSError(domain: "Test error", code: 0)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -711,13 +711,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackError = expectedError
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -725,7 +725,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
     func test_idAndAccessTokenFlow_missingOrInvalidCallbackURL_causesFailure() {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -738,7 +738,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingOrInvalidCallbackURL:
+                    case WebAuthenticationSession.Error.missingOrInvalidCallbackURL:
                         break
                         
                     default:
@@ -750,13 +750,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = nil
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -767,7 +767,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -780,7 +780,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.mismatchedState:
+                    case WebAuthenticationSession.Error.mismatchedState:
                         break
                         
                     default:
@@ -792,14 +792,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#access_token=\(accessToken)&state=someState")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -809,7 +809,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -822,7 +822,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingAccessToken:
+                    case WebAuthenticationSession.Error.missingAccessToken:
                         break
                         
                     default:
@@ -834,14 +834,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#id_token=someIdToken&state=\(state)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -851,7 +851,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -864,7 +864,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingIdToken:
+                    case WebAuthenticationSession.Error.missingIdToken:
                         break
                         
                     default:
@@ -876,14 +876,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#access_token=someAccessToken&state=\(state)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -897,7 +897,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let expectedState = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -917,23 +917,23 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { expectedState }
-        clientWebAuthSession.injectable.nonce = { expectedNonce }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { expectedState }
+        webAuthSession.injectable.nonce = { expectedNonce }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#id_token=\(expectedIdToken)&state=\(expectedState)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_idTokenFlow_invalidURLComponents_sessionDoesNotStart() throws {
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -946,24 +946,24 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         components.scheme = "https"
         components.host = "example"
         components.path = "badpath"
-        clientWebAuthSession.injectable.urlComponents = { _ in components }
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.urlComponents = { _ in components }
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        XCTAssertFalse(clientWebAuthSession.start(), "Expected client web auth session to not start")
+        XCTAssertFalse(webAuthSession.start(), "Expected client web auth session to not start")
     }
     
     func test_idTokenFlow_claims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let idTokenClaims = Set([Claim.email, .picture, .preferredUsername, .updatedAt])
         let userinfoClaims = Set([Claim.email, .emailVerified])
         let expectedClaims = Claims(idTokenClaims: idTokenClaims, userinfoClaims: userinfoClaims)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -972,7 +972,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             flow: .idToken(claims: idTokenClaims.intersection(userinfoClaims),
                            idTokenClaims: idTokenClaims,
                            userinfoClaims: userinfoClaims) { result in
-                            let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                            let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -990,31 +990,31 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_idTokenFlow_justIdTokenClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let claimsSet = Set([Claim.email, .emailVerified, .picture, .preferredUsername, .updatedAt])
         let expectedClaims = Claims(idTokenClaims: claimsSet, userinfoClaims: [])
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .idToken(idTokenClaims: claimsSet) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -1032,31 +1032,31 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_idTokenFlow_justUserinfoClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let claimsSet = Set([Claim.email, .emailVerified, .picture, .preferredUsername, .updatedAt])
         let expectedClaims = Claims(idTokenClaims: [], userinfoClaims: claimsSet)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .idToken(userinfoClaims: claimsSet) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -1074,28 +1074,28 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_idTokenFlow_emptyClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .idToken { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -1110,12 +1110,12 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1124,7 +1124,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         let expectedError = NSError(domain: "Test error", code: 0)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1144,13 +1144,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackError = expectedError
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1158,7 +1158,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
     func test_idTokenFlow_missingOrInvalidCallbackURL_causesFailure() {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1171,7 +1171,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingOrInvalidCallbackURL:
+                    case WebAuthenticationSession.Error.missingOrInvalidCallbackURL:
                         break
                         
                     default:
@@ -1183,13 +1183,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = nil
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1199,7 +1199,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -1212,7 +1212,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.mismatchedState:
+                    case WebAuthenticationSession.Error.mismatchedState:
                         break
                         
                     default:
@@ -1224,14 +1224,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#state=someState")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1241,7 +1241,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -1254,7 +1254,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingIdToken:
+                    case WebAuthenticationSession.Error.missingIdToken:
                         break
                         
                     default:
@@ -1266,14 +1266,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)#state=\(state)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1286,7 +1286,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -1306,22 +1306,22 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)?code=\(expectedAuthCode)&state=\(state)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_authCodeOAuthFlow_invalidURLComponents_sessionDoesNotStart() throws {
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1334,27 +1334,27 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         components.scheme = "https"
         components.host = "example"
         components.path = "badpath"
-        clientWebAuthSession.injectable.urlComponents = { _ in components }
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.urlComponents = { _ in components }
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        XCTAssertFalse(clientWebAuthSession.start(), "Expected client web auth session to not start")
+        XCTAssertFalse(webAuthSession.start(), "Expected client web auth session to not start")
     }
     
     func test_authCodeOAuthFlow_forceVerify_isSetToTrue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .authCodeUsingOAuth(forceVerify: true) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 XCTAssertTrue(queryItems.contains(.init(name: "force_verify", value: "true")),
                               "Expected \"force_verify\" query item to be \"true\"")
@@ -1362,28 +1362,28 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_authCodeOAuthFlow_forceVerify_isSetToFalse() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .authCodeUsingOAuth(forceVerify: false) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 XCTAssertTrue(queryItems.contains(.init(name: "force_verify", value: "false")),
                               "Expected \"force_verify\" query item to be \"false\"")
@@ -1391,12 +1391,12 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1405,7 +1405,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         let expectedError = NSError(domain: "Test error", code: 0)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1425,13 +1425,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackError = expectedError
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1439,7 +1439,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
     func test_authCodeOAuthFlow_missingOrInvalidCallbackURL_causesFailure() {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1452,7 +1452,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingOrInvalidCallbackURL:
+                    case WebAuthenticationSession.Error.missingOrInvalidCallbackURL:
                         break
                         
                     default:
@@ -1464,13 +1464,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = nil
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1480,7 +1480,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -1493,7 +1493,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.mismatchedState:
+                    case WebAuthenticationSession.Error.mismatchedState:
                         break
                         
                     default:
@@ -1505,14 +1505,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)?state=someState")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1522,7 +1522,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -1535,7 +1535,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingAuthCode:
+                    case WebAuthenticationSession.Error.missingAuthCode:
                         break
                         
                     default:
@@ -1547,14 +1547,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)?state=\(state)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1568,7 +1568,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let expectedState = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -1591,23 +1591,23 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { expectedState }
-        clientWebAuthSession.injectable.nonce = { expectedNonce }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { expectedState }
+        webAuthSession.injectable.nonce = { expectedNonce }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)?code=\(expectedAuthCode)&state=\(expectedState)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_authCodeOIDCFlow_invalidURLComponents_sessionDoesNotStart() throws {
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1620,24 +1620,24 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         components.scheme = "https"
         components.host = "example"
         components.path = "badpath"
-        clientWebAuthSession.injectable.urlComponents = { _ in components }
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.urlComponents = { _ in components }
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        XCTAssertFalse(clientWebAuthSession.start(), "Expected client web auth session to not start")
+        XCTAssertFalse(webAuthSession.start(), "Expected client web auth session to not start")
     }
     
     func test_authCodeOIDCFlow_claims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let idTokenClaims = Set([Claim.email, .picture, .preferredUsername, .updatedAt])
         let userinfoClaims = Set([Claim.email, .emailVerified])
         let expectedClaims = Claims(idTokenClaims: idTokenClaims, userinfoClaims: userinfoClaims)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1646,7 +1646,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             flow: .authCodeUsingOIDC(claims: idTokenClaims.intersection(userinfoClaims),
                                      idTokenClaims: idTokenClaims,
                                      userinfoClaims: userinfoClaims) { result in
-                                        let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                                        let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -1664,31 +1664,31 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_authCodeOIDCFlow_justIdTokenClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let claimsSet = Set([Claim.email, .emailVerified, .picture, .preferredUsername, .updatedAt])
         let expectedClaims = Claims(idTokenClaims: claimsSet, userinfoClaims: [])
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .authCodeUsingOIDC(idTokenClaims: claimsSet) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -1706,31 +1706,31 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_authCodeOIDCFlow_justUserinfoClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
         let claimsSet = Set([Claim.email, .emailVerified, .picture, .preferredUsername, .updatedAt])
         let expectedClaims = Claims(idTokenClaims: [], userinfoClaims: claimsSet)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .authCodeUsingOIDC(userinfoClaims: claimsSet) { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -1748,28 +1748,28 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
     
     func test_authCodeOIDCFlow_emptyClaims_isExpectedValue() throws {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
-        var webAuthSession: MockWebAuthSession!
+        var mockASWebAuthSession: MockASWebAuthSession!
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
             prefersEphemeralWebBrowserSession: false,
             presentationContextProvider: mockPresentationContextProvider,
             flow: .authCodeUsingOIDC { result in
-                let components = URLComponents(string: webAuthSession.url.absoluteString)!
+                let components = URLComponents(string: mockASWebAuthSession.url.absoluteString)!
                 let queryItems = components.queryItems ?? []
                 let claimsQueryItemData = Data((queryItems.first { $0.name == "claims" }?.value ?? "").utf8)
                 do {
@@ -1784,12 +1784,12 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            webAuthSession = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
-            return webAuthSession
+        webAuthSession.injectable.webAuthSession = {
+            mockASWebAuthSession = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            return mockASWebAuthSession
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1798,7 +1798,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         let expectedError = NSError(domain: "Test error", code: 0)
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1818,13 +1818,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackError = expectedError
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1832,7 +1832,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
     func test_authCodeOIDCFlow_missingOrInvalidCallbackURL_causesFailure() {
         let authFlowToComplete = expectation(description: "Expected auth flow to complete")
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1845,7 +1845,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingOrInvalidCallbackURL:
+                    case WebAuthenticationSession.Error.missingOrInvalidCallbackURL:
                         break
                         
                     default:
@@ -1857,13 +1857,13 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = nil
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1873,7 +1873,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -1886,7 +1886,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.mismatchedState:
+                    case WebAuthenticationSession.Error.mismatchedState:
                         break
                         
                     default:
@@ -1898,14 +1898,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)?state=someState")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1915,7 +1915,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         let redirectURLString = "mockscheme://mockhost"
         let state = UUID().uuidString
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: redirectURLString)!,
             scopes: .all,
@@ -1928,7 +1928,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
                     
                 case .failure(let error):
                     switch error {
-                    case ClientWebAuthenticationSession.Error.missingAuthCode:
+                    case WebAuthenticationSession.Error.missingAuthCode:
                         break
                         
                     default:
@@ -1940,14 +1940,14 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
             }
         )
         
-        clientWebAuthSession.injectable.state = { state }
-        clientWebAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+        webAuthSession.injectable.state = { state }
+        webAuthSession.injectable.webAuthSession = {
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(redirectURLString)?state=\(state)")
             return session
         }
         
-        clientWebAuthSession.start()
+        webAuthSession.start()
         
         wait(for: [authFlowToComplete], timeout: 1.0)
     }
@@ -1955,7 +1955,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
     func test_presentationAnchorForSession_returnsWindowOfPresentationContextProvider() {
         mockPresentationContextProvider.anchor = PresentationAnchor()
         
-        clientWebAuthSession = .init(
+        webAuthSession = .init(
             clientId: "MockClientId",
             redirectURL: URL(string: "mockscheme://mockhost")!,
             scopes: .all,
@@ -1966,7 +1966,7 @@ class ClientWebAuthenticationSessionTests: XCTestCase {
         
         let asWebAuthSession = ASWebAuthenticationSession(url: URL(string: "https://id.twitch.tv")!,
                                                           callbackURLScheme: "mockscheme") { _, _ in }
-        let anchor = clientWebAuthSession.presentationAnchor(for: asWebAuthSession)
+        let anchor = webAuthSession.presentationAnchor(for: asWebAuthSession)
         
         XCTAssertEqual(anchor, mockPresentationContextProvider.anchor, "Incorrect presentation anchor")
     }

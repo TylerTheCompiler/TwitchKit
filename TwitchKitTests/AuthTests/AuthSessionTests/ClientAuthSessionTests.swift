@@ -71,7 +71,7 @@ class ClientAuthSessionTests: XCTestCase {
         clientAuthSession.injectable.nonce = { expectedNonce }
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)#id_token=\(expectedIdToken)&access_token=\(expectedAccessTokenString)&state=\(state)")
             return session
         }
@@ -138,7 +138,7 @@ class ClientAuthSessionTests: XCTestCase {
         
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)#access_token=\(expectedAccessTokenString)&state=\(state)")
             return session
         }
@@ -188,7 +188,7 @@ class ClientAuthSessionTests: XCTestCase {
         clientAuthSession.injectable.nonce = { expectedNonce }
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)#id_token=\(expectedIdToken)&state=\(state)")
             return session
         }
@@ -232,7 +232,7 @@ class ClientAuthSessionTests: XCTestCase {
         clientAuthSession.injectable.nonce = { expectedNonce }
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)?code=\(expectedAuthCode)&state=\(state)")
             return session
         }
@@ -275,7 +275,7 @@ class ClientAuthSessionTests: XCTestCase {
         
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)?code=\(expectedAuthCode)&state=\(state)")
             return session
         }
@@ -393,7 +393,7 @@ class ClientAuthSessionTests: XCTestCase {
         
         mockAccessTokenStore.tokens[userId] = existingAccessToken
         clientAuthSession.userId = userId
-        clientAuthSession.injectable.webAuthSession = MockWebAuthSession.init
+        clientAuthSession.injectable.webAuthSession = MockASWebAuthSession.init
         
         clientAuthSession.getAccessToken { response in
             switch response.result {
@@ -469,7 +469,7 @@ class ClientAuthSessionTests: XCTestCase {
         clientAuthSession.injectable.nonce = { expectedNonce }
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)#id_token=\(expectedIdToken)&access_token=\(expectedAccessTokenString)&state=\(state)")
             return session
         }
@@ -555,7 +555,7 @@ class ClientAuthSessionTests: XCTestCase {
         clientAuthSession.injectable.nonce = { expectedNonce }
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)#id_token=\(expectedIdToken)&access_token=\(expectedAccessTokenString)&state=\(state)")
             return session
         }
@@ -621,7 +621,7 @@ class ClientAuthSessionTests: XCTestCase {
             )
         )
         
-        clientAuthSession.injectable.webAuthSession = MockWebAuthSession.init
+        clientAuthSession.injectable.webAuthSession = MockASWebAuthSession.init
         
         clientAuthSession.revokeCurrentAccessToken { response in
             if let error = response.error {
@@ -671,7 +671,7 @@ class ClientAuthSessionTests: XCTestCase {
             )
         )
         
-        clientAuthSession.injectable.webAuthSession = MockWebAuthSession.init
+        clientAuthSession.injectable.webAuthSession = MockASWebAuthSession.init
         
         clientAuthSession.revokeCurrentAccessToken { response in
             if response.error == nil {
@@ -711,7 +711,7 @@ class ClientAuthSessionTests: XCTestCase {
             urlSessionConfiguration: urlSessionConfig
         )
         
-        clientAuthSession.injectable.webAuthSession = MockWebAuthSession.init
+        clientAuthSession.injectable.webAuthSession = MockASWebAuthSession.init
         
         clientAuthSession.revokeCurrentAccessToken { response in
             if response.error == nil {
@@ -866,7 +866,7 @@ class ClientAuthSessionTests: XCTestCase {
         )
         
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.shouldCallCompletionHandler = false
             return session
         }
@@ -919,7 +919,7 @@ class ClientAuthSessionTests: XCTestCase {
         )
         
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.shouldCallCompletionHandler = false
             return session
         }
@@ -972,7 +972,7 @@ class ClientAuthSessionTests: XCTestCase {
         )
         
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.shouldCallCompletionHandler = false
             return session
         }
@@ -1033,7 +1033,7 @@ class ClientAuthSessionTests: XCTestCase {
         
         var isFirstWebAuthSession = true
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             if isFirstWebAuthSession {
                 session.shouldCallCompletionHandler = false
             } else {
@@ -1096,7 +1096,7 @@ class ClientAuthSessionTests: XCTestCase {
         clientAuthSession.injectable.nonce = { expectedNonce }
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)#id_token=\(expectedIdToken)&access_token=\(expectedAccessTokenString)&state=\(state)")
             return session
         }
@@ -1147,7 +1147,7 @@ class ClientAuthSessionTests: XCTestCase {
         
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)#access_token=\(expectedAccessTokenString)&state=\(state)")
             return session
         }
@@ -1195,7 +1195,7 @@ class ClientAuthSessionTests: XCTestCase {
         )
         
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackError = URLError(.init(rawValue: 0))
             return session
         }
@@ -1243,7 +1243,7 @@ class ClientAuthSessionTests: XCTestCase {
         )
         
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackError = URLError(.init(rawValue: 0))
             return session
         }
@@ -1291,7 +1291,7 @@ class ClientAuthSessionTests: XCTestCase {
         )
         
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackError = URLError(.init(rawValue: 0))
             return session
         }
@@ -1357,7 +1357,7 @@ class ClientAuthSessionTests: XCTestCase {
         clientAuthSession.injectable.nonce = { expectedNonce }
         clientAuthSession.injectable.state = { state }
         clientAuthSession.injectable.webAuthSession = {
-            let session = MockWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
+            let session = MockASWebAuthSession(url: $0, callbackURLScheme: $1, completionHandler: $2)
             session.callbackURL = URL(string: "\(self.redirectURLString)#id_token=\(expectedIdToken)&access_token=\(expectedAccessTokenString)&state=\(state)")
             return session
         }
@@ -1397,11 +1397,11 @@ class ClientAuthSessionTests: XCTestCase {
             urlSessionConfiguration: .default
         )
         
-        let clientWebAuthSession = ClientWebAuthenticationSession(clientId: clientId,
-                                                                  redirectURL: redirectURL,
-                                                                  scopes: scopes,
-                                                                  flow: .accessToken(forceVerify: false, completion: { _ in }))
-        let anchor = clientAuthSession.presentationAnchor(for: clientWebAuthSession)
+        let webAuthSession = WebAuthenticationSession(clientId: clientId,
+                                                      redirectURL: redirectURL,
+                                                      scopes: scopes,
+                                                      flow: .accessToken(forceVerify: false, completion: { _ in }))
+        let anchor = clientAuthSession.presentationAnchor(for: webAuthSession)
         
         XCTAssertEqual(anchor, mockPresentationContextProvider.anchor, "Incorrect presentation anchor")
     }

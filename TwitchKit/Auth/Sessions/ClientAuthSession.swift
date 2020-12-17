@@ -257,7 +257,7 @@ public class ClientAuthSession: InternalAuthSession {
             return
         }
         
-        webAuthSession = ClientWebAuthenticationSession(
+        webAuthSession = WebAuthenticationSession(
             clientId: clientId,
             redirectURL: redirectURL,
             scopes: scopes,
@@ -341,7 +341,7 @@ public class ClientAuthSession: InternalAuthSession {
             return
         }
         
-        webAuthSession = ClientWebAuthenticationSession(
+        webAuthSession = WebAuthenticationSession(
             clientId: clientId,
             redirectURL: redirectURL,
             scopes: scopes,
@@ -378,7 +378,7 @@ public class ClientAuthSession: InternalAuthSession {
             return
         }
         
-        webAuthSession = ClientWebAuthenticationSession(
+        webAuthSession = WebAuthenticationSession(
             clientId: clientId,
             redirectURL: redirectURL,
             scopes: scopes,
@@ -486,14 +486,14 @@ public class ClientAuthSession: InternalAuthSession {
     internal let accessTokenStore: AnyAuthTokenStore<ValidatedUserAccessToken>
     
     @ReaderWriterValue(wrappedValue: nil, ClientAuthSession.self, propertyName: "webAuthSession")
-    private var webAuthSession: ClientWebAuthenticationSession?
+    private var webAuthSession: WebAuthenticationSession?
     
     // For unit testing
-    internal var injectable: ClientWebAuthenticationSession.Injectable = .init()
+    internal var injectable: WebAuthenticationSession.Injectable = .init()
 }
 
-extension ClientAuthSession: SessionPresentationContextProviding {
-    internal func presentationAnchor(for session: ClientWebAuthenticationSession) -> PresentationAnchor {
+extension ClientAuthSession: WebAuthenticationSessionPresentationContextProviding {
+    internal func presentationAnchor(for session: WebAuthenticationSession) -> PresentationAnchor {
         // swiftlint:disable:next force_unwrapping
         presentationContextProvider!.presentationAnchor(for: self)
     }

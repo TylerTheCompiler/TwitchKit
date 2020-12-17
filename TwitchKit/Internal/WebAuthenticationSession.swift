@@ -1,5 +1,5 @@
 //
-//  ClientWebAuthenticationSession.swift
+//  WebAuthenticationSession.swift
 //  TwitchKit
 //
 //  Created by Tyler Prevost on 11/3/20.
@@ -8,19 +8,19 @@
 import AuthenticationServices
 
 /// An interface the Twitch web authentication session uses to ask a delegate for a presentation anchor.
-internal protocol SessionPresentationContextProviding: AnyObject {
+internal protocol WebAuthenticationSessionPresentationContextProviding: AnyObject {
     
     /// Tells the delegate from which window it should present content to the user.
     ///
-    /// - Parameter session: The session asking for the presentation anchor.
+    /// - Parameter webAuthSession: The session asking for the presentation anchor.
     /// - Returns: The window from which content should be presented to the user.
-    func presentationAnchor(for session: ClientWebAuthenticationSession) -> PresentationAnchor
+    func presentationAnchor(for webAuthSession: WebAuthenticationSession) -> PresentationAnchor
 }
 
 /// An object used for authenticating a client app with Twitch through a web browser.
-internal final class ClientWebAuthenticationSession: NSObject {
+internal final class WebAuthenticationSession: NSObject {
     
-    /// An error encountered during authentication in your client app.
+    /// An error encountered during authentication.
     internal enum Error: Swift.Error {
         
         /// Indicates that the returned callback URL is either nil or an invalid URL upon authentication completion.
@@ -105,7 +105,7 @@ internal final class ClientWebAuthenticationSession: NSObject {
     /// authorization view should be shown. A provider must be set prior to calling `start`, otherwise the
     /// authorization view cannot be displayed. If deploying to iOS prior to 13.0, the desired window is inferred
     /// by the application's key window.
-    internal weak var presentationContextProvider: SessionPresentationContextProviding?
+    internal weak var presentationContextProvider: WebAuthenticationSessionPresentationContextProviding?
     
     /// Whether the session can be successfully started.
     ///
@@ -115,7 +115,7 @@ internal final class ClientWebAuthenticationSession: NSObject {
         presentationContextProvider != nil && (webAuthSession?.canStart ?? true)
     }
     
-    /// Creates a Twitch client authentication session instance.
+    /// Creates a Twitch web authentication session instance.
     ///
     /// - Parameters:
     ///   - clientId: Your client ID.
@@ -133,7 +133,7 @@ internal final class ClientWebAuthenticationSession: NSObject {
                   redirectURL: URL,
                   scopes: Set<Scope>,
                   prefersEphemeralWebBrowserSession: Bool? = nil,
-                  presentationContextProvider: SessionPresentationContextProviding? = nil,
+                  presentationContextProvider: WebAuthenticationSessionPresentationContextProviding? = nil,
                   injectable: Injectable = .init(),
                   flow: Flow) {
         self.clientId = clientId
@@ -260,7 +260,7 @@ internal final class ClientWebAuthenticationSession: NSObject {
     
     internal var injectable: Injectable
     
-    @ReaderWriterValue(wrappedValue: nil, ClientWebAuthenticationSession.self, propertyName: "webAuthSession")
+    @ReaderWriterValue(wrappedValue: nil, WebAuthenticationSession.self, propertyName: "webAuthSession")
     internal var webAuthSession: WebAuthSessionProtocol?
     
     private func urlComponents(withState state: String) -> URLComponents {
@@ -503,7 +503,7 @@ internal final class ClientWebAuthenticationSession: NSObject {
     }
 }
 
-extension ClientWebAuthenticationSession: ASWebAuthenticationPresentationContextProviding {
+extension WebAuthenticationSession: ASWebAuthenticationPresentationContextProviding {
     internal func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         // swiftlint:disable:next force_unwrapping
         presentationContextProvider!.presentationAnchor(for: self)
