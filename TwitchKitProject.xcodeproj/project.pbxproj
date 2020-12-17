@@ -133,6 +133,8 @@
 		2F4163CA2572F4F200E94D2A /* UpdateCustomRewardRedemptionStatusRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4163C42572F4EE00E94D2A /* UpdateCustomRewardRedemptionStatusRequest.swift */; };
 		2F4163D825730C3000E94D2A /* TesterAppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4163D725730C2800E94D2A /* TesterAppData.swift */; };
 		2F4163DD25730C3100E94D2A /* TesterAppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4163D725730C2800E94D2A /* TesterAppData.swift */; };
+		2F47B367258ADC2300CADB1F /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F47B366258ADC2300CADB1F /* SafeURL.swift */; };
+		2F47B368258ADC2300CADB1F /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F47B366258ADC2300CADB1F /* SafeURL.swift */; };
 		2F60B7602551151A003C6941 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60B75F2551151A003C6941 /* AppDelegate.swift */; };
 		2F60B7622551151A003C6941 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60B7612551151A003C6941 /* SceneDelegate.swift */; };
 		2F60B7672551151A003C6941 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F60B7652551151A003C6941 /* Main.storyboard */; };
@@ -857,6 +859,7 @@
 		2F4163B82572F20000E94D2A /* UpdateCustomRewardRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCustomRewardRequest.swift; sourceTree = "<group>"; };
 		2F4163C42572F4EE00E94D2A /* UpdateCustomRewardRedemptionStatusRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCustomRewardRedemptionStatusRequest.swift; sourceTree = "<group>"; };
 		2F4163D725730C2800E94D2A /* TesterAppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesterAppData.swift; sourceTree = "<group>"; };
+		2F47B366258ADC2300CADB1F /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
 		2F60B75C2551151A003C6941 /* TwitchKitTester-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TwitchKitTester-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F60B75F2551151A003C6941 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F60B7612551151A003C6941 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -2527,6 +2530,7 @@
 			children = (
 				2FF81BA3255468B2009DE6B2 /* Dates */,
 				2F60B7D825537073003C6941 /* Pagination.swift */,
+				2F47B366258ADC2300CADB1F /* SafeURL.swift */,
 			);
 			path = PropertyWrappers;
 			sourceTree = "<group>";
@@ -3142,6 +3146,7 @@
 				2F83698A25800F32000EEFF2 /* LegacyGetChannelEditorsRequest.swift in Sources */,
 				2F7DBB32255C872D0022E56E /* ExtensionTransaction.swift in Sources */,
 				2F836B5A258061CD000EEFF2 /* LegacyGetLiveStreamsRequest.swift in Sources */,
+				2F47B367258ADC2300CADB1F /* SafeURL.swift in Sources */,
 				2F041F4B25631BF90076639C /* ChatMessageNotice.swift in Sources */,
 				2F836AE7258056F0000EEFF2 /* LegacyAddItemToCollectionRequest.swift in Sources */,
 				2F7DBCC7255CA7740022E56E /* GetWebhookSubscriptionsRequest.swift in Sources */,
@@ -3489,6 +3494,7 @@
 				2FF0A98F2558B170002FA9E8 /* KeychainAppAccessTokenStore.swift in Sources */,
 				2F7DBA92255C7AAE0022E56E /* DeleteUserFollowsRequest.swift in Sources */,
 				2F836AD825805480000EEFF2 /* LegacyCreateCollectionThumbnailRequest.swift in Sources */,
+				2F47B368258ADC2300CADB1F /* SafeURL.swift in Sources */,
 				2F7DBC5F255C906A0022E56E /* ActiveExtension.swift in Sources */,
 				2F4163CA2572F4F200E94D2A /* UpdateCustomRewardRedemptionStatusRequest.swift in Sources */,
 				2F83694C258003B3000EEFF2 /* APISession.swift in Sources */,
