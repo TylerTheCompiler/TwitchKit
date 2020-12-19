@@ -783,12 +783,12 @@ open class Chatbot {
         }
     }
     
-    private func performMultiple<T>(items: [T],
-                                    queueName: String,
-                                    function: (_ item: T,
-                                               _ completion: @escaping (_ channel: String,
-                                                                        _ error: Swift.Error?) -> Void) -> Void,
-                                    completion: MultiCompletion?) {
+    private func performMultiple<T>(
+        items: [T],
+        queueName: String,
+        function: (_ item: T, _ completion: @escaping (_ channel: String, _ error: Swift.Error?) -> Void) -> Void,
+        completion: MultiCompletion?
+    ) {
         let group = DispatchGroup()
         let queue = DispatchQueue(for: Self.self, name: queueName)
         var errors = [(channel: String, error: Swift.Error)]()
