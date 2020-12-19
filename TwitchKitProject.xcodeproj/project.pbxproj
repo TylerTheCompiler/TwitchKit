@@ -135,6 +135,8 @@
 		2F4163DD25730C3100E94D2A /* TesterAppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4163D725730C2800E94D2A /* TesterAppData.swift */; };
 		2F47B367258ADC2300CADB1F /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F47B366258ADC2300CADB1F /* SafeURL.swift */; };
 		2F47B368258ADC2300CADB1F /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F47B366258ADC2300CADB1F /* SafeURL.swift */; };
+		2F4D1021258DD8CD0000A080 /* ChatbotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */; };
+		2F4D1022258DD8CD0000A080 /* ChatbotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */; };
 		2F60B7602551151A003C6941 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60B75F2551151A003C6941 /* AppDelegate.swift */; };
 		2F60B7622551151A003C6941 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60B7612551151A003C6941 /* SceneDelegate.swift */; };
 		2F60B7672551151A003C6941 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F60B7652551151A003C6941 /* Main.storyboard */; };
@@ -862,6 +864,7 @@
 		2F4163C42572F4EE00E94D2A /* UpdateCustomRewardRedemptionStatusRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCustomRewardRedemptionStatusRequest.swift; sourceTree = "<group>"; };
 		2F4163D725730C2800E94D2A /* TesterAppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesterAppData.swift; sourceTree = "<group>"; };
 		2F47B366258ADC2300CADB1F /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
+		2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotTests.swift; sourceTree = "<group>"; };
 		2F60B75C2551151A003C6941 /* TwitchKitTester-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TwitchKitTester-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F60B75F2551151A003C6941 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F60B7612551151A003C6941 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -1418,6 +1421,14 @@
 			path = ChannelPoints;
 			sourceTree = "<group>";
 		};
+		2F4D101F258DD8B80000A080 /* ChatbotTests */ = {
+			isa = PBXGroup;
+			children = (
+				2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */,
+			);
+			path = ChatbotTests;
+			sourceTree = "<group>";
+		};
 		2F60B7532551151A003C6941 = {
 			isa = PBXGroup;
 			children = (
@@ -1561,6 +1572,7 @@
 				2FC7158C25848E700044A051 /* DeepLinkTests */,
 				2FC7159C25849AEF0044A051 /* AuthTests */,
 				2F024A472587ED9900F23916 /* APITests */,
+				2F4D101F258DD8B80000A080 /* ChatbotTests */,
 				2F60B82425538B81003C6941 /* Info.plist */,
 			);
 			path = TwitchKitTests;
@@ -3331,6 +3343,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F4D1021258DD8CD0000A080 /* ChatbotTests.swift in Sources */,
 				2FE515A3258818DB004DF306 /* HelixAPIRequestTests.swift in Sources */,
 				2F7BCABD2582576A003273D4 /* AnyAuthTokenStoreTests.swift in Sources */,
 				2FC715B02584A70F0044A051 /* AuthCodeScopeAndClaimTests.swift in Sources */,
@@ -3672,6 +3685,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F4D1022258DD8CD0000A080 /* ChatbotTests.swift in Sources */,
 				2FE515A4258818DB004DF306 /* HelixAPIRequestTests.swift in Sources */,
 				2F7BCABE2582576A003273D4 /* AnyAuthTokenStoreTests.swift in Sources */,
 				2FC715B12584A70F0044A051 /* AuthCodeScopeAndClaimTests.swift in Sources */,

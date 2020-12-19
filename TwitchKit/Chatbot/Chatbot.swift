@@ -105,7 +105,7 @@ open class Chatbot {
     open func connect(completion: ((HTTPErrorResponse) -> Void)? = nil) {
         func connect(accessToken: ValidatedUserAccessToken) {
             disconnect()
-            connection = .init(host: "irc.chat.twitch.tv", port: 6697, using: .tls)
+            connection = connectionType.init(to: .hostPort(host: "irc.chat.twitch.tv", port: 6697), using: .tls)
             connection?.stateUpdateHandler = { [weak self] state in
                 switch state {
                 case .failed, .cancelled, .waiting(.posix(.ETIMEDOUT)):
@@ -702,7 +702,7 @@ open class Chatbot {
     }
     
     private func send(command: String, completion: ((Swift.Error?) -> Void)? = nil) {
-        connection?.send(content: Data("\(command)\r\n".utf8), completion: .contentProcessed({ [weak self] error in
+        let contentProcessed = NWConnection.SendCompletion.contentProcessed { [weak self] error in
             if let completion = completion {
                 if let delegateQueue = self?.delegateQueue {
                     delegateQueue.async { completion(error) }
@@ -726,7 +726,12 @@ open class Chatbot {
                     self.delegate?.chatbot(self, didSend: command)
                 }
             }
-        }))
+        }
+        
+        connection?.send(content: Data("\(command)\r\n".utf8),
+                         contentContext: .defaultMessage,
+                         isComplete: true,
+                         completion: contentProcessed)
         
         read()
     }
@@ -835,6 +840,30 @@ open class Chatbot {
     @ReaderWriterValue(Chatbot.self, propertyName: "usersBeingAggregated")
     private var usersBeingAggregated = [String: Set<String>]()
     
-    private var connection: NWConnection?
-    private lazy var connectionQueue = DispatchQueue(for: Self.self, name: "connectionQueue")
+    internal var connection: ConnectionProtocol?
+    internal lazy var connectionQueue = DispatchQueue(for: Self.self, name: "connectionQueue")
+    
+    // For unit testing
+    internal var connectionType: ConnectionProtocol.Type = NWConnection.self
 }
+
+// For unit testing
+internal protocol ConnectionProtocol: AnyObject {
+    var stateUpdateHandler: ((NWConnection.State) -> Void)? { get set }
+    
+    init(to endpoint: NWEndpoint, using parameters: NWParameters)
+    
+    func start(queue: DispatchQueue)
+    func cancel()
+    
+    func send(content: Data?,
+              contentContext: NWConnection.ContentContext,
+              isComplete: Bool,
+              completion: NWConnection.SendCompletion)
+    
+    func receive(minimumIncompleteLength: Int,
+                 maximumLength: Int,
+                 completion: @escaping (Data?, NWConnection.ContentContext?, Bool, NWError?) -> Void)
+}
+
+extension NWConnection: ConnectionProtocol {}
