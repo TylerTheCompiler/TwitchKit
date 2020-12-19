@@ -643,8 +643,6 @@ open class Chatbot {
         connection?.receive(minimumIncompleteLength: 1, maximumLength: 1<<16) { [weak self] data, _, complete, error in
             guard let self = self else { return }
             
-            defer { self.read() }
-            
             if let error = error {
                 self.didFailToReceiveData(with: error)
                 self.tryExecutingOnDelegateQueue {
@@ -698,6 +696,8 @@ open class Chatbot {
             self.tryExecutingOnDelegateQueue {
                 self.delegate?.chatbot(self, didProcess: messages)
             }
+            
+            self.read()
         }
     }
     
