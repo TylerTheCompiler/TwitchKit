@@ -10,18 +10,20 @@ import XCTest
 @testable import TwitchKit
 
 class MockConnection: ConnectionProtocol {
-    static var startHandler: ((_ queue: DispatchQueue) -> Void)?
-    static var cancelHandler: (() -> Void)?
+    static var startHandler: ((_ connection: MockConnection, _ queue: DispatchQueue) -> Void)?
+    static var cancelHandler: ((_ connection: MockConnection) -> Void)?
     
     static var sendHandler: (
-        (_ content: Data?,
+        (_ connection: MockConnection,
+         _ content: Data?,
          _ contentContext: NWConnection.ContentContext,
          _ isComplete: Bool,
          _ completion: NWConnection.SendCompletion) -> Void
     )?
     
     static var receiveHandler: (
-        (_ minimumIncompleteLength: Int,
+        (_ connection: MockConnection,
+         _ minimumIncompleteLength: Int,
          _ maximumLength: Int,
          _ completion: @escaping (Data?, NWConnection.ContentContext?, Bool, NWError?) -> Void) -> Void
     )?
@@ -44,24 +46,24 @@ class MockConnection: ConnectionProtocol {
     }
     
     func start(queue: DispatchQueue) {
-        Self.startHandler?(queue)
+        Self.startHandler?(self, queue)
     }
     
     func cancel() {
-        Self.cancelHandler?()
+        Self.cancelHandler?(self)
     }
     
     func send(content: Data?,
               contentContext: NWConnection.ContentContext,
               isComplete: Bool,
               completion: NWConnection.SendCompletion) {
-        Self.sendHandler?(content, contentContext, isComplete, completion)
+        Self.sendHandler?(self, content, contentContext, isComplete, completion)
     }
     
     func receive(minimumIncompleteLength: Int,
                  maximumLength: Int,
                  completion: @escaping (Data?, NWConnection.ContentContext?, Bool, NWError?) -> Void) {
-        Self.receiveHandler?(minimumIncompleteLength, maximumLength, completion)
+        Self.receiveHandler?(self, minimumIncompleteLength, maximumLength, completion)
     }
 }
 
@@ -162,14 +164,16 @@ class ChatbotTests: XCTestCase, ChatbotDelegate {
         
         configureChatbot(withURLProtocolType: MockURLProtocol<RequestHandler>.self)
         
-        MockConnection.startHandler = { [weak self] queue in
-            guard let self = self else { return }
-            XCTAssertEqual(queue, self.chatbot.connectionQueue)
+        MockConnection.startHandler = { [weak self] connection, queue in
+            XCTAssertNotNil(queue)
+            XCTAssertEqual(queue, self?.chatbot.connectionQueue)
+            XCTAssertNotNil(connection.stateUpdateHandler)
+            connection.stateUpdateHandler?(.ready)
             start.fulfill()
         }
         
         var receiveCount = 0
-        MockConnection.receiveHandler = { minIncompleteLength, maxLength, completionHandler in
+        MockConnection.receiveHandler = { connection, minIncompleteLength, maxLength, completionHandler in
             defer { receiveCount += 1 }
             XCTAssertEqual(minIncompleteLength, 1)
             XCTAssertEqual(maxLength, 1<<16)
@@ -182,7 +186,7 @@ class ChatbotTests: XCTestCase, ChatbotDelegate {
         }
         
         var sendCount = 0
-        MockConnection.sendHandler = { [weak self] content, contentContext, isComplete, completion in
+        MockConnection.sendHandler = { [weak self] connection, content, contentContext, isComplete, completion in
             guard let self = self else { return }
             defer { sendCount += 1 }
             switch sendCount {
