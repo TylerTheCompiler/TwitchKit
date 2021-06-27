@@ -118,6 +118,12 @@ extension APISession where AuthSessionType == ServerUserAuthSession {
         getAccessTokenAndPerformRequest(request, completion: completion)
     }
     
+    @available(iOS 15, macOS 12, *)
+    public func perform<Request>(_ request: Request) async throws -> (Request.ResponseBody, HTTPURLResponse)
+    where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken {
+        try await getAccessTokenAndPerformRequest(request)
+    }
+    
     /// Performs an API request that requires a user access token and that does not return a response body.
     ///
     /// - Parameters:
@@ -142,6 +148,13 @@ extension APISession where AuthSessionType == ServerUserAuthSession {
                 completion(.failure(error))
             }
         }
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    @discardableResult
+    public func perform<Request>(_ request: Request) async throws -> HTTPURLResponse
+    where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken, Request.ResponseBody == EmptyCodable {
+        try await getAccessTokenAndPerformRequest(request).response
     }
     
     // MARK: - Private
@@ -189,6 +202,35 @@ extension APISession where AuthSessionType == ServerUserAuthSession {
             case .failure(let error):
                 completion(.failure(error))
             }
+        }
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    private func getAccessTokenAndPerformRequest<Request>(
+        _ request: Request
+    ) async throws -> (responseBody: Request.ResponseBody, response: HTTPURLResponse) where Request: APIRequest {
+        let (validatedAccessToken, _) = try await authSession.accessToken()
+        do {
+            return try await urlSession.callAPI(
+                with: request,
+                clientId: authSession.clientId,
+                rawAccessToken: validatedAccessToken.stringValue,
+                userId: validatedAccessToken.validation.userId
+            )
+        } catch {
+            if let error = error as? APIError, (400...401).contains(error.status) {
+                // Invalid access token, refresh and retry:
+                let (validatedAccessToken, _) = try await authSession.refreshAccessToken()
+                
+                return try await urlSession.callAPI(
+                    with: request,
+                    clientId: authSession.clientId,
+                    rawAccessToken: validatedAccessToken.stringValue,
+                    userId: validatedAccessToken.validation.userId
+                )
+            }
+            
+            throw error
         }
     }
 }

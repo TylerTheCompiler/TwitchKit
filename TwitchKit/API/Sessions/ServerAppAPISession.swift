@@ -89,6 +89,12 @@ extension APISession where AuthSessionType == ServerAppAuthSession {
         getAccessTokenAndPerformRequest(request, completion: completion)
     }
     
+    @available(iOS 15, macOS 12, *)
+    public func perform<Request>(_ request: Request) async throws -> (Request.ResponseBody, HTTPURLResponse)
+    where Request: APIRequest, Request.AppToken == ValidatedAppAccessToken {
+        try await getAccessTokenAndPerformRequest(request)
+    }
+    
     /// Performs an API request that requires an app access token and that does not return a response body.
     ///
     /// - Parameters:
@@ -115,6 +121,15 @@ extension APISession where AuthSessionType == ServerAppAuthSession {
         }
     }
     
+    @available(iOS 15, macOS 12, *)
+    @discardableResult
+    public func perform<Request>(_ request: Request) async throws -> HTTPURLResponse
+    where Request: APIRequest,
+    Request.AppToken == ValidatedAppAccessToken,
+    Request.ResponseBody == EmptyCodable {
+        try await getAccessTokenAndPerformRequest(request).response
+    }
+    
     // MARK: - Private
     
     private func getAccessTokenAndPerformRequest<Request>(
@@ -136,5 +151,18 @@ extension APISession where AuthSessionType == ServerAppAuthSession {
                 completion(.failure(error))
             }
         }
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    private func getAccessTokenAndPerformRequest<Request>(
+        _ request: Request
+    ) async throws -> (responseBody: Request.ResponseBody, response: HTTPURLResponse) where Request: APIRequest {
+        let (validatedAccessToken, _) = try await authSession.accessToken()
+        return try await urlSession.callAPI(
+            with: request,
+            clientId: authSession.clientId,
+            rawAccessToken: validatedAccessToken.stringValue,
+            userId: nil
+        )
     }
 }

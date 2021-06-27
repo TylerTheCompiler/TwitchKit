@@ -133,17 +133,16 @@ public class APISession<AuthSessionType> where AuthSessionType: AuthSession {
     
     @available(iOS 15, macOS 12, *)
     @discardableResult
-    public func perform<Request>(
-        _ request: Request
-    ) async throws -> HTTPURLResponse where Request: APIRequest,
-                                            Request.UserToken == IncompatibleAccessToken,
-                                            Request.AppToken == IncompatibleAccessToken,
-                                            Request.ResponseBody == EmptyCodable {
+    public func perform<Request>(_ request: Request) async throws -> HTTPURLResponse
+    where Request: APIRequest,
+    Request.UserToken == IncompatibleAccessToken,
+    Request.AppToken == IncompatibleAccessToken,
+    Request.ResponseBody == EmptyCodable {
         try await urlSession.callAPI(
             with: request,
             clientId: authSession.clientId,
             rawAccessToken: nil,
             userId: nil
-        ).1
+        ).response
     }
 }

@@ -193,7 +193,7 @@ extension APISession where AuthSessionType == ClientAuthSession {
         authFlow: ClientAuthSession.AuthFlow? = nil
     ) async throws -> HTTPURLResponse
     where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken, Request.ResponseBody == EmptyCodable {
-        try await getAccessTokenAndPerformRequest(request, authFlow: authFlow).1
+        try await getAccessTokenAndPerformRequest(request, authFlow: authFlow).response
     }
     
     // MARK: - Private
@@ -250,7 +250,7 @@ extension APISession where AuthSessionType == ClientAuthSession {
     private func getAccessTokenAndPerformRequest<Request>(
         _ request: Request,
         authFlow: ClientAuthSession.AuthFlow?
-    ) async throws -> (Request.ResponseBody, HTTPURLResponse) where Request: APIRequest {
+    ) async throws -> (responseBody: Request.ResponseBody, response: HTTPURLResponse) where Request: APIRequest {
         let (validatedAccessToken, _, _) = try await authSession.accessToken(reauthorizeUsing: authFlow)
         do {
             return try await urlSession.callAPI(

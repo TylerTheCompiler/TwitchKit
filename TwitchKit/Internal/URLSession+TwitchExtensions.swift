@@ -319,7 +319,7 @@ extension URLSession {
         clientId: String,
         rawAccessToken: String?,
         userId: String?
-    ) async throws -> (Request.ResponseBody, HTTPURLResponse) where Request: APIRequest {
+    ) async throws -> (responseBody: Request.ResponseBody, response: HTTPURLResponse) where Request: APIRequest {
         var request = request
         if let userId = userId {
             request.update(with: userId)
