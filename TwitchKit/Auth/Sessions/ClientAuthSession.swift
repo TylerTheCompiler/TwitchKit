@@ -7,6 +7,7 @@
 
 /// An auth session to be used in your client app for authorizing a user through Twitch via a webview.
 public class ClientAuthSession: InternalAuthSession {
+    // swiftlint:disable:previous type_body_length
     
     /// Error type for client auth sessions.
     public enum Error: Swift.Error {

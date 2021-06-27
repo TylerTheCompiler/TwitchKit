@@ -35,6 +35,7 @@ type_name:
 line_length:
   ignores_comments: true
   ignores_interpolated_strings: true
+  warning: 127
 
 file_length:
   ignore_comment_only_lines: true

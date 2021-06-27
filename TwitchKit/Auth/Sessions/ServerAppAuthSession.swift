@@ -5,6 +5,8 @@
 //  Created by Tyler Prevost on 12/7/20.
 //
 
+import Foundation
+
 /// An auth session to be used on your server for authorizing your Twitch application.
 ///
 /// - Important: Since this auth session requires your client secret, you should NOT use this auth session
@@ -79,6 +81,11 @@ public class ServerAppAuthSession: InternalAuthSession {
         accessTokenStore.fetchAuthToken(forUserId: nil, completion: completion)
     }
     
+    @available(iOS 15, macOS 12, *)
+    public func currentAccessToken() async throws -> ValidatedAppAccessToken {
+        try await accessTokenStore.authToken(forUserId: nil)
+    }
+    
     // MARK: - Public
     
     /// Returns (via a completion handler) either the current stored user access token after validating it
@@ -130,6 +137,20 @@ public class ServerAppAuthSession: InternalAuthSession {
         }
     }
     
+    @available(iOS 15, macOS 12, *)
+    public func accessToken() async throws -> (ValidatedAppAccessToken, HTTPURLResponse?) {
+        do {
+            let validatedAccessToken = try await accessTokenStore.authToken(forUserId: nil)
+            if validatedAccessToken.validation.isRecent {
+                return (validatedAccessToken, nil)
+            }
+        
+            return try await validateAndStore(accessToken: validatedAccessToken.unvalidated)
+        } catch {
+            return try await newAccessToken()
+        }
+    }
+    
     /// Authorizes the Twitch application through Twitch using the client credentials flow.
     ///
     /// - Parameters:
@@ -149,6 +170,17 @@ public class ServerAppAuthSession: InternalAuthSession {
                 completion(.failure(error))
             }
         }.resume()
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    public func newAccessToken() async throws -> (ValidatedAppAccessToken, HTTPURLResponse) {
+        let (accessTokenResponse, _) = try await urlSession.authorize(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            scopes: scopes
+        )
+        
+        return try await validateAndStore(accessToken: accessTokenResponse.accessToken)
     }
     
     /// Revokes the current app access token if one exists in the access token store.
@@ -182,6 +214,15 @@ public class ServerAppAuthSession: InternalAuthSession {
         }
     }
     
+    @available(iOS 15, macOS 12, *)
+    @discardableResult
+    public func revokeCurrentAccessToken() async throws -> HTTPURLResponse {
+        let accessToken = try await accessTokenStore.authToken(forUserId: nil)
+        let response = try await urlSession.revoke(token: accessToken, clientId: clientId)
+        try await accessTokenStore.removeAuthToken(forUserId: nil)
+        return response
+    }
+    
     // MARK: - Private
     
     private func validateAndStore(
@@ -204,6 +245,15 @@ public class ServerAppAuthSession: InternalAuthSession {
                 completion(.failure(error))
             }
         }.resume()
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    private func validateAndStore(accessToken: AppAccessToken) async throws -> (ValidatedAppAccessToken, HTTPURLResponse) {
+        let (validation, response) = try await urlSession.validate(token: accessToken)
+        let validatedAccessToken = ValidatedAppAccessToken(stringValue: accessToken.stringValue,
+                                                           validation: validation)
+        try await accessTokenStore.store(authToken: validatedAccessToken, forUserId: nil)
+        return (validatedAccessToken, response)
     }
     
     internal let urlSession: URLSession
