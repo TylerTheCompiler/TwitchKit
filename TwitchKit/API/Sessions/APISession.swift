@@ -83,7 +83,7 @@ public class APISession<AuthSessionType> where AuthSessionType: AuthSession {
             rawAccessToken: nil,
             userId: nil,
             completion: completion
-        ).resume()
+        )?.resume()
     }
     
     /// Performs an API request that does not require authorization and that does not return a response body.
@@ -115,6 +115,6 @@ public class APISession<AuthSessionType> where AuthSessionType: AuthSession {
             case .failure(let error):
                 completion(.failure(error))
             }
-        }.resume()
+        }?.resume()
     }
 }

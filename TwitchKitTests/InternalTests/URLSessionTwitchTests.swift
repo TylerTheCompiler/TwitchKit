@@ -956,7 +956,7 @@ class URLSessionTwitchTests: XCTestCase {
             }
             
             apiTaskToFinish.fulfill()
-        }.resume()
+        }?.resume()
         
         wait(for: [apiTaskToFinish], timeout: 1.0)
     }
@@ -1006,7 +1006,7 @@ class URLSessionTwitchTests: XCTestCase {
             }
             
             apiTaskToFinish.fulfill()
-        }.resume()
+        }?.resume()
         
         wait(for: [apiTaskToFinish], timeout: 1.0)
     }
@@ -1049,7 +1049,7 @@ class URLSessionTwitchTests: XCTestCase {
             }
             
             apiTaskToFinish.fulfill()
-        }.resume()
+        }?.resume()
         
         wait(for: [apiTaskToFinish], timeout: 1.0)
     }
@@ -1099,7 +1099,7 @@ class URLSessionTwitchTests: XCTestCase {
             }
             
             apiTaskToFinish.fulfill()
-        }.resume()
+        }?.resume()
         
         wait(for: [apiTaskToFinish], timeout: 1.0)
     }

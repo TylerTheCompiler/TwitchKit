@@ -130,7 +130,7 @@ extension APISession where AuthSessionType == ServerAppAuthSession {
                     rawAccessToken: validatedAccessToken.stringValue,
                     userId: nil,
                     completion: completion
-                ).resume()
+                )?.resume()
                 
             case .failure(let error):
                 completion(.failure(error))

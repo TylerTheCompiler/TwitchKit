@@ -209,7 +209,7 @@ extension APISession where AuthSessionType == ClientAuthSession {
                                         rawAccessToken: validatedAccessToken.stringValue,
                                         userId: validatedAccessToken.validation.userId,
                                         completion: completion
-                                    ).resume()
+                                    )?.resume()
                                     
                                 case .failure(let error):
                                     completion(.failure(error))
@@ -219,7 +219,7 @@ extension APISession where AuthSessionType == ClientAuthSession {
                             completion(.failure(error))
                         }
                     }
-                }.resume()
+                }?.resume()
                 
             case .failure(let error):
                 completion(.failure(error))
