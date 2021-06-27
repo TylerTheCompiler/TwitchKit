@@ -145,6 +145,15 @@ extension APISession where AuthSessionType == ClientAuthSession {
         getAccessTokenAndPerformRequest(request, authFlow: authFlow, completion: completion)
     }
     
+    @available(iOS 15, macOS 12, *)
+    public func perform<Request>(
+        _ request: Request,
+        authFlow: ClientAuthSession.AuthFlow? = nil
+    ) async throws -> (Request.ResponseBody, HTTPURLResponse)
+    where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken {
+        try await getAccessTokenAndPerformRequest(request, authFlow: authFlow)
+    }
+    
     /// Performs an API request that requires a user access token and that does not return a response body.
     ///
     /// If authorization is needed, the user is prompted to sign in to Twitch with the provided auth flow,
@@ -175,6 +184,16 @@ extension APISession where AuthSessionType == ClientAuthSession {
                 completion(.failure(error))
             }
         }
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    @discardableResult
+    public func perform<Request>(
+        _ request: Request,
+        authFlow: ClientAuthSession.AuthFlow? = nil
+    ) async throws -> HTTPURLResponse
+    where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken, Request.ResponseBody == EmptyCodable {
+        try await getAccessTokenAndPerformRequest(request, authFlow: authFlow).1
     }
     
     // MARK: - Private
@@ -224,6 +243,36 @@ extension APISession where AuthSessionType == ClientAuthSession {
             case .failure(let error):
                 completion(.failure(error))
             }
+        }
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    private func getAccessTokenAndPerformRequest<Request>(
+        _ request: Request,
+        authFlow: ClientAuthSession.AuthFlow?
+    ) async throws -> (Request.ResponseBody, HTTPURLResponse) where Request: APIRequest {
+        let (validatedAccessToken, _, _) = try await authSession.accessToken(reauthorizeUsing: authFlow)
+        do {
+            return try await urlSession.callAPI(
+                with: request,
+                clientId: authSession.clientId,
+                rawAccessToken: validatedAccessToken.stringValue,
+                userId: validatedAccessToken.validation.userId
+            )
+        } catch {
+            if let error = error as? APIError, (400...401).contains(error.status) {
+                // Invalid access token, reauthorize and retry:
+                let (validatedAccessToken, _, _) = try await authSession.newAccessToken(using: authFlow)
+                
+                return try await urlSession.callAPI(
+                    with: request,
+                    clientId: authSession.clientId,
+                    rawAccessToken: validatedAccessToken.stringValue,
+                    userId: validatedAccessToken.validation.userId
+                )
+            }
+            
+            throw error
         }
     }
 }

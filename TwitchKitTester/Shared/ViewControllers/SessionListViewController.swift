@@ -479,14 +479,32 @@ extension SessionListViewController {
             presentationContextProvider: self
         )
         
-        session.getNewAccessToken { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success((let validatedAccessToken, _, _)):
+        if #available(iOS 15, macOS 12, *) {
+            #if os(iOS)
+            async {
+                let (validatedAccessToken, _, _) = try await session.newAccessToken()
+                await MainActor.run {
                     self.addClientAuthSession(session, for: validatedAccessToken.validation.userId)
-                    
-                case .failure(let error):
-                    print("Auth error:", error)
+                }
+            }
+            #elseif os(macOS)
+            Task.init {
+                let (validatedAccessToken, _, _) = try await session.newAccessToken()
+                await MainActor.run {
+                    self.addClientAuthSession(session, for: validatedAccessToken.validation.userId)
+                }
+            }
+            #endif
+        } else {
+            session.getNewAccessToken { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success((let validatedAccessToken, _, _)):
+                        self.addClientAuthSession(session, for: validatedAccessToken.validation.userId)
+                        
+                    case .failure(let error):
+                        print("Auth error:", error)
+                    }
                 }
             }
         }

@@ -14,6 +14,9 @@ public class ClientAuthSession: InternalAuthSession {
         /// An error that denotes that an authorization flow was attempted,
         /// but there is already an authorization flow in progress.
         case operationInProgress
+        
+        /// <#description#>
+        case authSessionDeallocated
     }
     
     /// Describes the type of authorization flow that a Client API session may use.
@@ -189,6 +192,11 @@ public class ClientAuthSession: InternalAuthSession {
         accessTokenStore.fetchAuthToken(forUserId: userId, completion: completion)
     }
     
+    @available(iOS 15, macOS 12, *)
+    public func currentAccessToken() async throws -> ValidatedUserAccessToken {
+        try await accessTokenStore.authToken(forUserId: userId)
+    }
+    
     /// Returns (via a completion handler) either the current stored user access token after validating it,
     /// or if there is no stored user access token then prompts the user for authorization using the provided
     /// auth flow.
@@ -248,6 +256,23 @@ public class ClientAuthSession: InternalAuthSession {
         }
     }
     
+    @available(iOS 15, macOS 12, *)
+    public func accessToken(
+        reauthorizeUsing authFlow: AuthFlow? = nil
+    ) async throws -> (accessToken: ValidatedUserAccessToken, idToken: IdToken?, response: HTTPURLResponse?) {
+        let validatedAccessToken = try await accessTokenStore.authToken(forUserId: userId)
+        if validatedAccessToken.validation.isRecent {
+            return (validatedAccessToken, nil, nil)
+        }
+        
+        do {
+            let (newValidatedAccessToken, response) = try await validateAndStore(validatedAccessToken.unvalidated)
+            return (newValidatedAccessToken, nil, response)
+        } catch {
+            return try await newAccessToken(using: authFlow)
+        }
+    }
+    
     /// Prompts the user for authorization using the provided auth flow.
     ///
     /// If the auth session is not in a state to be able to authorize (i.e. if `canAuthorize` returns false),
@@ -286,11 +311,16 @@ public class ClientAuthSession: InternalAuthSession {
                 switch authFlow ?? defaultAuthFlow {
                 case .oAuth(let forceVerify):
                     return .accessToken(forceVerify: forceVerify) { [weak self] result in
-                        self?.webAuthSession = nil
+                        guard let self = self else {
+                            completion(.failure(Error.authSessionDeallocated))
+                            return
+                        }
+                        
+                        self.webAuthSession = nil
                         
                         switch result {
                         case .success(let accessToken):
-                            self?.validateAndStore(accessToken) { result in
+                            self.validateAndStore(accessToken) { result in
                                 switch result {
                                 case .success((let validatedAccessToken, let response)):
                                     completion(.success((validatedAccessToken, nil, response)))
@@ -311,11 +341,16 @@ public class ClientAuthSession: InternalAuthSession {
                         idTokenClaims: idTokenClaims,
                         userinfoClaims: userInfoClaims
                     ) { [weak self] result in
-                        self?.webAuthSession = nil
+                        guard let self = self else {
+                            completion(.failure(Error.authSessionDeallocated))
+                            return
+                        }
+                        
+                        self.webAuthSession = nil
                         
                         switch result {
                         case .success((let idToken, let accessToken)):
-                            self?.validateAndStore(accessToken) { result in
+                            self.validateAndStore(accessToken) { result in
                                 switch result {
                                 case .success((let validatedAccessToken, let response)):
                                     completion(.success((validatedAccessToken, idToken, response)))
@@ -334,6 +369,87 @@ public class ClientAuthSession: InternalAuthSession {
         )
         
         webAuthSession?.start()
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    public func newAccessToken(
+        using authFlow: AuthFlow? = nil
+    ) async throws -> (accessToken: ValidatedUserAccessToken, idToken: IdToken?, response: HTTPURLResponse) {
+        guard canAuthorize else {
+            throw Error.operationInProgress
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            webAuthSession = WebAuthenticationSession(
+                clientId: clientId,
+                redirectURL: redirectURL,
+                scopes: scopes,
+                prefersEphemeralWebBrowserSession: prefersEphemeralWebBrowserSession,
+                presentationContextProvider: self,
+                injectable: injectable,
+                flow: {
+                    switch authFlow ?? defaultAuthFlow {
+                    case .oAuth(let forceVerify):
+                        return .accessToken(forceVerify: forceVerify) { [weak self] result in
+                            guard let self = self else {
+                                continuation.resume(throwing: Error.authSessionDeallocated)
+                                return
+                            }
+                            
+                            self.webAuthSession = nil
+                            
+                            switch result {
+                            case .success(let accessToken):
+                                self.validateAndStore(accessToken) { result in
+                                    switch result {
+                                    case .success((let validatedAccessToken, let response)):
+                                        continuation.resume(returning: (validatedAccessToken, nil, response))
+                                        
+                                    case .failure(let error):
+                                        continuation.resume(throwing: error)
+                                    }
+                                }
+                                
+                            case .failure(let error):
+                                continuation.resume(throwing: error)
+                            }
+                        }
+                        
+                    case .openId(let claims, let idTokenClaims, let userInfoClaims):
+                        return .idAndAccessToken(
+                            claims: claims,
+                            idTokenClaims: idTokenClaims,
+                            userinfoClaims: userInfoClaims
+                        ) { [weak self] result in
+                            guard let self = self else {
+                                continuation.resume(throwing: Error.authSessionDeallocated)
+                                return
+                            }
+                            
+                            self.webAuthSession = nil
+                            
+                            switch result {
+                            case .success((let idToken, let accessToken)):
+                                self.validateAndStore(accessToken) { result in
+                                    switch result {
+                                    case .success((let validatedAccessToken, let response)):
+                                        continuation.resume(returning: (validatedAccessToken, idToken, response))
+                                        
+                                    case .failure(let error):
+                                        continuation.resume(throwing: error)
+                                    }
+                                }
+                                
+                            case .failure(let error):
+                                continuation.resume(throwing: error)
+                            }
+                        }
+                    }
+                }()
+            )
+            
+            webAuthSession?.start()
+        }
     }
     
     /// Authenticates a user through Twitch with a set of claims, returning an ID token through
@@ -370,13 +486,53 @@ public class ClientAuthSession: InternalAuthSession {
                 claims: claims,
                 idTokenClaims: idTokenClaims,
                 userinfoClaims: userinfoClaims
-            ) { result in
+            ) { [weak self] result in
+                guard let self = self else {
+                    completion(.failure(Error.authSessionDeallocated))
+                    return
+                }
+                
                 self.webAuthSession = nil
                 completion(result)
             }
         )
         
         webAuthSession?.start()
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    public func idToken(claims: Set<Claim> = [],
+                        idTokenClaims: Set<Claim> = [],
+                        userinfoClaims: Set<Claim> = []) async throws -> IdToken {
+        guard canAuthorize else {
+            throw Error.operationInProgress
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            webAuthSession = WebAuthenticationSession(
+                clientId: clientId,
+                redirectURL: redirectURL,
+                scopes: scopes,
+                prefersEphemeralWebBrowserSession: prefersEphemeralWebBrowserSession,
+                presentationContextProvider: self,
+                injectable: injectable,
+                flow: .idToken(
+                    claims: claims,
+                    idTokenClaims: idTokenClaims,
+                    userinfoClaims: userinfoClaims
+                ) { [weak self] result in
+                    guard let self = self else {
+                        continuation.resume(throwing: Error.authSessionDeallocated)
+                        return
+                    }
+                    
+                    self.webAuthSession = nil
+                    continuation.resume(with: result)
+                }
+            )
+            
+            webAuthSession?.start()
+        }
     }
     
     /// Prompts the user to authenticate and returns (via a completion handler) an auth code (and nonce)
@@ -406,7 +562,14 @@ public class ClientAuthSession: InternalAuthSession {
             flow: {
                 switch authFlow ?? defaultAuthFlow {
                 case .oAuth(let forceVerify):
-                    return .authCodeUsingOAuth(forceVerify: forceVerify) { result in
+                    return .authCodeUsingOAuth(forceVerify: forceVerify) { [weak self] result in
+                        guard let self = self else {
+                            completion(.failure(Error.authSessionDeallocated))
+                            return
+                        }
+                        
+                        self.webAuthSession = nil
+                        
                         switch result {
                         case .success(let authCode):
                             completion(.success((authCode, nil)))
@@ -421,7 +584,14 @@ public class ClientAuthSession: InternalAuthSession {
                         claims: claims,
                         idTokenClaims: idTokenClaims,
                         userinfoClaims: userinfoClaims
-                    ) { result in
+                    ) { [weak self] result in
+                        guard let self = self else {
+                            completion(.failure(Error.authSessionDeallocated))
+                            return
+                        }
+                        
+                        self.webAuthSession = nil
+                        
                         switch result {
                         case .success((let authCode, let nonce)):
                             completion(.success((authCode, nonce)))
@@ -435,6 +605,69 @@ public class ClientAuthSession: InternalAuthSession {
         )
         
         webAuthSession?.start()
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    public func authCode(using authFlow: AuthFlow? = nil) async throws -> (authCode: AuthCode, nonce: String?) {
+        guard canAuthorize else {
+            throw Error.operationInProgress
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            webAuthSession = WebAuthenticationSession(
+                clientId: clientId,
+                redirectURL: redirectURL,
+                scopes: scopes,
+                prefersEphemeralWebBrowserSession: prefersEphemeralWebBrowserSession,
+                presentationContextProvider: self,
+                injectable: injectable,
+                flow: {
+                    switch authFlow ?? defaultAuthFlow {
+                    case .oAuth(let forceVerify):
+                        return .authCodeUsingOAuth(forceVerify: forceVerify) { [weak self] result in
+                            guard let self = self else {
+                                continuation.resume(throwing: Error.authSessionDeallocated)
+                                return
+                            }
+                            
+                            self.webAuthSession = nil
+                            
+                            switch result {
+                            case .success(let authCode):
+                                continuation.resume(returning: (authCode, nil))
+                                
+                            case .failure(let error):
+                                continuation.resume(throwing: error)
+                            }
+                        }
+                        
+                    case .openId(let claims, let idTokenClaims, let userinfoClaims):
+                        return .authCodeUsingOIDC(
+                            claims: claims,
+                            idTokenClaims: idTokenClaims,
+                            userinfoClaims: userinfoClaims
+                        ) { [weak self] result in
+                            guard let self = self else {
+                                continuation.resume(throwing: Error.authSessionDeallocated)
+                                return
+                            }
+                            
+                            self.webAuthSession = nil
+                            
+                            switch result {
+                            case .success((let authCode, let nonce)):
+                                continuation.resume(returning: (authCode, nonce))
+                                
+                            case .failure(let error):
+                                continuation.resume(throwing: error)
+                            }
+                        }
+                    }
+                }()
+            )
+            
+            webAuthSession?.start()
+        }
     }
     
     /// Cancels any current auth flow.
@@ -477,6 +710,15 @@ public class ClientAuthSession: InternalAuthSession {
         }
     }
     
+    @available(iOS 15, macOS 12, *)
+    @discardableResult
+    public func revokeCurrentAccessToken() async throws -> HTTPURLResponse {
+        let accessToken = try await accessTokenStore.authToken(forUserId: userId)
+        let response = try await urlSession.revoke(token: accessToken, clientId: clientId)
+        try await accessTokenStore.removeAuthToken(forUserId: userId)
+        return response
+    }
+    
     // MARK: - Private
     
     private func validateAndStore(
@@ -504,6 +746,21 @@ public class ClientAuthSession: InternalAuthSession {
                 completion(.failure(error))
             }
         }.resume()
+    }
+    
+    @available(iOS 15, macOS 12, *)
+    private func validateAndStore(
+        _ accessToken: UserAccessToken
+    ) async throws -> (ValidatedUserAccessToken, HTTPURLResponse) {
+        let (validation, response) = try await urlSession.validate(token: accessToken)
+        self.userId = validation.userId
+        
+        let newValidatedAccessToken = ValidatedUserAccessToken(stringValue: accessToken.stringValue,
+                                                               validation: validation)
+        try await accessTokenStore.store(authToken: newValidatedAccessToken,
+                                         forUserId: newValidatedAccessToken.validation.userId)
+        
+        return (newValidatedAccessToken, response)
     }
     
     internal let urlSession: URLSession

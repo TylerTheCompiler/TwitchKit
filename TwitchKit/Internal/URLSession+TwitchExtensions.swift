@@ -43,7 +43,7 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, *)
+    @available(iOS 15, macOS 12, *)
     internal func authorize(
         clientId: String,
         clientSecret: String,
@@ -78,7 +78,7 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, *)
+    @available(iOS 15, macOS 12, *)
     internal func authorize(
         clientId: String,
         clientSecret: String,
@@ -110,7 +110,7 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, *)
+    @available(iOS 15, macOS 12, *)
     internal func authorize(
         clientId: String,
         clientSecret: String,
@@ -138,7 +138,7 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, *)
+    @available(iOS 15, macOS 12, *)
     internal func validate<AccessTokenType>(
         token: AccessTokenType
     ) async throws -> (AccessTokenType.ValidAccessTokenType.Validation, HTTPURLResponse)
@@ -179,7 +179,7 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, *)
+    @available(iOS 15, macOS 12, *)
     internal func revoke<AccessTokenType>(
         token: AccessTokenType,
         clientId: String
@@ -232,7 +232,7 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, *)
+    @available(iOS 15, macOS 12, *)
     internal func refresh(
         with refreshToken: RefreshToken,
         clientId: String,
@@ -313,7 +313,7 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, *)
+    @available(iOS 15, macOS 12, *)
     internal func callAPI<Request>(
         with request: Request,
         clientId: String,

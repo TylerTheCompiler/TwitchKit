@@ -41,4 +41,31 @@ extension AuthTokenStoring {
     public func removeAuthToken(forUserId userId: String?, completion: ((_ error: Error?) -> Void)? = nil) {
         store(authToken: nil, forUserId: userId, completion: completion)
     }
+    
+    @available(iOS 15.0, macOS 12, *)
+    public func authToken(forUserId userId: String?) async throws -> Token {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchAuthToken(forUserId: userId) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    @available(iOS 15.0, macOS 12, *)
+    public func store(authToken: Token?, forUserId userId: String?) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            self.store(authToken: authToken, forUserId: userId) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    @available(iOS 15.0, macOS 12, *)
+    public func removeAuthToken(forUserId userId: String?) async throws {
+        try await store(authToken: nil, forUserId: userId)
+    }
 }
