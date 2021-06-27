@@ -76,9 +76,9 @@ class ClientAuthSessionTests: XCTestCase {
             return session
         }
         
-        clientAuthSession.getNewAccessToken { response in
-            switch response.result {
-            case .success((let accessToken, let idToken)):
+        clientAuthSession.getNewAccessToken { result in
+            switch result {
+            case .success((let accessToken, let idToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -143,9 +143,9 @@ class ClientAuthSessionTests: XCTestCase {
             return session
         }
         
-        clientAuthSession.getNewAccessToken { response in
-            switch response.result {
-            case .success((let accessToken, let idToken)):
+        clientAuthSession.getNewAccessToken { result in
+            switch result {
+            case .success((let accessToken, let idToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -328,9 +328,9 @@ class ClientAuthSessionTests: XCTestCase {
         mockAccessTokenStore.tokens[userId] = expectedAccessToken
         clientAuthSession.userId = userId
         
-        clientAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success((let accessToken, _)):
+        clientAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, _, _)):
                 XCTAssertEqual(accessToken, expectedAccessToken, "Incorrect access token")
                 
             case .failure(let error):
@@ -395,9 +395,9 @@ class ClientAuthSessionTests: XCTestCase {
         clientAuthSession.userId = userId
         clientAuthSession.injectable.webAuthSession = MockASWebAuthSession.init
         
-        clientAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success((let accessToken, _)):
+        clientAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, _, _)):
                 XCTAssertEqual(accessToken.stringValue, existingAccessToken.stringValue,
                                "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, existingAccessToken.validation.clientId,
@@ -488,9 +488,9 @@ class ClientAuthSessionTests: XCTestCase {
         mockAccessTokenStore.tokens[userId] = existingAccessToken
         clientAuthSession.userId = userId
         
-        clientAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success((let accessToken, _)):
+        clientAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, _, _)):
                 XCTAssertEqual(accessToken.stringValue, existingAccessToken.stringValue,
                                "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, existingAccessToken.validation.clientId,
@@ -562,9 +562,9 @@ class ClientAuthSessionTests: XCTestCase {
         
         clientAuthSession.userId = userId
         
-        clientAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success((let accessToken, let idToken)):
+        clientAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, let idToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -623,8 +623,12 @@ class ClientAuthSessionTests: XCTestCase {
         
         clientAuthSession.injectable.webAuthSession = MockASWebAuthSession.init
         
-        clientAuthSession.revokeCurrentAccessToken { response in
-            if let error = response.error {
+        clientAuthSession.revokeCurrentAccessToken { result in
+            switch result {
+            case .success:
+                break
+                
+            case .failure(let error):
                 XCTFail("Expected revoke to not fail, got: \(error)")
             }
             
@@ -673,9 +677,13 @@ class ClientAuthSessionTests: XCTestCase {
         
         clientAuthSession.injectable.webAuthSession = MockASWebAuthSession.init
         
-        clientAuthSession.revokeCurrentAccessToken { response in
-            if response.error == nil {
+        clientAuthSession.revokeCurrentAccessToken { result in
+            switch result {
+            case .success:
                 XCTFail("Expected revoke to return error")
+                
+            case .failure:
+                break
             }
             
             taskToFinish.fulfill()
@@ -713,9 +721,13 @@ class ClientAuthSessionTests: XCTestCase {
         
         clientAuthSession.injectable.webAuthSession = MockASWebAuthSession.init
         
-        clientAuthSession.revokeCurrentAccessToken { response in
-            if response.error == nil {
+        clientAuthSession.revokeCurrentAccessToken { result in
+            switch result {
+            case .success:
                 XCTFail("Expected revoke to return error")
+                
+            case .failure:
+                break
             }
             
             taskToFinish.fulfill()
@@ -873,8 +885,8 @@ class ClientAuthSessionTests: XCTestCase {
         
         clientAuthSession.getNewAccessToken { _ in }
         
-        clientAuthSession.getNewAccessToken { response in
-            switch response.result {
+        clientAuthSession.getNewAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
@@ -1101,8 +1113,8 @@ class ClientAuthSessionTests: XCTestCase {
             return session
         }
         
-        clientAuthSession.getNewAccessToken { response in
-            switch response.result {
+        clientAuthSession.getNewAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
@@ -1152,8 +1164,8 @@ class ClientAuthSessionTests: XCTestCase {
             return session
         }
         
-        clientAuthSession.getNewAccessToken { response in
-            switch response.result {
+        clientAuthSession.getNewAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
@@ -1200,8 +1212,8 @@ class ClientAuthSessionTests: XCTestCase {
             return session
         }
         
-        clientAuthSession.getNewAccessToken { response in
-            switch response.result {
+        clientAuthSession.getNewAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
@@ -1362,8 +1374,8 @@ class ClientAuthSessionTests: XCTestCase {
             return session
         }
         
-        clientAuthSession.getNewAccessToken { response in
-            switch response.result {
+        clientAuthSession.getNewAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 

@@ -479,10 +479,10 @@ extension SessionListViewController {
             presentationContextProvider: self
         )
         
-        session.getNewAccessToken { response in
+        session.getNewAccessToken { result in
             DispatchQueue.main.async {
-                switch response.result {
-                case .success((let validatedAccessToken, _)):
+                switch result {
+                case .success((let validatedAccessToken, _, _)):
                     self.addClientAuthSession(session, for: validatedAccessToken.validation.userId)
                     
                 case .failure(let error):
@@ -515,10 +515,10 @@ extension SessionListViewController {
                     refreshTokenStore: self.serverRefreshTokenStore
                 )
                 
-                session.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { response in
+                session.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { result in
                     DispatchQueue.main.async {
-                        switch response.result {
-                        case .success((let validatedAccessToken, _)):
+                        switch result {
+                        case .success((let validatedAccessToken, _, _)):
                             self.addUserServerAuthSession(session, for: validatedAccessToken.validation.userId)
                             
                         case .failure(let error):
@@ -541,9 +541,9 @@ extension SessionListViewController {
             accessTokenStore: appAccessTokenStore
         )
         
-        session.getNewAccessToken { response in
+        session.getNewAccessToken { result in
             DispatchQueue.main.async {
-                switch response.result {
+                switch result {
                 case .success:
                     self.setAppServerAuthSession(session)
                     

@@ -35,11 +35,14 @@ class JSONCodingExtensionTests: XCTestCase {
             let expectedUnderlyingError = NSError(
                 domain: NSCocoaErrorDomain,
                 code: NSPropertyListReadCorruptError,
-                userInfo: [NSDebugDescriptionErrorKey: "No value."]
+                userInfo: nil
             )
             
-            XCTAssertEqual(context.underlyingError as NSError?, expectedUnderlyingError,
-                           "Incorrect underlying error.")
+            let underlyingError = context.underlyingError as NSError?
+            XCTAssertEqual(expectedUnderlyingError.domain, underlyingError?.domain,
+                           "Incorrect underlying error domain.")
+            XCTAssertEqual(expectedUnderlyingError.code, underlyingError?.code,
+                           "Incorrect underlying error code.")
         } catch {
             XCTFail("Expected DecodingError.dataCorrupted, got: \(error)")
         }

@@ -138,7 +138,7 @@ extension APISession where AuthSessionType == ClientAuthSession {
     public func perform<Request>(
         _ request: Request,
         authFlow: ClientAuthSession.AuthFlow? = nil,
-        completion: @escaping (_ response: HTTPResponse<Request.ResponseBody, Error>) -> Void
+        completion: @escaping (_ response: Result<(Request.ResponseBody, HTTPURLResponse), Error>) -> Void
     ) where
         Request: APIRequest,
         Request.UserToken == ValidatedUserAccessToken {
@@ -161,18 +161,18 @@ extension APISession where AuthSessionType == ClientAuthSession {
     public func perform<Request>(
         _ request: Request,
         authFlow: ClientAuthSession.AuthFlow? = nil,
-        completion: @escaping (_ response: HTTPErrorResponse) -> Void
+        completion: @escaping (_ response: Result<HTTPURLResponse, Error>) -> Void
     ) where
         Request: APIRequest,
         Request.UserToken == ValidatedUserAccessToken,
         Request.ResponseBody == EmptyCodable {
-        getAccessTokenAndPerformRequest(request, authFlow: authFlow) { response in
-            switch response.result {
-            case .success:
-                completion(.init(nil, response.httpURLResponse))
+        getAccessTokenAndPerformRequest(request, authFlow: authFlow) { result in
+            switch result {
+            case .success((_, let response)):
+                completion(.success(response))
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }
     }
@@ -182,48 +182,47 @@ extension APISession where AuthSessionType == ClientAuthSession {
     private func getAccessTokenAndPerformRequest<Request>(
         _ request: Request,
         authFlow: ClientAuthSession.AuthFlow?,
-        completion: @escaping (HTTPResponse<Request.ResponseBody, Error>) -> Void
+        completion: @escaping (Result<(Request.ResponseBody, HTTPURLResponse), Error>) -> Void
     ) where Request: APIRequest {
-        authSession.getAccessToken(reauthorizeUsing: authFlow) { response in
-            switch response.result {
-            case .success((let validatedAccessToken, _)):
+        authSession.getAccessToken(reauthorizeUsing: authFlow) { result in
+            switch result {
+            case .success((let validatedAccessToken, _, _)):
                 self.urlSession.apiTask(
                     with: request,
                     clientId: self.authSession.clientId,
                     rawAccessToken: validatedAccessToken.stringValue,
-                    userId: validatedAccessToken.validation.userId,
-                    completion: { response in
-                        switch response.result {
-                        case .success(let responseBody):
-                            completion(.init(responseBody, response.httpURLResponse))
-                            
-                        case .failure(let error):
-                            if let error = error as? APIError, error.status == 400 {
-                                // Invalid access token, reauthorize and retry:
-                                self.authSession.getNewAccessToken(using: authFlow) { response in
-                                    switch response.result {
-                                    case .success((let validatedAccessToken, _)):
-                                        self.urlSession.apiTask(
-                                            with: request,
-                                            clientId: self.authSession.clientId,
-                                            rawAccessToken: validatedAccessToken.stringValue,
-                                            userId: validatedAccessToken.validation.userId,
-                                            completion: completion
-                                        ).resume()
-                                        
-                                    case .failure(let error):
-                                        completion(.init(error, response.httpURLResponse))
-                                    }
+                    userId: validatedAccessToken.validation.userId
+                ) { result in
+                    switch result {
+                    case .success((let responseBody, let response)):
+                        completion(.success((responseBody, response)))
+                        
+                    case .failure(let error):
+                        if let error = error as? APIError, (400...401).contains(error.status) {
+                            // Invalid access token, reauthorize and retry:
+                            self.authSession.getNewAccessToken(using: authFlow) { result in
+                                switch result {
+                                case .success((let validatedAccessToken, _, _)):
+                                    self.urlSession.apiTask(
+                                        with: request,
+                                        clientId: self.authSession.clientId,
+                                        rawAccessToken: validatedAccessToken.stringValue,
+                                        userId: validatedAccessToken.validation.userId,
+                                        completion: completion
+                                    ).resume()
+                                    
+                                case .failure(let error):
+                                    completion(.failure(error))
                                 }
-                            } else {
-                                completion(.init(error, response.httpURLResponse))
                             }
+                        } else {
+                            completion(.failure(error))
                         }
                     }
-                ).resume()
+                }.resume()
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }
     }

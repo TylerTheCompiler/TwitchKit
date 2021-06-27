@@ -200,9 +200,9 @@ class URLSessionTwitchTests: XCTestCase {
             clientSecret: clientSecret,
             authCode: authCode,
             redirectURL: redirectURL
-        ) { response in
-            switch response.result {
-            case .success(let tokens):
+        ) { result in
+            switch result {
+            case .success((let tokens, _)):
                 XCTAssertEqual(tokens.accessToken.stringValue, self.accessToken, "Incorrect access token.")
                 XCTAssertEqual(tokens.refreshToken.rawValue, self.refreshToken, "Incorrect refresh token.")
                 
@@ -236,8 +236,8 @@ class URLSessionTwitchTests: XCTestCase {
             clientSecret: clientSecret,
             authCode: authCode,
             redirectURL: redirectURL
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected authorization to fail")
                 
@@ -280,8 +280,8 @@ class URLSessionTwitchTests: XCTestCase {
             clientSecret: clientSecret,
             authCode: authCode,
             redirectURL: redirectURL
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected authorization to fail")
                 
@@ -332,9 +332,9 @@ class URLSessionTwitchTests: XCTestCase {
             authCode: authCode,
             redirectURL: redirectURL,
             nonce: nonce
-        ) { response in
-            switch response.result {
-            case .success(let tokens):
+        ) { result in
+            switch result {
+            case .success((let tokens, _)):
                 XCTAssertEqual(tokens.accessToken.stringValue, self.accessToken, "Incorrect access token.")
                 XCTAssertEqual(tokens.refreshToken.rawValue, self.refreshToken, "Incorrect refresh token.")
                 XCTAssertEqual(tokens.idToken.stringValue, idToken, "Incorrect ID token.")
@@ -370,8 +370,8 @@ class URLSessionTwitchTests: XCTestCase {
             authCode: authCode,
             redirectURL: redirectURL,
             nonce: nonce
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected authorization to fail")
                 
@@ -415,8 +415,8 @@ class URLSessionTwitchTests: XCTestCase {
             authCode: authCode,
             redirectURL: redirectURL,
             nonce: nonce
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected authorization to fail")
                 
@@ -463,9 +463,9 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             clientSecret: clientSecret,
             scopes: scopes
-        ) { response in
-            switch response.result {
-            case .success(let accessTokenResponse):
+        ) { result in
+            switch result {
+            case .success((let accessTokenResponse, _)):
                 XCTAssertEqual(accessTokenResponse.accessToken.stringValue, self.accessToken,
                                "Incorrect access token.")
                 
@@ -498,8 +498,8 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             clientSecret: clientSecret,
             scopes: scopes
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected authorization to fail")
                 
@@ -541,8 +541,8 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             clientSecret: clientSecret,
             scopes: scopes
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected authorization to fail")
                 
@@ -584,9 +584,9 @@ class URLSessionTwitchTests: XCTestCase {
         config.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
         urlSession = URLSession(configuration: config)
         
-        urlSession.validationTask(with: MockAccessToken(stringValue: accessToken)) { response in
-            switch response.result {
-            case .success(let validation):
+        urlSession.validationTask(with: MockAccessToken(stringValue: accessToken)) { result in
+            switch result {
+            case .success((let validation, _)):
                 XCTAssertEqual(validation.date.timeIntervalSinceReferenceDate,
                                expectedDate.timeIntervalSinceReferenceDate,
                                "Incorrect validation date.")
@@ -616,8 +616,8 @@ class URLSessionTwitchTests: XCTestCase {
         config.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
         urlSession = URLSession(configuration: config)
         
-        urlSession.validationTask(with: MockAccessToken(stringValue: accessToken)) { response in
-            switch response.result {
+        urlSession.validationTask(with: MockAccessToken(stringValue: accessToken)) { result in
+            switch result {
             case .success:
                 XCTFail("Expected validation to fail")
                 
@@ -655,8 +655,8 @@ class URLSessionTwitchTests: XCTestCase {
         config.protocolClasses = [MockURLProtocol<ResponseProvider>.self]
         urlSession = URLSession(configuration: config)
         
-        urlSession.validationTask(with: MockAccessToken(stringValue: accessToken)) { response in
-            switch response.result {
+        urlSession.validationTask(with: MockAccessToken(stringValue: accessToken)) { result in
+            switch result {
             case .success:
                 XCTFail("Expected validation to fail")
                 
@@ -694,8 +694,14 @@ class URLSessionTwitchTests: XCTestCase {
         urlSession.revokeTask(
             with: MockAccessToken(stringValue: accessToken),
             clientId: clientId
-        ) { response in
-            XCTAssertNil(response.error, "Expected no error")
+        ) { result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                XCTFail("Expected no error: \(error)")
+            }
+            
             revokingToFinish.fulfill()
         }.resume()
         
@@ -720,8 +726,14 @@ class URLSessionTwitchTests: XCTestCase {
         urlSession.revokeTask(
             with: MockAccessToken(stringValue: accessToken),
             clientId: clientId
-        ) { response in
-            XCTAssertNotNil(response.error, "Expected error")
+        ) { result in
+            switch result {
+            case .success:
+                XCTFail("Expected error")
+            case .failure:
+                break
+            }
+            
             revokingToFinish.fulfill()
         }.resume()
         
@@ -755,8 +767,14 @@ class URLSessionTwitchTests: XCTestCase {
         urlSession.revokeTask(
             with: MockAccessToken(stringValue: accessToken),
             clientId: clientId
-        ) { response in
-            XCTAssertNotNil(response.error, "Expected error")
+        ) { result in
+            switch result {
+            case .success:
+                XCTFail("Expected error")
+            case .failure:
+                break
+            }
+            
             revokingToFinish.fulfill()
         }.resume()
         
@@ -794,9 +812,9 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             clientSecret: clientSecret,
             scopes: scopes
-        ) { response in
-            switch response.result {
-            case .success(let refreshResponse):
+        ) { result in
+            switch result {
+            case .success((let refreshResponse, _)):
                 XCTAssertEqual(refreshResponse.accessToken.stringValue, self.accessToken,
                                "Incorrect access token value.")
                 XCTAssertEqual(refreshResponse.refreshToken.rawValue, self.refreshToken,
@@ -832,8 +850,8 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             clientSecret: clientSecret,
             scopes: scopes
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected refreshing to fail")
                 
@@ -876,8 +894,8 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             clientSecret: clientSecret,
             scopes: scopes
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected refreshing to fail")
                 
@@ -927,9 +945,9 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             rawAccessToken: accessToken,
             userId: userId
-        ) { response in
-            switch response.result {
-            case .success(let responseBody):
+        ) { result in
+            switch result {
+            case .success((let responseBody, _)):
                 XCTAssertEqual(responseBody.responseValue, expectedResponseValue,
                                "Expected response value to be equal to expected value")
                 
@@ -977,9 +995,9 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             rawAccessToken: accessToken,
             userId: userId
-        ) { response in
-            switch response.result {
-            case .success(let responseBody):
+        ) { result in
+            switch result {
+            case .success((let responseBody, _)):
                 XCTAssertEqual(responseBody.responseValue, expectedResponseValue,
                                "Expected response value to be equal to expected value")
                 
@@ -1020,9 +1038,9 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             rawAccessToken: accessToken,
             userId: userId
-        ) { response in
-            switch response.result {
-            case .success(let emptyCodable):
+        ) { result in
+            switch result {
+            case .success((let emptyCodable, _)):
                 XCTAssertEqual(emptyCodable, EmptyCodable(),
                                "Expected response body to be an empty codable")
                 
@@ -1063,8 +1081,8 @@ class URLSessionTwitchTests: XCTestCase {
             clientId: clientId,
             rawAccessToken: accessToken,
             userId: userId
-        ) { response in
-            switch response.result {
+        ) { result in
+            switch result {
             case .success:
                 XCTFail("Expected API request to fail")
                 

@@ -111,7 +111,7 @@ extension APISession where AuthSessionType == ServerUserAuthSession {
     ///               an unsuccessful result contains the error that occurred.
     public func perform<Request>(
         _ request: Request,
-        completion: @escaping (_ response: HTTPResponse<Request.ResponseBody, Error>) -> Void
+        completion: @escaping (_ response: Result<(Request.ResponseBody, HTTPURLResponse), Error>) -> Void
     ) where
         Request: APIRequest,
         Request.UserToken == ValidatedUserAccessToken {
@@ -128,18 +128,18 @@ extension APISession where AuthSessionType == ServerUserAuthSession {
     ///               `HTTPURLResponse` of the last HTTP request made, if any.
     public func perform<Request>(
         _ request: Request,
-        completion: @escaping (_ response: HTTPErrorResponse) -> Void
+        completion: @escaping (_ response: Result<HTTPURLResponse, Error>) -> Void
     ) where
         Request: APIRequest,
         Request.UserToken == ValidatedUserAccessToken,
         Request.ResponseBody == EmptyCodable {
-        getAccessTokenAndPerformRequest(request) { response in
-            switch response.result {
-            case .success:
-                completion(.init(nil, response.httpURLResponse))
+        getAccessTokenAndPerformRequest(request) { result in
+            switch result {
+            case .success((_, let response)):
+                completion(.success(response))
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }
     }
@@ -148,26 +148,26 @@ extension APISession where AuthSessionType == ServerUserAuthSession {
     
     private func getAccessTokenAndPerformRequest<Request>(
         _ request: Request,
-        completion: @escaping (HTTPResponse<Request.ResponseBody, Error>) -> Void
+        completion: @escaping (Result<(Request.ResponseBody, HTTPURLResponse), Error>) -> Void
     ) where Request: APIRequest {
-        authSession.getAccessToken { response in
-            switch response.result {
-            case .success(let validatedAccessToken):
+        authSession.getAccessToken { result in
+            switch result {
+            case .success((let validatedAccessToken, _)):
                 self.urlSession.apiTask(
                     with: request,
                     clientId: self.authSession.clientId,
                     rawAccessToken: validatedAccessToken.stringValue,
                     userId: validatedAccessToken.validation.userId
-                ) { response in
-                    switch response.result {
-                    case .success:
-                        completion(response)
+                ) { result in
+                    switch result {
+                    case .success((let responseBody, let response)):
+                        completion(.success((responseBody, response)))
                         
                     case .failure(let error):
-                        if response.httpURLResponse?.statusCode == 401 {
-                            self.authSession.refreshAccessToken { response in
-                                switch response.result {
-                                case .success(let validatedAccessToken):
+                        if let error = error as? APIError, (400...401).contains(error.status) {
+                            self.authSession.refreshAccessToken { result in
+                                switch result {
+                                case .success((let validatedAccessToken, _)):
                                     self.urlSession.apiTask(
                                         with: request,
                                         clientId: self.authSession.clientId,
@@ -177,17 +177,17 @@ extension APISession where AuthSessionType == ServerUserAuthSession {
                                     ).resume()
                                     
                                 case .failure(let error):
-                                    completion(.init(error, response.httpURLResponse))
+                                    completion(.failure(error))
                                 }
                             }
                         } else {
-                            completion(.init(error, response.httpURLResponse))
+                            completion(.failure(error))
                         }
                     }
                 }.resume()
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }
     }

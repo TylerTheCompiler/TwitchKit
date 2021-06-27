@@ -108,9 +108,9 @@ class UserServerAuthViewController: PlatformIndependentViewController {
     @IBAction private func continueSignInWithAuthCode(_ sender: Any) {
         if let authCode = settings?.delegate?.userServerAuthViewControllerConsumeAuthCode(self) {
             continueSignInButton.isEnabled = false
-            settings?.authSession.getNewAccessToken(withAuthCode: authCode) { response in
-                switch response.result {
-                case .success(let validatedAccessToken):
+            settings?.authSession.getNewAccessToken(withAuthCode: authCode) { result in
+                switch result {
+                case .success((let validatedAccessToken, _)):
                     print("(Server) User access token:", validatedAccessToken.stringValue)
                     
                 case .failure(let error):
@@ -121,9 +121,9 @@ class UserServerAuthViewController: PlatformIndependentViewController {
             // swiftlint:disable:previous line_length
             continueSignInButton.isEnabled = false
             settings?.authSession.getNewAccessAndIdTokens(withAuthCode: authCodeAndNonce.0,
-                                                          expectedNonce: authCodeAndNonce.1) { response in
-                switch response.result {
-                case .success((let validatedAccessToken, let idToken)):
+                                                          expectedNonce: authCodeAndNonce.1) { result in
+                switch result {
+                case .success((let validatedAccessToken, let idToken, _)):
                     print("(Server) User access token:", validatedAccessToken.stringValue)
                     print("(Server) ID token:", idToken)
                     
@@ -135,9 +135,9 @@ class UserServerAuthViewController: PlatformIndependentViewController {
     }
     
     @IBAction private func refreshAccessToken(_ sender: Any) {
-        settings?.authSession.refreshAccessToken { response in
-            switch response.result {
-            case .success(let validatedAccessToken):
+        settings?.authSession.refreshAccessToken { result in
+            switch result {
+            case .success((let validatedAccessToken, _)):
                 print("(Server) User access token:", validatedAccessToken.stringValue)
                 
             case .failure(let error):
@@ -147,11 +147,13 @@ class UserServerAuthViewController: PlatformIndependentViewController {
     }
     
     @IBAction private func revokeAccessToken(_ sender: Any) {
-        settings?.authSession.revokeCurrentAccessToken { response in
-            if let error = response.error {
+        settings?.authSession.revokeCurrentAccessToken { result in
+            switch result {
+            case .success(let response):
+                print("(Server) User access token revoked!", response.statusCode)
+                
+            case .failure(let error):
                 print("(Server) Error:", error)
-            } else {
-                print("(Server) User access token revoked!", response.httpURLResponse?.statusCode ?? -1)
             }
         }
     }

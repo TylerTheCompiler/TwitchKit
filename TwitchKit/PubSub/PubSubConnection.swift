@@ -148,10 +148,10 @@ public enum PubSub {
                 return
             }
             
-            authSession.getAccessToken { [weak self] response in
+            authSession.getAccessToken { [weak self] result in
                 guard let self = self else { return }
-                switch response.result {
-                case .success(let accessToken):
+                switch result {
+                case .success((let accessToken, _)):
                     let listenMessage = ListenMessage(type: .listen, topics: topics, accessToken: accessToken)
                     let nonce = listenMessage.nonce
                     self.listenCompletionHandlers[nonce] = completion
@@ -184,10 +184,10 @@ public enum PubSub {
                 return
             }
             
-            authSession.getAccessToken { [weak self] response in
+            authSession.getAccessToken { [weak self] result in
                 guard let self = self else { return }
-                switch response.result {
-                case .success(let accessToken):
+                switch result {
+                case .success((let accessToken, _)):
                     let unlistenMessage = ListenMessage(type: .unlisten, topics: topics, accessToken: accessToken)
                     let nonce = unlistenMessage.nonce
                     self.listenCompletionHandlers[nonce] = completion

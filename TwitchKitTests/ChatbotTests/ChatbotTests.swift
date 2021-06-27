@@ -178,7 +178,7 @@ class ChatbotTests: XCTestCase, ChatbotDelegate {
             XCTAssertEqual(minIncompleteLength, 1)
             XCTAssertEqual(maxLength, 1<<16)
             guard receiveCount <= 6 else {
-                XCTFail("Did not expect to get more than 6 receives")
+                XCTFail("Expected to not get more than 6 receives")
                 return
             }
             
@@ -196,15 +196,21 @@ class ChatbotTests: XCTestCase, ChatbotDelegate {
             case 3: XCTAssertEqual(content, Data("PASS oauth:\(self.accessToken.stringValue)\r\n".utf8))
             case 4: XCTAssertEqual(content, Data("NICK \(self.chatbotUsername.lowercased())\r\n".utf8))
             default:
-                XCTFail("Did not expect more than 5 sends")
+                XCTFail("Expected no more than 5 sends")
                 return
             }
             
             sends[sendCount].fulfill()
         }
         
-        chatbot.connect { response in
-            XCTAssertNil(response.error)
+        chatbot.connect { result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                XCTFail("Expected no error: \(error)")
+            }
+            
             connectCompletion.fulfill()
         }
         

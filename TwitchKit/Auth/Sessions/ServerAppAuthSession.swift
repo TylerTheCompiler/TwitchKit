@@ -90,28 +90,42 @@ public class ServerAppAuthSession: InternalAuthSession {
     ///               made, if any. A successful result contains a validated app access token; un unsuccessful
     ///               result contains the error that occurred.
     public func getAccessToken(
-        completion: @escaping (_ response: HTTPResponse<ValidatedAppAccessToken, Error>) -> Void
+        completion: @escaping (_ response: Result<(ValidatedAppAccessToken, HTTPURLResponse?), Error>) -> Void
     ) {
         accessTokenStore.fetchAuthToken(forUserId: nil) { result in
             switch result {
             case .success(let validatedAccessToken):
                 if validatedAccessToken.validation.isRecent {
-                    completion(.init(validatedAccessToken))
+                    completion(.success((validatedAccessToken, nil)))
                     return
                 }
                 
-                self.validateAndStore(accessToken: validatedAccessToken.unvalidated) { response in
-                    switch response.result {
-                    case .success(let validatedAccessToken):
-                        completion(.init(validatedAccessToken, response.httpURLResponse))
+                self.validateAndStore(accessToken: validatedAccessToken.unvalidated) { result in
+                    switch result {
+                    case .success((let validatedAccessToken, let response)):
+                        completion(.success((validatedAccessToken, response)))
                         
                     case .failure:
-                        self.getNewAccessToken(completion: completion)
+                        self.getNewAccessToken { result in
+                            switch result {
+                            case .success((let validatedAccessToken, let response)):
+                                completion(.success((validatedAccessToken, response)))
+                            case .failure(let error):
+                                completion(.failure(error))
+                            }
+                        }
                     }
                 }
                 
             case .failure:
-                self.getNewAccessToken(completion: completion)
+                self.getNewAccessToken { result in
+                    switch result {
+                    case .success((let validatedAccessToken, let response)):
+                        completion(.success((validatedAccessToken, response)))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
             }
         }
     }
@@ -124,15 +138,15 @@ public class ServerAppAuthSession: InternalAuthSession {
     ///               made, if any. A successful result contains a validated app access token; an unsuccessdul
     ///               result contains the error that occurred.
     public func getNewAccessToken(
-        completion: @escaping (_ response: HTTPResponse<ValidatedAppAccessToken, Error>) -> Void
+        completion: @escaping (_ response: Result<(ValidatedAppAccessToken, HTTPURLResponse), Error>) -> Void
     ) {
-        urlSession.authorizeTask(clientId: clientId, clientSecret: clientSecret, scopes: scopes) { response in
-            switch response.result {
-            case .success(let accessTokenResponse):
+        urlSession.authorizeTask(clientId: clientId, clientSecret: clientSecret, scopes: scopes) { result in
+            switch result {
+            case .success((let accessTokenResponse, _)):
                 self.validateAndStore(accessToken: accessTokenResponse.accessToken, completion: completion)
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }.resume()
     }
@@ -143,44 +157,51 @@ public class ServerAppAuthSession: InternalAuthSession {
     ///   - completion: A closure called when revoking succeeds, or when an error occurs.
     ///   - response: Contains any error that may have occurred along with an `HTTPURLResponse`
     ///               of the last HTTP request made, if any.
-    public func revokeCurrentAccessToken(completion: @escaping (_ response: HTTPErrorResponse) -> Void) {
+    public func revokeCurrentAccessToken(completion: @escaping (_ response: Result<HTTPURLResponse, Error>) -> Void) {
         accessTokenStore.fetchAuthToken(forUserId: nil) { result in
             switch result {
             case .success(let accessToken):
-                self.urlSession.revokeTask(with: accessToken, clientId: self.clientId) { response in
-                    if response.error != nil {
-                        completion(response)
-                    } else {
+                self.urlSession.revokeTask(with: accessToken, clientId: self.clientId) { result in
+                    switch result {
+                    case .success(let response):
                         self.accessTokenStore.removeAuthToken(forUserId: nil) { error in
-                            completion(.init(error, response.httpURLResponse))
+                            if let error = error {
+                                completion(.failure(error))
+                            } else {
+                                completion(.success(response))
+                            }
                         }
+                    case .failure(let error):
+                        completion(.failure(error))
                     }
                 }.resume()
                 
             case .failure(let error):
-                completion(.init(error))
+                completion(.failure(error))
             }
         }
     }
     
     // MARK: - Private
     
-    private func validateAndStore(accessToken: AppAccessToken,
-                                  completion: @escaping (HTTPResponse<ValidatedAppAccessToken, Error>) -> Void) {
-        urlSession.validationTask(with: accessToken) { response in
-            switch response.result {
-            case .success(let validation):
+    private func validateAndStore(
+        accessToken: AppAccessToken,
+        completion: @escaping (Result<(ValidatedAppAccessToken, HTTPURLResponse), Error>) -> Void
+    ) {
+        urlSession.validationTask(with: accessToken) { result in
+            switch result {
+            case .success((let validation, let response)):
                 let validatedAccessToken = ValidatedAppAccessToken(stringValue: accessToken.stringValue,
                                                                    validation: validation)
                 self.accessTokenStore.store(authToken: validatedAccessToken, forUserId: nil) { error in
-                    completion(.init(.init {
+                    completion(.init {
                         if let error = error { throw error }
-                        return validatedAccessToken
-                    }, response.httpURLResponse))
+                        return (validatedAccessToken, response)
+                    })
                 }
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }.resume()
     }

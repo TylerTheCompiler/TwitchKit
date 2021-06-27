@@ -131,28 +131,42 @@ public class ServerUserAuthSession: InternalAuthSession {
     ///               made, if any. A successful result contains a validated user access token; un unsuccessful
     ///               result contains the error that occurred.
     public func getAccessToken(
-        completion: @escaping (_ response: HTTPResponse<ValidatedUserAccessToken, Error>) -> Void
+        completion: @escaping (_ response: Result<(ValidatedUserAccessToken, HTTPURLResponse?), Error>) -> Void
     ) {
         accessTokenStore.fetchAuthToken(forUserId: userId) { result in
             switch result {
             case .success(let validatedAccessToken):
                 if validatedAccessToken.validation.isRecent {
-                    completion(.init(validatedAccessToken))
+                    completion(.success((validatedAccessToken, nil)))
                     return
                 }
                 
-                self.validateAndStore(accessToken: validatedAccessToken.unvalidated, refreshToken: nil) { response in
-                    switch response.result {
-                    case .success(let validatedAccessToken):
-                        completion(.init(validatedAccessToken, response.httpURLResponse))
+                self.validateAndStore(accessToken: validatedAccessToken.unvalidated, refreshToken: nil) { result in
+                    switch result {
+                    case .success((let validatedAccessToken, let response)):
+                        completion(.success((validatedAccessToken, response)))
                         
                     case .failure:
-                        self.refreshAccessToken(completion: completion)
+                        self.refreshAccessToken { result in
+                            switch result {
+                            case .success((let validatedAccessToken, let response)):
+                                completion(.success((validatedAccessToken, response)))
+                            case .failure(let error):
+                                completion(.failure(error))
+                            }
+                        }
                     }
                 }
                 
             case .failure:
-                self.refreshAccessToken(completion: completion)
+                self.refreshAccessToken { result in
+                    switch result {
+                    case .success((let validatedAccessToken, let response)):
+                        completion(.success((validatedAccessToken, response)))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
             }
         }
     }
@@ -168,22 +182,22 @@ public class ServerUserAuthSession: InternalAuthSession {
     ///               result contains the error that occurred.
     public func getNewAccessToken(
         withAuthCode authCode: AuthCode,
-        completion: @escaping (_ response: HTTPResponse<ValidatedUserAccessToken, Error>) -> Void
+        completion: @escaping (_ response: Result<(ValidatedUserAccessToken, HTTPURLResponse), Error>) -> Void
     ) {
         urlSession.authorizeTask(
             clientId: clientId,
             clientSecret: clientSecret,
             authCode: authCode,
             redirectURL: redirectURL
-        ) { response in
-            switch response.result {
-            case.success(let tokens):
+        ) { result in
+            switch result {
+            case.success((let tokens, _)):
                 self.validateAndStore(accessToken: tokens.accessToken,
                                       refreshToken: tokens.refreshToken,
                                       completion: completion)
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }.resume()
     }
@@ -203,7 +217,7 @@ public class ServerUserAuthSession: InternalAuthSession {
     public func getNewAccessAndIdTokens(
         withAuthCode authCode: AuthCode,
         expectedNonce: String?,
-        completion: @escaping (_ response: HTTPResponse<(ValidatedUserAccessToken, IdToken), Error>) -> Void
+        completion: @escaping (_ response: Result<(ValidatedUserAccessToken, IdToken, HTTPURLResponse), Error>) -> Void
     ) {
         urlSession.authorizeTask(
             clientId: clientId,
@@ -211,22 +225,22 @@ public class ServerUserAuthSession: InternalAuthSession {
             authCode: authCode,
             redirectURL: redirectURL,
             nonce: expectedNonce
-        ) { response in
-            switch response.result {
-            case .success(let tokens):
+        ) { result in
+            switch result {
+            case .success((let tokens, _)):
                 self.validateAndStore(accessToken: tokens.accessToken,
-                                      refreshToken: tokens.refreshToken) { response in
-                    switch response.result {
-                    case .success(let validatedAccessToken):
-                        completion(.init((validatedAccessToken, tokens.idToken), response.httpURLResponse))
+                                      refreshToken: tokens.refreshToken) { result in
+                    switch result {
+                    case .success((let validatedAccessToken, let response)):
+                        completion(.success((validatedAccessToken, tokens.idToken, response)))
                         
                     case .failure(let error):
-                        completion(.init(error, response.httpURLResponse))
+                        completion(.failure(error))
                     }
                 }
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }.resume()
     }
@@ -239,7 +253,7 @@ public class ServerUserAuthSession: InternalAuthSession {
     ///               made, if any. A successful result contains a validated user access token; an unsuccessdul
     ///               result contains the error that occurred.
     public func refreshAccessToken(
-        completion: @escaping (_ response: HTTPResponse<ValidatedUserAccessToken, Error>) -> Void
+        completion: @escaping (_ response: Result<(ValidatedUserAccessToken, HTTPURLResponse), Error>) -> Void
     ) {
         refreshTokenStore.fetchAuthToken(forUserId: userId) { result in
             switch result {
@@ -249,27 +263,26 @@ public class ServerUserAuthSession: InternalAuthSession {
                     clientId: self.clientId,
                     clientSecret: self.clientSecret,
                     scopes: self.scopes
-                ) { response in
-                    switch response.result {
-                    case .success(let refreshResponse):
+                ) { result in
+                    switch result {
+                    case .success((let refreshResponse, _)):
                         self.validateAndStore(accessToken: refreshResponse.accessToken,
                                               refreshToken: refreshResponse.refreshToken,
                                               completion: completion)
                         
                     case .failure(let error):
-                        if let statusCode = response.httpURLResponse?.statusCode,
-                           (400...401).contains(statusCode) {
+                        if let error = error as? APIError, (400...401).contains(error.status) {
                             self.refreshTokenStore.removeAuthToken(forUserId: self.userId) { _ in
-                                completion(.init(error, response.httpURLResponse))
+                                completion(.failure(error))
                             }
                         } else {
-                            completion(.init(error, response.httpURLResponse))
+                            completion(.failure(error))
                         }
                     }
                 }.resume()
                 
             case .failure(let error):
-                completion(.init(error))
+                completion(.failure(error))
             }
         }
     }
@@ -280,22 +293,27 @@ public class ServerUserAuthSession: InternalAuthSession {
     ///   - completion: A closure called when revoking succeeds, or when an error occurs.
     ///   - response: Contains any error that may have occurred along with an `HTTPURLResponse`
     ///               of the last HTTP request made, if any.
-    public func revokeCurrentAccessToken(completion: @escaping (_ response: HTTPErrorResponse) -> Void) {
+    public func revokeCurrentAccessToken(completion: @escaping (_ response: Result<HTTPURLResponse, Error>) -> Void) {
         accessTokenStore.fetchAuthToken(forUserId: userId) { result in
             switch result {
             case .success(let accessToken):
-                self.urlSession.revokeTask(with: accessToken, clientId: self.clientId) { response in
-                    if response.error != nil {
-                        completion(response)
-                    } else {
+                self.urlSession.revokeTask(with: accessToken, clientId: self.clientId) { result in
+                    switch result {
+                    case .success(let response):
                         self.accessTokenStore.removeAuthToken(forUserId: self.userId) { error in
-                            completion(.init(error, response.httpURLResponse))
+                            if let error = error {
+                                completion(.failure(error))
+                            } else {
+                                completion(.success(response))
+                            }
                         }
+                    case .failure(let error):
+                        completion(.failure(error))
                     }
                 }.resume()
                 
             case .failure(let error):
-                completion(.init(error))
+                completion(.failure(error))
             }
         }
     }
@@ -305,11 +323,11 @@ public class ServerUserAuthSession: InternalAuthSession {
     private func validateAndStore(
         accessToken: UserAccessToken,
         refreshToken: RefreshToken?,
-        completion: @escaping (HTTPResponse<ValidatedUserAccessToken, Swift.Error>) -> Void
+        completion: @escaping (Result<(ValidatedUserAccessToken, HTTPURLResponse), Swift.Error>) -> Void
     ) {
-        urlSession.validationTask(with: accessToken) { response in
-            switch response.result {
-            case .success(let validation):
+        urlSession.validationTask(with: accessToken) { result in
+            switch result {
+            case .success((let validation, let response)):
                 self.userId = validation.userId
                 
                 let newValidatedAccessToken = ValidatedUserAccessToken(stringValue: accessToken.stringValue,
@@ -319,26 +337,26 @@ public class ServerUserAuthSession: InternalAuthSession {
                     forUserId: validation.userId
                 ) { error in
                     if let error = error {
-                        completion(.init(error, response.httpURLResponse))
+                        completion(.failure(error))
                     } else {
                         if let refreshToken = refreshToken {
                             self.refreshTokenStore.store(
                                 authToken: refreshToken,
                                 forUserId: self.userId
                             ) { error in
-                                completion(.init(.init {
+                                completion(.init {
                                     if let error = error { throw error }
-                                    return newValidatedAccessToken
-                                }, response.httpURLResponse))
+                                    return (newValidatedAccessToken, response)
+                                })
                             }
                         } else {
-                            completion(.init(newValidatedAccessToken, response.httpURLResponse))
+                            completion(.success((newValidatedAccessToken, response)))
                         }
                     }
                 }
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }.resume()
     }

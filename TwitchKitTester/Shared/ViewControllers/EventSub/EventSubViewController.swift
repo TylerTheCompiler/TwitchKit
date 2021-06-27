@@ -52,9 +52,9 @@ class EventSubViewController: PlatformIndependentViewController {
             secret: UUID().uuidString
         )
         
-        apiSession?.perform(request) { response in
-            switch response.result {
-            case .success(let responseBody):
+        apiSession?.perform(request) { result in
+            switch result {
+            case .success((let responseBody, _)):
                 print("(Server) Created EventSub subscription:", responseBody.subscriptions.first as Any)
                 
             case .failure(let error):
@@ -64,21 +64,26 @@ class EventSubViewController: PlatformIndependentViewController {
     }
     
     private func getSubscriptions(
-        completion: @escaping (HTTPResponse<GetEventSubSubscriptionsRequest.ResponseBody, Error>) -> Void
+        completion: @escaping (Result<(GetEventSubSubscriptionsRequest.ResponseBody, HTTPURLResponse), Error>) -> Void
     ) {
         apiSession?.perform(GetEventSubSubscriptionsRequest(), completion: completion)
     }
     
-    private func deleteAllSubscriptions(completion: @escaping ([Swift.Error]) -> Void) {
-        getSubscriptions { response in
-            switch response.result {
-            case .success(let response):
+    private func deleteAllSubscriptions(completion: @escaping ([Error]) -> Void) {
+        getSubscriptions { result in
+            switch result {
+            case .success((let responseBody, _)):
                 let group = DispatchGroup()
                 var errors = [Swift.Error]()
-                for subscription in response.subscriptions {
+                for subscription in responseBody.subscriptions {
                     group.enter()
-                    self.deleteSubscription(withId: subscription.id) { response in
-                        response.error.map { errors.append($0) }
+                    self.deleteSubscription(withId: subscription.id) { result in
+                        switch result {
+                        case .success:
+                            break
+                        case .failure(let error):
+                            errors.append(error)
+                        }
                         group.leave()
                     }
                 }
@@ -93,7 +98,10 @@ class EventSubViewController: PlatformIndependentViewController {
         }
     }
     
-    private func deleteSubscription(withId subscriptionId: String, completion: @escaping (HTTPErrorResponse) -> Void) {
+    private func deleteSubscription(
+        withId subscriptionId: String,
+        completion: @escaping (Result<HTTPURLResponse, Error>) -> Void
+    ) {
         apiSession?.perform(DeleteEventSubSubscriptionRequest(subscriptionId: subscriptionId), completion: completion)
     }
 }

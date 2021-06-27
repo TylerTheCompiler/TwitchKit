@@ -198,9 +198,9 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         mockRefreshTokenStore.tokens[userId] = refreshToken
         
-        serverUserAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success(let accessToken):
+        serverUserAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token")
                 
             case .failure(let error):
@@ -280,9 +280,9 @@ class ServerUserAuthSessionTests: XCTestCase {
         mockAccessTokenStore.tokens[userId] = originalAccessToken
         mockRefreshTokenStore.tokens[userId] = refreshToken
         
-        serverUserAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success(let accessToken):
+        serverUserAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token")
                 
             case .failure(let error):
@@ -343,9 +343,9 @@ class ServerUserAuthSessionTests: XCTestCase {
             )
         )
         
-        serverUserAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success(let accessToken):
+        serverUserAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -410,9 +410,9 @@ class ServerUserAuthSessionTests: XCTestCase {
             )
         )
         
-        serverUserAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success(let accessToken):
+        serverUserAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -493,9 +493,9 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         mockRefreshTokenStore.tokens[userId] = .init(rawValue: "MockRefreshToken")
         
-        serverUserAuthSession.getAccessToken { response in
-            switch response.result {
-            case .success(let accessToken):
+        serverUserAuthSession.getAccessToken { result in
+            switch result {
+            case .success((let accessToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -566,9 +566,9 @@ class ServerUserAuthSessionTests: XCTestCase {
             urlSessionConfiguration: urlSessionConfig
         )
         
-        serverUserAuthSession.getNewAccessToken(withAuthCode: authCode) { response in
-            switch response.result {
-            case .success(let accessToken):
+        serverUserAuthSession.getNewAccessToken(withAuthCode: authCode) { result in
+            switch result {
+            case .success((let accessToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -642,9 +642,9 @@ class ServerUserAuthSessionTests: XCTestCase {
             urlSessionConfiguration: urlSessionConfig
         )
 
-        serverUserAuthSession.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: expectedNonce) { response in
-            switch response.result {
-            case .success((let accessToken, let idToken)):
+        serverUserAuthSession.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: expectedNonce) { result in
+            switch result {
+            case .success((let accessToken, let idToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -717,9 +717,9 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         mockRefreshTokenStore.tokens[userId] = .init(rawValue: expectedRefreshTokenString)
 
-        serverUserAuthSession.refreshAccessToken { response in
-            switch response.result {
-            case .success(let accessToken):
+        serverUserAuthSession.refreshAccessToken { result in
+            switch result {
+            case .success((let accessToken, _)):
                 XCTAssertEqual(accessToken.stringValue, expectedAccessTokenString, "Incorrect access token string")
                 XCTAssertEqual(accessToken.validation.clientId, self.clientId, "Incorrect client ID")
                 XCTAssertEqual(accessToken.validation.userId, self.userId, "Incorrect user ID")
@@ -791,8 +791,8 @@ class ServerUserAuthSessionTests: XCTestCase {
         mockRefreshTokenStore.tokens[userId] = .init(rawValue: expectedRefreshTokenString)
         mockRefreshTokenStore.shouldStoreFail = true
 
-        serverUserAuthSession.refreshAccessToken { response in
-            switch response.result {
+        serverUserAuthSession.refreshAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
 
@@ -844,7 +844,11 @@ class ServerUserAuthSessionTests: XCTestCase {
         )
 
         serverUserAuthSession.revokeCurrentAccessToken { result in
-            if let error = result.error {
+            switch result {
+            case .success:
+                break
+                
+            case .failure(let error):
                 XCTFail("Expected to not get error, got: \(error)")
             }
 
@@ -891,8 +895,12 @@ class ServerUserAuthSessionTests: XCTestCase {
         )
 
         serverUserAuthSession.revokeCurrentAccessToken { result in
-            if result.error == nil {
+            switch result {
+            case .success:
                 XCTFail("Expected to get error")
+                
+            case .failure:
+                break
             }
 
             taskToFinish.fulfill()
@@ -927,8 +935,12 @@ class ServerUserAuthSessionTests: XCTestCase {
         )
 
         serverUserAuthSession.revokeCurrentAccessToken { result in
-            if result.error == nil {
+            switch result {
+            case .success:
                 XCTFail("Expected to get error")
+                
+            case .failure:
+                break
             }
 
             taskToFinish.fulfill()
@@ -964,8 +976,8 @@ class ServerUserAuthSessionTests: XCTestCase {
             urlSessionConfiguration: urlSessionConfig
         )
         
-        serverUserAuthSession.getNewAccessToken(withAuthCode: authCode) { response in
-            switch response.result {
+        serverUserAuthSession.getNewAccessToken(withAuthCode: authCode) { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
@@ -1007,8 +1019,8 @@ class ServerUserAuthSessionTests: XCTestCase {
             urlSessionConfiguration: urlSessionConfig
         )
         
-        serverUserAuthSession.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { response in
-            switch response.result {
+        serverUserAuthSession.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
@@ -1078,13 +1090,13 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         mockAccessTokenStore.shouldStoreFail = true
         
-        serverUserAuthSession.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { response in
-            switch response.result {
+        serverUserAuthSession.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
-            case .failure(let error):
-                print(error)
+            case .failure:
+                break
             }
             
             taskToFinish.fulfill()
@@ -1120,8 +1132,8 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         mockRefreshTokenStore.tokens[userId] = RefreshToken(rawValue: "MockRefreshToken")
         
-        serverUserAuthSession.refreshAccessToken { response in
-            switch response.result {
+        serverUserAuthSession.refreshAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
@@ -1164,8 +1176,8 @@ class ServerUserAuthSessionTests: XCTestCase {
         
         mockRefreshTokenStore.tokens[userId] = expectedRefreshToken
         
-        serverUserAuthSession.refreshAccessToken { response in
-            switch response.result {
+        serverUserAuthSession.refreshAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 
@@ -1205,8 +1217,8 @@ class ServerUserAuthSessionTests: XCTestCase {
             urlSessionConfiguration: urlSessionConfig
         )
         
-        serverUserAuthSession.refreshAccessToken { response in
-            switch response.result {
+        serverUserAuthSession.refreshAccessToken { result in
+            switch result {
             case .success:
                 XCTFail("Expected to get error")
                 

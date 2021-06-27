@@ -19,9 +19,9 @@ class PubSubViewController: PlatformIndependentViewController {
     
     private func updatePubSubConnection() {
         if let authSession = authSession {
-            authSession.getAccessToken { response in
-                switch response.result {
-                case .success(let accessToken):
+            authSession.getAccessToken { result in
+                switch result {
+                case .success((let accessToken, _)):
                     let pubSub = PubSub.Connection(authSession: authSession)
                     self.pubSubConnection = pubSub
                     pubSub.delegate = self

@@ -102,7 +102,7 @@ open class Chatbot {
     // MARK: - Connection Methods
     
     /// Connects the chatbot to Twitch. You must call this before you can have the bot interact with channels.
-    open func connect(completion: ((HTTPErrorResponse) -> Void)? = nil) {
+    open func connect(completion: ((Result<HTTPURLResponse?, Swift.Error>) -> Void)? = nil) {
         func connect(accessToken: ValidatedUserAccessToken) {
             disconnect()
             connection = connectionType.init(to: .hostPort(host: "irc.chat.twitch.tv", port: 6697), using: .tls)
@@ -133,30 +133,30 @@ open class Chatbot {
         
         switch authSession {
         case .client(let session):
-            session.getAccessToken { response in
-                switch response.result {
-                case .success((let validatedAccessToken, _)):
+            session.getAccessToken { result in
+                switch result {
+                case .success((let validatedAccessToken, _, let response)):
                     connect(accessToken: validatedAccessToken)
-                    completion?(.init(nil, response.httpURLResponse))
+                    completion?(.success(response))
                     
                 case .failure(let error):
                     self.reconnectIteration = nil
                     self.channelsToRejoin = []
-                    completion?(.init(error, response.httpURLResponse))
+                    completion?(.failure(error))
                 }
             }
             
         case .server(let session):
-            session.getAccessToken { response in
-                switch response.result {
-                case .success(let validatedAccessToken):
+            session.getAccessToken { result in
+                switch result {
+                case .success((let validatedAccessToken, let response)):
                     connect(accessToken: validatedAccessToken)
-                    completion?(.init(nil, response.httpURLResponse))
+                    completion?(.success(response))
                     
                 case .failure(let error):
                     self.reconnectIteration = nil
                     self.channelsToRejoin = []
-                    completion?(.init(error, response.httpURLResponse))
+                    completion?(.failure(error))
                 }
             }
         }

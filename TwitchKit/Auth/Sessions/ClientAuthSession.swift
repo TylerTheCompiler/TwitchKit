@@ -205,29 +205,45 @@ public class ClientAuthSession: InternalAuthSession {
     public func getAccessToken(
         reauthorizeUsing authFlow: AuthFlow? = nil,
         completion: @escaping (
-            _ response: HTTPResponse<(accessToken: ValidatedUserAccessToken, idToken: IdToken?), Swift.Error>
+            _ response: Result<(accessToken: ValidatedUserAccessToken,
+                                idToken: IdToken?,
+                                response: HTTPURLResponse?), Swift.Error>
         ) -> Void
     ) {
         accessTokenStore.fetchAuthToken(forUserId: userId) { result in
             switch result {
             case .success(let validatedAccessToken):
                 if validatedAccessToken.validation.isRecent {
-                    completion(.init((validatedAccessToken, nil)))
+                    completion(.success((validatedAccessToken, nil, nil)))
                     return
                 }
                 
-                self.validateAndStore(validatedAccessToken.unvalidated) { response in
-                    switch response.result {
-                    case .success(let newValidatedAccessToken):
-                        completion(.init((newValidatedAccessToken, nil), response.httpURLResponse))
+                self.validateAndStore(validatedAccessToken.unvalidated) { result in
+                    switch result {
+                    case .success((let newValidatedAccessToken, let response)):
+                        completion(.success((newValidatedAccessToken, nil, response)))
                         
                     case .failure:
-                        self.getNewAccessToken(using: authFlow, completion: completion)
+                        self.getNewAccessToken(using: authFlow) { result in
+                            switch result {
+                            case .success((let accessToken, let idToken, let response)):
+                                completion(.success((accessToken, idToken, response)))
+                            case .failure(let error):
+                                completion(.failure(error))
+                            }
+                        }
                     }
                 }
                 
             case .failure:
-                self.getNewAccessToken(using: authFlow, completion: completion)
+                self.getNewAccessToken(using: authFlow) { result in
+                    switch result {
+                    case .success((let accessToken, let idToken, let response)):
+                        completion(.success((accessToken, idToken, response)))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
             }
         }
     }
@@ -249,11 +265,13 @@ public class ClientAuthSession: InternalAuthSession {
     public func getNewAccessToken(
         using authFlow: AuthFlow? = nil,
         completion: @escaping (
-            _ response: HTTPResponse<(accessToken: ValidatedUserAccessToken, idToken: IdToken?), Swift.Error>
+            _ response: Result<(accessToken: ValidatedUserAccessToken,
+                                idToken: IdToken?,
+                                response: HTTPURLResponse), Swift.Error>
         ) -> Void
     ) {
         guard canAuthorize else {
-            completion(.init(Error.operationInProgress))
+            completion(.failure(Error.operationInProgress))
             return
         }
         
@@ -272,18 +290,18 @@ public class ClientAuthSession: InternalAuthSession {
                         
                         switch result {
                         case .success(let accessToken):
-                            self?.validateAndStore(accessToken) { response in
-                                switch response.result {
-                                case .success(let validatedAccessToken):
-                                    completion(.init((validatedAccessToken, nil), response.httpURLResponse))
+                            self?.validateAndStore(accessToken) { result in
+                                switch result {
+                                case .success((let validatedAccessToken, let response)):
+                                    completion(.success((validatedAccessToken, nil, response)))
                                     
                                 case .failure(let error):
-                                    completion(.init(error, response.httpURLResponse))
+                                    completion(.failure(error))
                                 }
                             }
                             
                         case .failure(let error):
-                            completion(.init(error))
+                            completion(.failure(error))
                         }
                     }
                     
@@ -297,18 +315,18 @@ public class ClientAuthSession: InternalAuthSession {
                         
                         switch result {
                         case .success((let idToken, let accessToken)):
-                            self?.validateAndStore(accessToken) { response in
-                                switch response.result {
-                                case .success(let validatedAccessToken):
-                                    completion(.init((validatedAccessToken, idToken), response.httpURLResponse))
+                            self?.validateAndStore(accessToken) { result in
+                                switch result {
+                                case .success((let validatedAccessToken, let response)):
+                                    completion(.success((validatedAccessToken, idToken, response)))
                                     
                                 case .failure(let error):
-                                    completion(.init(error, response.httpURLResponse))
+                                    completion(.failure(error))
                                 }
                             }
                             
                         case .failure(let error):
-                            completion(.init(error))
+                            completion(.failure(error))
                         }
                     }
                 }
@@ -431,33 +449,43 @@ public class ClientAuthSession: InternalAuthSession {
     ///   - completion: A closure called when revoking succeeds, or when an error occurs.
     ///   - response: Contains any error that may have occurred along with an `HTTPURLResponse`
     ///               of the last HTTP request made, if any.
-    public func revokeCurrentAccessToken(completion: @escaping (_ response: HTTPErrorResponse) -> Void) {
+    public func revokeCurrentAccessToken(
+        completion: @escaping (_ result: Result<HTTPURLResponse, Swift.Error>) -> Void
+    ) {
         accessTokenStore.fetchAuthToken(forUserId: userId) { result in
             switch result {
             case .success(let accessToken):
-                self.urlSession.revokeTask(with: accessToken, clientId: self.clientId) { response in
-                    if response.error != nil {
-                        completion(response)
-                    } else {
+                self.urlSession.revokeTask(with: accessToken, clientId: self.clientId) { result in
+                    switch result {
+                    case .success(let response):
                         self.accessTokenStore.removeAuthToken(forUserId: self.userId) { error in
-                            completion(.init(error, response.httpURLResponse))
+                            if let error = error {
+                                completion(.failure(error))
+                            } else {
+                                completion(.success(response))
+                            }
                         }
+                        
+                    case .failure(let error):
+                        completion(.failure(error))
                     }
                 }.resume()
                 
             case .failure(let error):
-                completion(.init(error))
+                completion(.failure(error))
             }
         }
     }
     
     // MARK: - Private
     
-    private func validateAndStore(_ accessToken: UserAccessToken,
-                                  completion: @escaping (HTTPResponse<ValidatedUserAccessToken, Swift.Error>) -> Void) {
-        urlSession.validationTask(with: accessToken) { response in
-            switch response.result {
-            case .success(let validation):
+    private func validateAndStore(
+        _ accessToken: UserAccessToken,
+        completion: @escaping (Result<(ValidatedUserAccessToken, HTTPURLResponse), Swift.Error>) -> Void
+    ) {
+        urlSession.validationTask(with: accessToken) { result in
+            switch result {
+            case .success((let validation, let response)):
                 self.userId = validation.userId
                 
                 let newValidatedAccessToken = ValidatedUserAccessToken(stringValue: accessToken.stringValue,
@@ -466,14 +494,14 @@ public class ClientAuthSession: InternalAuthSession {
                     authToken: newValidatedAccessToken,
                     forUserId: newValidatedAccessToken.validation.userId
                 ) { error in
-                    completion(.init(.init {
+                    completion(.init {
                         if let error = error { throw error }
-                        return newValidatedAccessToken
-                    }, response.httpURLResponse))
+                        return (newValidatedAccessToken, response)
+                    })
                 }
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }.resume()
     }

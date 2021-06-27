@@ -72,7 +72,7 @@ public class APISession<AuthSessionType> where AuthSessionType: AuthSession {
     ///               and an unsuccessful result contains the error that occurred.
     public func perform<Request>(
         _ request: Request,
-        completion: @escaping (_ response: HTTPResponse<Request.ResponseBody, Error>) -> Void
+        completion: @escaping (_ response: Result<(Request.ResponseBody, HTTPURLResponse), Error>) -> Void
     ) where
         Request: APIRequest,
         Request.UserToken == IncompatibleAccessToken,
@@ -96,7 +96,7 @@ public class APISession<AuthSessionType> where AuthSessionType: AuthSession {
     ///               `HTTPURLResponse` of the last HTTP request made, if any.
     public func perform<Request>(
         _ request: Request,
-        completion: @escaping (_ response: HTTPErrorResponse) -> Void
+        completion: @escaping (_ response: Result<HTTPURLResponse, Error>) -> Void
     ) where
         Request: APIRequest,
         Request.UserToken == IncompatibleAccessToken,
@@ -107,13 +107,13 @@ public class APISession<AuthSessionType> where AuthSessionType: AuthSession {
             clientId: authSession.clientId,
             rawAccessToken: nil,
             userId: nil
-        ) { response in
-            switch response.result {
-            case .success:
-                completion(.init(nil, response.httpURLResponse))
+        ) { result in
+            switch result {
+            case .success((_, let response)):
+                completion(.success(response))
                 
             case .failure(let error):
-                completion(.init(error, response.httpURLResponse))
+                completion(.failure(error))
             }
         }.resume()
     }

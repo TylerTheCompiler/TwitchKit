@@ -17,9 +17,9 @@ class AppServerEndpointListViewController: PlatformIndependentTableViewControlle
             
             apiSession = .init(authSession: authSession)
             
-            apiSession?.perform(LegacyGetChatBadgesByChannelRequest(channelId: twitchChannelId)) { response in
-                switch response.result {
-                case .success(let badges):
+            apiSession?.perform(LegacyGetChatBadgesByChannelRequest(channelId: twitchChannelId)) { result in
+                switch result {
+                case .success((let badges, _)):
                     print("Response:", badges)
                     
                 case .failure(let error):

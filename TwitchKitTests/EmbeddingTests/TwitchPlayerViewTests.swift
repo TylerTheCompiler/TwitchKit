@@ -16,33 +16,61 @@ class MockWebView: WKWebView {
     }
 }
 
-class MockSecurityOrigin: WKSecurityOrigin {
-    var testHost: String
+//class MockSecurityOrigin: WKSecurityOrigin {
+//    var testHost: String
+//
+//    init(testHost: String) {
+//        self.testHost = testHost
+//    }
+//
+//    override var host: String {
+//        testHost
+//    }
+//}
+
+extension WKSecurityOrigin {
+    private static var isHostSwizzled = false
+    static func swizzleHostIfNeeded() {
+        if !isHostSwizzled {
+            isHostSwizzled = true
+            let originalSelector = #selector(getter:host)
+            let swizzledSelector = #selector(twitchKitTests_host)
+            let originalHostMethod = class_getInstanceMethod(self, originalSelector)!
+            let swizzledHostMethod = class_getInstanceMethod(self, swizzledSelector)!
+            method_exchangeImplementations(originalHostMethod, swizzledHostMethod)
+        }
+    }
+    
+    @objc func twitchKitTests_host() -> String {
+        testHost ?? twitchKitTests_host()
+    }
+    
+    private static var testHostKey = 0
+    
+    var testHost: String? {
+        get { objc_getAssociatedObject(self, &Self.testHostKey) as? String }
+        set { objc_setAssociatedObject(self, &Self.testHostKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    }
+}
+
+class MockWebViewFrameInfo: WKFrameInfo {
+    var testHost: String?
     
     init(testHost: String) {
         self.testHost = testHost
     }
     
-    override var host: String {
-        testHost
-    }
-}
-
-class MockWebViewFrameInfo: WKFrameInfo {
-    var testSecurityOrigin: MockSecurityOrigin?
-    
-    init(testHost: String) {
-        testSecurityOrigin = .init(testHost: testHost)
-    }
-    
     override func copy(with zone: NSZone? = nil) -> Any {
         let frame = super.copy(with: zone) as! MockWebViewFrameInfo
-        frame.testSecurityOrigin = testSecurityOrigin
+        frame.testHost = testHost
         return frame
     }
     
     override var securityOrigin: WKSecurityOrigin {
-        testSecurityOrigin ?? super.securityOrigin
+        let securityOrigin = super.securityOrigin
+        securityOrigin.testHost = testHost
+        WKSecurityOrigin.swizzleHostIfNeeded()
+        return securityOrigin
     }
 }
 

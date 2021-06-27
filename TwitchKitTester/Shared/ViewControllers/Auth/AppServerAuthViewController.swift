@@ -60,9 +60,9 @@ class AppServerAuthViewController: PlatformIndependentViewController {
     }
     
     @IBAction private func getAccessToken(_ sender: Any) {
-        settings?.authSession.getNewAccessToken { response in
-            switch response.result {
-            case .success(let validatedAccessToken):
+        settings?.authSession.getNewAccessToken { result in
+            switch result {
+            case .success((let validatedAccessToken, _)):
                 print("(Server) App access token:", validatedAccessToken.stringValue)
                 
             case .failure(let error):
@@ -72,11 +72,13 @@ class AppServerAuthViewController: PlatformIndependentViewController {
     }
     
     @IBAction private func revokeAccessToken(_ sender: Any) {
-        settings?.authSession.revokeCurrentAccessToken { response in
-            if let error = response.error {
+        settings?.authSession.revokeCurrentAccessToken { result in
+            switch result {
+            case .success(let response):
+                print("(Server) App access token revoked!", response.statusCode)
+                
+            case .failure(let error):
                 print("(Server) Error:", error)
-            } else {
-                print("(Server) App access token revoked!", response.httpURLResponse?.statusCode ?? -1)
             }
         }
     }

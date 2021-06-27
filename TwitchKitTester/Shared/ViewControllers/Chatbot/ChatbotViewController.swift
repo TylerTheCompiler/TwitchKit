@@ -44,14 +44,17 @@ class ChatbotViewController: PlatformIndependentViewController {
         }
         
         apiSession = ServerUserAPISession(authSession: authSession)
-        apiSession?.perform(GetUsersRequest()) { response in
-            switch response.result {
-            case .success(let body):
+        apiSession?.perform(GetUsersRequest()) { result in
+            switch result {
+            case .success((let body, _)):
                 guard let displayName = body.users.first?.displayName else { return }
                 self.chatbot = .init(username: displayName, authSession: .server(authSession))
-                self.chatbot?.connect { response in
-                    if response.error == nil {
+                self.chatbot?.connect { result in
+                    switch result {
+                    case .success:
                         self.chatbot?.join(channel: channel)
+                    case .failure:
+                        break
                     }
                 }
                 

@@ -31,7 +31,7 @@ extension URLSession {
         clientSecret: String,
         authCode: AuthCode,
         redirectURL: URL,
-        completion: @escaping (HTTPResponse<AuthorizeWithOAuthAuthCodeResponse, Error>) -> Void
+        completion: @escaping (Result<(AuthorizeWithOAuthAuthCodeResponse, HTTPURLResponse), Error>) -> Void
     ) -> URLSessionDataTask {
         var components = URLComponents()
         components.scheme = "https"
@@ -50,8 +50,7 @@ extension URLSession {
         request.httpMethod = "POST"
         
         return dataTask(with: request) { data, response, error in
-            let response = response as? HTTPURLResponse
-            completion(.init(.init { try self.parse(data: data, response: response, error: error) }, response))
+            completion(.init { try self.parse(data: data, response: response, error: error) })
         }
     }
     
@@ -62,7 +61,7 @@ extension URLSession {
         authCode: AuthCode,
         redirectURL: URL,
         nonce: String?,
-        completion: @escaping (HTTPResponse<AuthorizeWithOIDCAuthCodeResponse, Error>) -> Void
+        completion: @escaping (Result<(AuthorizeWithOIDCAuthCodeResponse, HTTPURLResponse), Error>) -> Void
     ) -> URLSessionDataTask {
         var components = URLComponents()
         components.scheme = "https"
@@ -81,10 +80,7 @@ extension URLSession {
         request.httpMethod = "POST"
         
         return dataTask(with: request) { data, response, error in
-            let response = response as? HTTPURLResponse
-            completion(.init(.init {
-                try self.parse(data: data, response: response, error: error, expectedNonce: nonce)
-            }, response))
+            completion(.init { try self.parse(data: data, response: response, error: error, expectedNonce: nonce) })
         }
     }
     
@@ -92,7 +88,7 @@ extension URLSession {
         clientId: String,
         clientSecret: String,
         scopes: Set<Scope>,
-        completion: @escaping (HTTPResponse<AuthorizeWithClientCredentialsResponse, Error>) -> Void
+        completion: @escaping (Result<(AuthorizeWithClientCredentialsResponse, HTTPURLResponse), Error>) -> Void
     ) -> URLSessionDataTask {
         var components = URLComponents()
         components.scheme = "https"
@@ -113,29 +109,28 @@ extension URLSession {
         request.httpMethod = "POST"
         
         return dataTask(with: request) { data, response, error in
-            let response = response as? HTTPURLResponse
-            completion(.init(.init { try self.parse(data: data, response: response, error: error) }, response))
+            completion(.init { try self.parse(data: data, response: response, error: error) })
         }
     }
     
     internal func validationTask<AccessTokenType>(
         with token: AccessTokenType,
-        completion: @escaping (HTTPResponse<AccessTokenType.ValidAccessTokenType.Validation, Error>) -> Void
+        completion: @escaping (Result<(AccessTokenType.ValidAccessTokenType.Validation,
+                                       HTTPURLResponse), Error>) -> Void
     ) -> URLSessionDataTask where AccessTokenType: AccessToken {
         var request = URLRequest(url: URL(string: "https://id.twitch.tv/oauth2/validate")!)
         // swiftlint:disable:previous force_unwrapping
         request.addValue("OAuth \(token.stringValue)", forHTTPHeaderField: "Authorization")
         
         return dataTask(with: request) { data, response, error in
-            let response = response as? HTTPURLResponse
-            completion(.init(.init { try self.parse(data: data, response: response, error: error) }, response))
+            completion(.init { try self.parse(data: data, response: response, error: error) })
         }
     }
     
     internal func revokeTask<AccessTokenType>(
         with token: AccessTokenType,
         clientId: String,
-        completion: @escaping (HTTPErrorResponse) -> Void
+        completion: @escaping (Result<HTTPURLResponse, Error>) -> Void
     ) -> URLSessionDataTask where AccessTokenType: AccessToken {
         var components = URLComponents()
         components.scheme = "https"
@@ -150,9 +145,13 @@ extension URLSession {
         request.httpMethod = "POST"
         
         return dataTask(with: request) { data, response, error in
-            let response = response as? HTTPURLResponse
-            let parsedError = self.parseError(data: data, response: response, error: error)
-            completion(.init(parsedError, response))
+            do {
+                try self.parseError(data: data, response: response, error: error)
+                // swiftlint:disable:next force_cast
+                completion(.success(response as! HTTPURLResponse))
+            } catch {
+                completion(.failure(error))
+            }
         }
     }
     
@@ -161,7 +160,7 @@ extension URLSession {
         clientId: String,
         clientSecret: String,
         scopes: Set<Scope>,
-        completion: @escaping (HTTPResponse<RefreshAccessTokenResponse, Error>) -> Void
+        completion: @escaping (Result<(RefreshAccessTokenResponse, HTTPURLResponse), Error>) -> Void
     ) -> URLSessionDataTask {
         var components = URLComponents()
         components.scheme = "https"
@@ -182,8 +181,7 @@ extension URLSession {
         request.httpMethod = "POST"
         
         return dataTask(with: request) { data, response, error in
-            let response = response as? HTTPURLResponse
-            completion(.init(.init { try self.parse(data: data, response: response, error: error) }, response))
+            completion(.init { try self.parse(data: data, response: response, error: error) })
         }
     }
     
@@ -192,7 +190,7 @@ extension URLSession {
         clientId: String,
         rawAccessToken: String?,
         userId: String?,
-        completion: @escaping (HTTPResponse<Request.ResponseBody, Error>) -> Void
+        completion: @escaping (Result<(Request.ResponseBody, HTTPURLResponse), Error>) -> Void
     ) -> URLSessionDataTask where Request: APIRequest {
         var request = request
         if let userId = userId {
@@ -230,26 +228,28 @@ extension URLSession {
         }
         
         return dataTask(with: urlRequest) { data, response, error in
-            let response = response as? HTTPURLResponse
-            completion(.init(.init { try self.parse(data: data, response: response, error: error) }, response))
+            completion(.init { try self.parse(data: data, response: response, error: error) })
         }
     }
     
     private func parse<T>(data: Data?,
-                          response: HTTPURLResponse?,
+                          response: URLResponse?,
                           error: Error?,
-                          expectedNonce: String? = nil) throws -> T where T: Decodable {
-        if let parsedError = parseError(data: data, response: response, error: error) { throw parsedError }
+                          expectedNonce: String? = nil) throws -> (T, HTTPURLResponse) where T: Decodable {
+        try parseError(data: data, response: response, error: error)
+        
+        // swiftlint:disable:next force_cast
+        let response = response as! HTTPURLResponse
         
         if T.self == EmptyCodable.self, data.isEmpty {
             // swiftlint:disable:next force_cast
-            return EmptyCodable() as! T
+            return (EmptyCodable() as! T, response)
         }
         
         do {
             let decoder = JSONDecoder.snakeCaseToCamelCase
             decoder.userInfo[.expectedNonce] = expectedNonce
-            return try decoder.decode(T.self, from: data)
+            return (try decoder.decode(T.self, from: data), response)
         } catch {
             do {
                 let jsonObject = try JSONSerialization.jsonObject(with: data ?? Data())
@@ -264,21 +264,17 @@ extension URLSession {
         }
     }
     
-    private func parseError(data: Data?, response: HTTPURLResponse?, error: Error?) -> Error? {
-        if let error = error {
-            return error
-        }
+    private func parseError(data: Data?, response: URLResponse?, error: Error?) throws {
+        if let error = error { throw error }
         
         if let apiError = try? JSONDecoder.snakeCaseToCamelCase.decode(APIError.self, from: data) {
-            return apiError
+            throw apiError
         }
         
-        if let statusCode = response?.statusCode, !(200..<300).contains(statusCode) {
-            return APIError(error: "Bad Response",
-                            status: statusCode,
-                            message: "Response did not contain a 2XX response code.")
+        if let statusCode = (response as? HTTPURLResponse)?.statusCode, !(200..<300).contains(statusCode) {
+            throw APIError(error: "Bad Response",
+                           status: statusCode,
+                           message: "Response did not contain a 2XX response code.")
         }
-        
-        return nil
     }
 }
