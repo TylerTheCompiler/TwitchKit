@@ -34,3 +34,10 @@ public struct OptionalCodableDate<Strategy>: Codable where Strategy: DateConvert
         }
     }
 }
+
+extension KeyedDecodingContainer {
+    public func decode<T>(_ type: OptionalCodableDate<T>.Type,
+                          forKey key: Key) throws -> OptionalCodableDate<T> where T: Decodable {
+        try decodeIfPresent(type, forKey: key) ?? OptionalCodableDate(wrappedValue: nil)
+    }
+}

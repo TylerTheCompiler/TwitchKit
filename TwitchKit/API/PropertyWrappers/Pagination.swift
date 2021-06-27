@@ -61,6 +61,10 @@ public struct Pagination: Decodable {
     /// The wrapped `Cursor` value.
     public var wrappedValue: Cursor?
     
+    public init(wrappedValue: Cursor?) {
+        self.wrappedValue = wrappedValue
+    }
+    
     public init(from decoder: Decoder) throws {
         if let keyedContainer = try? decoder.container(keyedBy: CodingKeys.self) {
             wrappedValue = try? .init(rawValue: keyedContainer.decode(String.self, forKey: .cursor))
@@ -72,5 +76,11 @@ public struct Pagination: Decodable {
     
     private enum CodingKeys: String, CodingKey {
         case cursor
+    }
+}
+
+extension KeyedDecodingContainer {
+    public func decode(_ type: Pagination.Type, forKey key: Key) throws -> Pagination {
+        try decodeIfPresent(type, forKey: key) ?? Pagination(wrappedValue: nil)
     }
 }

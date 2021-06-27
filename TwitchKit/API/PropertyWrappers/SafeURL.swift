@@ -32,3 +32,9 @@ public struct SafeURL: Codable {
         try container.encode(wrappedValue)
     }
 }
+
+extension KeyedDecodingContainer {
+    public func decode(_ type: SafeURL.Type, forKey key: Key) throws -> SafeURL {
+        try decodeIfPresent(type, forKey: key) ?? SafeURL(wrappedValue: nil)
+    }
+}

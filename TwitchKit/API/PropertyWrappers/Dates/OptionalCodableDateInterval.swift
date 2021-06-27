@@ -58,3 +58,10 @@ public struct OptionalCodableDateInterval<Strategy>: Codable where Strategy: Dat
         case endedAt
     }
 }
+
+extension KeyedDecodingContainer {
+    public func decode<T>(_ type: OptionalCodableDateInterval<T>.Type,
+                          forKey key: Key) throws -> OptionalCodableDateInterval<T> where T: Decodable {
+        try decodeIfPresent(type, forKey: key) ?? OptionalCodableDateInterval(wrappedValue: nil)
+    }
+}
