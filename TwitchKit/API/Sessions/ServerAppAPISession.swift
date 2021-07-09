@@ -89,12 +89,6 @@ extension APISession where AuthSessionType == ServerAppAuthSession {
         getAccessTokenAndPerformRequest(request, completion: completion)
     }
     
-    @available(iOS 15, macOS 12, *)
-    public func perform<Request>(_ request: Request) async throws -> (Request.ResponseBody, HTTPURLResponse)
-    where Request: APIRequest, Request.AppToken == ValidatedAppAccessToken {
-        try await getAccessTokenAndPerformRequest(request)
-    }
-    
     /// Performs an API request that requires an app access token and that does not return a response body.
     ///
     /// - Parameters:
@@ -121,15 +115,6 @@ extension APISession where AuthSessionType == ServerAppAuthSession {
         }
     }
     
-    @available(iOS 15, macOS 12, *)
-    @discardableResult
-    public func perform<Request>(_ request: Request) async throws -> HTTPURLResponse
-    where Request: APIRequest,
-    Request.AppToken == ValidatedAppAccessToken,
-    Request.ResponseBody == EmptyCodable {
-        try await getAccessTokenAndPerformRequest(request).response
-    }
-    
     // MARK: - Private
     
     private func getAccessTokenAndPerformRequest<Request>(
@@ -152,11 +137,37 @@ extension APISession where AuthSessionType == ServerAppAuthSession {
             }
         }
     }
+}
+
+// MARK: - Async Methods
+
+@available(iOS 15, macOS 12, *)
+extension ServerAppAPISession {
     
-    @available(iOS 15, macOS 12, *)
+    /// Performs an API request that requires an app access token and that returns a response body.
+    ///
+    /// - Parameter request: The API request to perform.
+    public func perform<Request>(
+        _ request: Request
+    ) async throws -> (body: Request.ResponseBody, httpURLResponse: HTTPURLResponse)
+    where Request: APIRequest, Request.AppToken == ValidatedAppAccessToken {
+        try await getAccessTokenAndPerformRequest(request)
+    }
+    
+    /// Performs an API request that requires an app access token and that does not return a response body.
+    ///
+    /// - Parameter request: The API request to perform.
+    @discardableResult
+    public func perform<Request>(_ request: Request) async throws -> HTTPURLResponse
+    where Request: APIRequest,
+    Request.AppToken == ValidatedAppAccessToken,
+    Request.ResponseBody == EmptyCodable {
+        try await getAccessTokenAndPerformRequest(request).httpURLResponse
+    }
+    
     private func getAccessTokenAndPerformRequest<Request>(
         _ request: Request
-    ) async throws -> (responseBody: Request.ResponseBody, response: HTTPURLResponse) where Request: APIRequest {
+    ) async throws -> (body: Request.ResponseBody, httpURLResponse: HTTPURLResponse) where Request: APIRequest {
         let (validatedAccessToken, _) = try await authSession.accessToken()
         return try await urlSession.callAPI(
             with: request,

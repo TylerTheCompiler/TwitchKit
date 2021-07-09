@@ -23,8 +23,7 @@ public protocol AuthTokenStoring {
     ///
     /// - Parameters:
     ///   - token: The auth token to store, or nil to remove the auth token from storage.
-    ///   - userId: The user ID of the auth token to store or remove, or nil if the auth token type does not apply to
-    ///             a user.
+    ///   - userId: The user ID of the auth token to store or remove, or nil if the auth token type does not apply to a user.
     ///   - completion: A closure to be called when storing of the auth token is complete. The `error` parameter
     ///                 contains any error that prevented the storage of the auth token.
     func store(authToken: Token?, forUserId userId: String?, completion: ((_ error: Error?) -> Void)?)
@@ -41,8 +40,16 @@ extension AuthTokenStoring {
     public func removeAuthToken(forUserId userId: String?, completion: ((_ error: Error?) -> Void)? = nil) {
         store(authToken: nil, forUserId: userId, completion: completion)
     }
+}
+
+// MARK: - Async Methods
+
+@available(iOS 15, macOS 12, *)
+extension AuthTokenStoring {
     
-    @available(iOS 15.0, macOS 12, *)
+    /// Retrieves an auth token for an optional user ID.
+    ///
+    /// - Parameter userId: The user ID of the auth token to fetch, or nil if the auth token type does not apply to a user.
     public func authToken(forUserId userId: String?) async throws -> Token {
         try await withCheckedThrowingContinuation { continuation in
             self.fetchAuthToken(forUserId: userId) { result in
@@ -51,7 +58,11 @@ extension AuthTokenStoring {
         }
     }
     
-    @available(iOS 15.0, macOS 12, *)
+    /// Stores or removes an auth token, for an optional user ID.
+    ///
+    /// - Parameters:
+    ///   - token: The auth token to store, or nil to remove the auth token from storage.
+    ///   - userId: The user ID of the auth token to store or remove, or nil if the auth token type does not apply to a user.
     public func store(authToken: Token?, forUserId userId: String?) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             self.store(authToken: authToken, forUserId: userId) { error in
@@ -64,7 +75,9 @@ extension AuthTokenStoring {
         }
     }
     
-    @available(iOS 15.0, macOS 12, *)
+    /// Removes an auth token for an optional user ID.
+    ///
+    /// - Parameter userId: The user ID of the auth token to remove, or nil if the auth token type does not apply to a user.
     public func removeAuthToken(forUserId userId: String?) async throws {
         try await store(authToken: nil, forUserId: userId)
     }

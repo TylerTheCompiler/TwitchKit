@@ -7,7 +7,6 @@
 
 /// An auth session to be used in your client app for authorizing a user through Twitch via a webview.
 public class ClientAuthSession: InternalAuthSession {
-    // swiftlint:disable:previous type_body_length
     
     /// Error type for client auth sessions.
     public enum Error: Swift.Error {
@@ -193,11 +192,6 @@ public class ClientAuthSession: InternalAuthSession {
         accessTokenStore.fetchAuthToken(forUserId: userId, completion: completion)
     }
     
-    @available(iOS 15, macOS 12, *)
-    public func currentAccessToken() async throws -> ValidatedUserAccessToken {
-        try await accessTokenStore.authToken(forUserId: userId)
-    }
-    
     /// Returns (via a completion handler) either the current stored user access token after validating it,
     /// or if there is no stored user access token then prompts the user for authorization using the provided
     /// auth flow.
@@ -254,23 +248,6 @@ public class ClientAuthSession: InternalAuthSession {
                     }
                 }
             }
-        }
-    }
-    
-    @available(iOS 15, macOS 12, *)
-    public func accessToken(
-        reauthorizeUsing authFlow: AuthFlow? = nil
-    ) async throws -> (accessToken: ValidatedUserAccessToken, idToken: IdToken?, response: HTTPURLResponse?) {
-        let validatedAccessToken = try await accessTokenStore.authToken(forUserId: userId)
-        if validatedAccessToken.validation.isRecent {
-            return (validatedAccessToken, nil, nil)
-        }
-        
-        do {
-            let (newValidatedAccessToken, response) = try await validateAndStore(validatedAccessToken.unvalidated)
-            return (newValidatedAccessToken, nil, response)
-        } catch {
-            return try await newAccessToken(using: authFlow)
         }
     }
     
@@ -372,10 +349,255 @@ public class ClientAuthSession: InternalAuthSession {
         webAuthSession?.start()
     }
     
-    @available(iOS 15, macOS 12, *)
+    /// Authenticates a user through Twitch with a set of claims, returning an ID token through
+    /// a result in a completion handler.
+    ///
+    /// - Parameters:
+    ///   - claims: The set of claims that should be present in _both_ the returned ID token
+    ///             and the `UserInfo` endpoint.
+    ///   - idTokenClaims: The set of additional claims that should be present _only_ in
+    ///                    the returned ID token (and _not_ the `UserInfo` endpoint).
+    ///   - userinfoClaims: The set of additional claims that should be present _only_ in
+    ///                     the `UserInfo` endpoint (and _not_ the returned ID token).
+    ///   - completion: A closure that is called with the authentication results, which is
+    ///                 either an ID token or an error.
+    ///   - result: The result of the operation. On success, contains an ID token. Otherwise it contains
+    ///             the error that occurred.
+    public func getIdToken(claims: Set<Claim> = [],
+                           idTokenClaims: Set<Claim> = [],
+                           userinfoClaims: Set<Claim> = [],
+                           completion: @escaping (_ result: Result<IdToken, Swift.Error>) -> Void) {
+        guard canAuthorize else {
+            completion(.failure(Error.operationInProgress))
+            return
+        }
+        
+        webAuthSession = WebAuthenticationSession(
+            clientId: clientId,
+            redirectURL: redirectURL,
+            scopes: scopes,
+            prefersEphemeralWebBrowserSession: prefersEphemeralWebBrowserSession,
+            presentationContextProvider: self,
+            injectable: injectable,
+            flow: .idToken(
+                claims: claims,
+                idTokenClaims: idTokenClaims,
+                userinfoClaims: userinfoClaims
+            ) { [weak self] result in
+                guard let self = self else {
+                    completion(.failure(Error.authSessionDeallocated))
+                    return
+                }
+                
+                self.webAuthSession = nil
+                completion(result)
+            }
+        )
+        
+        webAuthSession?.start()
+    }
+    
+    /// Prompts the user to authenticate and returns (via a completion handler) an auth code (and nonce)
+    /// to be sent to your server to complete the authorization process.
+    ///
+    /// - Parameters:
+    ///   - authFlow: The auth flow to use for authorization. If nil, the `defaultAuthFlow` is used.
+    ///   - completion: A closure called when authentication succeeds, or when an error occurs.
+    ///   - result: On success, contains the auth code and nonce that you should send to your server to
+    ///             complete the authorization process. On failure, contains the error that occurred.
+    public func getAuthCode(
+        using authFlow: AuthFlow? = nil,
+        completion: @escaping (_ result: Result<(authCode: AuthCode, nonce: String?), Swift.Error>) -> Void
+    ) {
+        guard canAuthorize else {
+            completion(.failure(Error.operationInProgress))
+            return
+        }
+        
+        webAuthSession = WebAuthenticationSession(
+            clientId: clientId,
+            redirectURL: redirectURL,
+            scopes: scopes,
+            prefersEphemeralWebBrowserSession: prefersEphemeralWebBrowserSession,
+            presentationContextProvider: self,
+            injectable: injectable,
+            flow: {
+                switch authFlow ?? defaultAuthFlow {
+                case .oAuth(let forceVerify):
+                    return .authCodeUsingOAuth(forceVerify: forceVerify) { [weak self] result in
+                        guard let self = self else {
+                            completion(.failure(Error.authSessionDeallocated))
+                            return
+                        }
+                        
+                        self.webAuthSession = nil
+                        
+                        switch result {
+                        case .success(let authCode):
+                            completion(.success((authCode, nil)))
+                            
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
+                    
+                case .openId(let claims, let idTokenClaims, let userinfoClaims):
+                    return .authCodeUsingOIDC(
+                        claims: claims,
+                        idTokenClaims: idTokenClaims,
+                        userinfoClaims: userinfoClaims
+                    ) { [weak self] result in
+                        guard let self = self else {
+                            completion(.failure(Error.authSessionDeallocated))
+                            return
+                        }
+                        
+                        self.webAuthSession = nil
+                        
+                        switch result {
+                        case .success((let authCode, let nonce)):
+                            completion(.success((authCode, nonce)))
+                            
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
+                }
+            }()
+        )
+        
+        webAuthSession?.start()
+    }
+    
+    /// Cancels any current auth flow.
+    public func cancelAuth() {
+        webAuthSession?.cancel()
+        webAuthSession = nil
+    }
+    
+    /// Revokes the current user access token if one exists in the access token store.
+    ///
+    /// - Parameters:
+    ///   - completion: A closure called when revoking succeeds, or when an error occurs.
+    ///   - response: Contains any error that may have occurred along with an `HTTPURLResponse`
+    ///               of the last HTTP request made, if any.
+    public func revokeCurrentAccessToken(
+        completion: @escaping (_ result: Result<HTTPURLResponse, Swift.Error>) -> Void
+    ) {
+        accessTokenStore.fetchAuthToken(forUserId: userId) { result in
+            switch result {
+            case .success(let accessToken):
+                self.urlSession.revokeTask(with: accessToken, clientId: self.clientId) { result in
+                    switch result {
+                    case .success(let response):
+                        self.accessTokenStore.removeAuthToken(forUserId: self.userId) { error in
+                            if let error = error {
+                                completion(.failure(error))
+                            } else {
+                                completion(.success(response))
+                            }
+                        }
+                        
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }.resume()
+                
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    // MARK: - Private
+    
+    private func validateAndStore(
+        _ accessToken: UserAccessToken,
+        completion: @escaping (Result<(ValidatedUserAccessToken, HTTPURLResponse), Swift.Error>) -> Void
+    ) {
+        urlSession.validationTask(with: accessToken) { result in
+            switch result {
+            case .success((let validation, let response)):
+                self.userId = validation.userId
+                
+                let newValidatedAccessToken = ValidatedUserAccessToken(stringValue: accessToken.stringValue,
+                                                                       validation: validation)
+                self.accessTokenStore.store(
+                    authToken: newValidatedAccessToken,
+                    forUserId: newValidatedAccessToken.validation.userId
+                ) { error in
+                    completion(.init {
+                        if let error = error { throw error }
+                        return (newValidatedAccessToken, response)
+                    })
+                }
+                
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+    
+    internal let urlSession: URLSession
+    internal var urlSessionConfiguration: URLSessionConfiguration {
+        urlSession.configuration
+    }
+    
+    internal let accessTokenStore: AnyAuthTokenStore<ValidatedUserAccessToken>
+    
+    @ReaderWriterValue(wrappedValue: nil, ClientAuthSession.self, propertyName: "webAuthSession")
+    private var webAuthSession: WebAuthenticationSession?
+    
+    // For unit testing
+    internal var injectable: WebAuthenticationSession.Injectable = .init()
+}
+
+// MARK: - Async Methods
+
+@available(iOS 15, macOS 12, *)
+extension ClientAuthSession {
+    
+    /// Gets the current access token (if one exists) from the access token store.
+    public func currentAccessToken() async throws -> ValidatedUserAccessToken {
+        try await accessTokenStore.authToken(forUserId: userId)
+    }
+    
+    /// Returns either the current stored user access token after validating it, or if there is no stored user
+    /// access token then prompts the user for authorization using the provided auth flow.
+    ///
+    /// If reauthorization occurs and the auth flow used is `.openId`, an `IdToken` is also returned. Otherwise,
+    /// the `IdToken` is nil.
+    ///
+    /// - Parameter authFlow: The auth flow to use if/when reauthorization is needed. If nil, the
+    ///                       `defaultAuthFlow` is used.
+    public func accessToken(
+        reauthorizeUsing authFlow: AuthFlow? = nil
+    ) async throws -> (accessToken: ValidatedUserAccessToken, idToken: IdToken?, httpURLResponse: HTTPURLResponse?) {
+        let validatedAccessToken = try await accessTokenStore.authToken(forUserId: userId)
+        if validatedAccessToken.validation.isRecent {
+            return (validatedAccessToken, nil, nil)
+        }
+        
+        do {
+            let (newValidatedAccessToken, response) = try await validateAndStore(validatedAccessToken.unvalidated)
+            return (newValidatedAccessToken, nil, response)
+        } catch {
+            return try await newAccessToken(using: authFlow)
+        }
+    }
+    
+    /// Prompts the user for authorization using the provided auth flow.
+    ///
+    /// If the auth session is not in a state to be able to authorize (i.e. if `canAuthorize` returns false),
+    /// then `Error.operationInProgress` is thrown.
+    ///
+    /// If reauthorization occurs and the auth flow used is `.openId`, an `IdToken` is also returned. Otherwise,
+    /// the `IdToken` is nil.
+    ///
+    /// - Parameter authFlow: The auth flow to use for authorization. If nil, the `defaultAuthFlow` is used.
     public func newAccessToken(
         using authFlow: AuthFlow? = nil
-    ) async throws -> (accessToken: ValidatedUserAccessToken, idToken: IdToken?, response: HTTPURLResponse) {
+    ) async throws -> (accessToken: ValidatedUserAccessToken, idToken: IdToken?, httpURLResponse: HTTPURLResponse) {
         guard canAuthorize else {
             throw Error.operationInProgress
         }
@@ -453,8 +675,7 @@ public class ClientAuthSession: InternalAuthSession {
         }
     }
     
-    /// Authenticates a user through Twitch with a set of claims, returning an ID token through
-    /// a result in a completion handler.
+    /// Authenticates a user through Twitch with a set of claims, returning an ID token.
     ///
     /// - Parameters:
     ///   - claims: The set of claims that should be present in _both_ the returned ID token
@@ -463,45 +684,6 @@ public class ClientAuthSession: InternalAuthSession {
     ///                    the returned ID token (and _not_ the `UserInfo` endpoint).
     ///   - userinfoClaims: The set of additional claims that should be present _only_ in
     ///                     the `UserInfo` endpoint (and _not_ the returned ID token).
-    ///   - completion: A closure that is called with the authentication results, which is
-    ///                 either an ID token or an error.
-    ///   - result: The result of the operation. On success, contains an ID token. Otherwise it contains
-    ///             the error that occurred.
-    public func getIdToken(claims: Set<Claim> = [],
-                           idTokenClaims: Set<Claim> = [],
-                           userinfoClaims: Set<Claim> = [],
-                           completion: @escaping (_ result: Result<IdToken, Swift.Error>) -> Void) {
-        guard canAuthorize else {
-            completion(.failure(Error.operationInProgress))
-            return
-        }
-        
-        webAuthSession = WebAuthenticationSession(
-            clientId: clientId,
-            redirectURL: redirectURL,
-            scopes: scopes,
-            prefersEphemeralWebBrowserSession: prefersEphemeralWebBrowserSession,
-            presentationContextProvider: self,
-            injectable: injectable,
-            flow: .idToken(
-                claims: claims,
-                idTokenClaims: idTokenClaims,
-                userinfoClaims: userinfoClaims
-            ) { [weak self] result in
-                guard let self = self else {
-                    completion(.failure(Error.authSessionDeallocated))
-                    return
-                }
-                
-                self.webAuthSession = nil
-                completion(result)
-            }
-        )
-        
-        webAuthSession?.start()
-    }
-    
-    @available(iOS 15, macOS 12, *)
     public func idToken(claims: Set<Claim> = [],
                         idTokenClaims: Set<Claim> = [],
                         userinfoClaims: Set<Claim> = []) async throws -> IdToken {
@@ -536,79 +718,10 @@ public class ClientAuthSession: InternalAuthSession {
         }
     }
     
-    /// Prompts the user to authenticate and returns (via a completion handler) an auth code (and nonce)
-    /// to be sent to your server to complete the authorization process.
+    /// Prompts the user to authenticate and returns an auth code (and nonce) to be sent to your server to
+    /// complete the authorization process.
     ///
-    /// - Parameters:
-    ///   - authFlow: The auth flow to use for authorization. If nil, the `defaultAuthFlow` is used.
-    ///   - completion: A closure called when authentication succeeds, or when an error occurs.
-    ///   - result: On success, contains the auth code and nonce that you should send to your server to
-    ///             complete the authorization process. On failure, contains the error that occurred.
-    public func getAuthCode(
-        using authFlow: AuthFlow? = nil,
-        completion: @escaping (_ result: Result<(authCode: AuthCode, nonce: String?), Swift.Error>) -> Void
-    ) {
-        guard canAuthorize else {
-            completion(.failure(Error.operationInProgress))
-            return
-        }
-        
-        webAuthSession = WebAuthenticationSession(
-            clientId: clientId,
-            redirectURL: redirectURL,
-            scopes: scopes,
-            prefersEphemeralWebBrowserSession: prefersEphemeralWebBrowserSession,
-            presentationContextProvider: self,
-            injectable: injectable,
-            flow: {
-                switch authFlow ?? defaultAuthFlow {
-                case .oAuth(let forceVerify):
-                    return .authCodeUsingOAuth(forceVerify: forceVerify) { [weak self] result in
-                        guard let self = self else {
-                            completion(.failure(Error.authSessionDeallocated))
-                            return
-                        }
-                        
-                        self.webAuthSession = nil
-                        
-                        switch result {
-                        case .success(let authCode):
-                            completion(.success((authCode, nil)))
-                            
-                        case .failure(let error):
-                            completion(.failure(error))
-                        }
-                    }
-                    
-                case .openId(let claims, let idTokenClaims, let userinfoClaims):
-                    return .authCodeUsingOIDC(
-                        claims: claims,
-                        idTokenClaims: idTokenClaims,
-                        userinfoClaims: userinfoClaims
-                    ) { [weak self] result in
-                        guard let self = self else {
-                            completion(.failure(Error.authSessionDeallocated))
-                            return
-                        }
-                        
-                        self.webAuthSession = nil
-                        
-                        switch result {
-                        case .success((let authCode, let nonce)):
-                            completion(.success((authCode, nonce)))
-                            
-                        case .failure(let error):
-                            completion(.failure(error))
-                        }
-                    }
-                }
-            }()
-        )
-        
-        webAuthSession?.start()
-    }
-    
-    @available(iOS 15, macOS 12, *)
+    /// - Parameter authFlow: The auth flow to use for authorization. If nil, the `defaultAuthFlow` is used.
     public func authCode(using authFlow: AuthFlow? = nil) async throws -> (authCode: AuthCode, nonce: String?) {
         guard canAuthorize else {
             throw Error.operationInProgress
@@ -671,47 +784,9 @@ public class ClientAuthSession: InternalAuthSession {
         }
     }
     
-    /// Cancels any current auth flow.
-    public func cancelAuth() {
-        webAuthSession?.cancel()
-        webAuthSession = nil
-    }
-    
     /// Revokes the current user access token if one exists in the access token store.
     ///
-    /// - Parameters:
-    ///   - completion: A closure called when revoking succeeds, or when an error occurs.
-    ///   - response: Contains any error that may have occurred along with an `HTTPURLResponse`
-    ///               of the last HTTP request made, if any.
-    public func revokeCurrentAccessToken(
-        completion: @escaping (_ result: Result<HTTPURLResponse, Swift.Error>) -> Void
-    ) {
-        accessTokenStore.fetchAuthToken(forUserId: userId) { result in
-            switch result {
-            case .success(let accessToken):
-                self.urlSession.revokeTask(with: accessToken, clientId: self.clientId) { result in
-                    switch result {
-                    case .success(let response):
-                        self.accessTokenStore.removeAuthToken(forUserId: self.userId) { error in
-                            if let error = error {
-                                completion(.failure(error))
-                            } else {
-                                completion(.success(response))
-                            }
-                        }
-                        
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-                }.resume()
-                
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    @available(iOS 15, macOS 12, *)
+    /// - Returns: An `HTTPURLResponse` of the last HTTP request made, if any.
     @discardableResult
     public func revokeCurrentAccessToken() async throws -> HTTPURLResponse {
         let accessToken = try await accessTokenStore.authToken(forUserId: userId)
@@ -720,39 +795,9 @@ public class ClientAuthSession: InternalAuthSession {
         return response
     }
     
-    // MARK: - Private
-    
-    private func validateAndStore(
-        _ accessToken: UserAccessToken,
-        completion: @escaping (Result<(ValidatedUserAccessToken, HTTPURLResponse), Swift.Error>) -> Void
-    ) {
-        urlSession.validationTask(with: accessToken) { result in
-            switch result {
-            case .success((let validation, let response)):
-                self.userId = validation.userId
-                
-                let newValidatedAccessToken = ValidatedUserAccessToken(stringValue: accessToken.stringValue,
-                                                                       validation: validation)
-                self.accessTokenStore.store(
-                    authToken: newValidatedAccessToken,
-                    forUserId: newValidatedAccessToken.validation.userId
-                ) { error in
-                    completion(.init {
-                        if let error = error { throw error }
-                        return (newValidatedAccessToken, response)
-                    })
-                }
-                
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }.resume()
-    }
-    
-    @available(iOS 15, macOS 12, *)
     private func validateAndStore(
         _ accessToken: UserAccessToken
-    ) async throws -> (ValidatedUserAccessToken, HTTPURLResponse) {
+    ) async throws -> (accessToken: ValidatedUserAccessToken, httpURLResponse: HTTPURLResponse) {
         let (validation, response) = try await urlSession.validate(token: accessToken)
         self.userId = validation.userId
         
@@ -763,19 +808,6 @@ public class ClientAuthSession: InternalAuthSession {
         
         return (newValidatedAccessToken, response)
     }
-    
-    internal let urlSession: URLSession
-    internal var urlSessionConfiguration: URLSessionConfiguration {
-        urlSession.configuration
-    }
-    
-    internal let accessTokenStore: AnyAuthTokenStore<ValidatedUserAccessToken>
-    
-    @ReaderWriterValue(wrappedValue: nil, ClientAuthSession.self, propertyName: "webAuthSession")
-    private var webAuthSession: WebAuthenticationSession?
-    
-    // For unit testing
-    internal var injectable: WebAuthenticationSession.Injectable = .init()
 }
 
 extension ClientAuthSession: WebAuthenticationSessionPresentationContextProviding {

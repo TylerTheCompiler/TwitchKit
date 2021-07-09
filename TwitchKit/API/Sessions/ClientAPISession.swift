@@ -145,15 +145,6 @@ extension APISession where AuthSessionType == ClientAuthSession {
         getAccessTokenAndPerformRequest(request, authFlow: authFlow, completion: completion)
     }
     
-    @available(iOS 15, macOS 12, *)
-    public func perform<Request>(
-        _ request: Request,
-        authFlow: ClientAuthSession.AuthFlow? = nil
-    ) async throws -> (Request.ResponseBody, HTTPURLResponse)
-    where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken {
-        try await getAccessTokenAndPerformRequest(request, authFlow: authFlow)
-    }
-    
     /// Performs an API request that requires a user access token and that does not return a response body.
     ///
     /// If authorization is needed, the user is prompted to sign in to Twitch with the provided auth flow,
@@ -184,16 +175,6 @@ extension APISession where AuthSessionType == ClientAuthSession {
                 completion(.failure(error))
             }
         }
-    }
-    
-    @available(iOS 15, macOS 12, *)
-    @discardableResult
-    public func perform<Request>(
-        _ request: Request,
-        authFlow: ClientAuthSession.AuthFlow? = nil
-    ) async throws -> HTTPURLResponse
-    where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken, Request.ResponseBody == EmptyCodable {
-        try await getAccessTokenAndPerformRequest(request, authFlow: authFlow).response
     }
     
     // MARK: - Private
@@ -245,12 +226,51 @@ extension APISession where AuthSessionType == ClientAuthSession {
             }
         }
     }
+}
+
+// MARK: - Async Methods
+
+@available(iOS 15, macOS 12, *)
+extension ClientAPISession {
+    /// Performs an API request that requires a user access token and that returns a response body.
+    ///
+    /// If authorization is needed, the user is prompted to sign in to Twitch with the provided auth flow,
+    /// or `authSession`'s default auth flow if the provided auth flow is nil.
+    ///
+    /// - Parameters:
+    ///   - request: The API request to perform.
+    ///   - authFlow: The auth flow to use if authorization is needed, or nil to use `authSession`'s
+    ///               default auth flow.
+    public func perform<Request>(
+        _ request: Request,
+        authFlow: ClientAuthSession.AuthFlow? = nil
+    ) async throws -> (body: Request.ResponseBody, httpURLResponse: HTTPURLResponse)
+    where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken {
+        try await getAccessTokenAndPerformRequest(request, authFlow: authFlow)
+    }
     
-    @available(iOS 15, macOS 12, *)
+    /// Performs an API request that requires a user access token and that does not return a response body.
+    ///
+    /// If authorization is needed, the user is prompted to sign in to Twitch with the provided auth flow,
+    /// or `authSession`'s default auth flow if the provided auth flow is nil.
+    ///
+    /// - Parameters:
+    ///   - request: The API request to perform.
+    ///   - authFlow: The auth flow to use if authorization is needed, or nil to use `authSession`'s
+    ///               default auth flow.
+    @discardableResult
+    public func perform<Request>(
+        _ request: Request,
+        authFlow: ClientAuthSession.AuthFlow? = nil
+    ) async throws -> HTTPURLResponse
+    where Request: APIRequest, Request.UserToken == ValidatedUserAccessToken, Request.ResponseBody == EmptyCodable {
+        try await getAccessTokenAndPerformRequest(request, authFlow: authFlow).httpURLResponse
+    }
+    
     private func getAccessTokenAndPerformRequest<Request>(
         _ request: Request,
         authFlow: ClientAuthSession.AuthFlow?
-    ) async throws -> (responseBody: Request.ResponseBody, response: HTTPURLResponse) where Request: APIRequest {
+    ) async throws -> (body: Request.ResponseBody, httpURLResponse: HTTPURLResponse) where Request: APIRequest {
         let (validatedAccessToken, _, _) = try await authSession.accessToken(reauthorizeUsing: authFlow)
         do {
             return try await urlSession.callAPI(

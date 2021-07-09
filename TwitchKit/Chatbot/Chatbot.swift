@@ -847,6 +847,535 @@ open class Chatbot {
     internal var connectionType: ConnectionProtocol.Type = NWConnection.self
 }
 
+// MARK: - Async Methods
+
+@available(iOS 15, macOS 12, *)
+extension Chatbot {
+    
+    /// Connects the chatbot to Twitch. You must call this before you can have the bot interact with channels.
+    open func connect() async throws -> HTTPURLResponse? {
+        try await withCheckedThrowingContinuation { continuation in
+            self.connect { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    /// Joins a channel.
+    ///
+    /// - Parameter channel: The name of a channel to join.
+    open func join(channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.join(channel: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Joins the specified channels.
+    ///
+    /// - Parameter channels: The names of the channels to join.
+    /// - Returns: An array containing the channels that the chatbot failed to join along with the error that
+    ///            occurred for each channel.
+    open func join(channels: [String]) async -> [(channel: String, error: Swift.Error)] {
+        await withCheckedContinuation { continuation in
+            self.join(channels: channels) { errors in
+                continuation.resume(returning: errors)
+            }
+        }
+    }
+    
+    /// Leaves a channel.
+    ///
+    /// - Parameter channel: The name of a channel to leave.
+    open func leave(channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.leave(channel: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Leaves the specified channels.
+    ///
+    /// - Parameter channels: The names of a channels to leave.
+    /// - Returns: An array containing the channels that the chatbot failed to leave along with the error that
+    ///            occurred for each channel.
+    open func leave(channels: [String]) async -> [(channel: String, error: Swift.Error)] {
+        await withCheckedContinuation { continuation in
+            self.leave(channels: channels) { errors in
+                continuation.resume(returning: errors)
+            }
+        }
+    }
+    
+    /// Leaves all joined channels.
+    ///
+    /// - Returns: An array containing the channels that the chatbot failed to leave along with the error that
+    ///            occurred for each channel.
+    open func leaveAllChannels() async -> [(channel: String, error: Swift.Error)] {
+        await withCheckedContinuation { continuation in
+            self.leaveAllChannels { errors in
+                continuation.resume(returning: errors)
+            }
+        }
+    }
+    
+    /// Sends a message to a channel.
+    ///
+    /// - Parameters:
+    ///   - message: The message to send.
+    ///   - channel: The name of a channel to send the message to.
+    open func send(message: String, to channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.send(message: message, to: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Sends multiple messages to a channel.
+    ///
+    /// - Parameters:
+    ///   - messages: The messages to send.
+    ///   - channel: The name of a channel to send the messages to.
+    /// - Returns: An array containing the channels for which the message send failed along with the error that
+    ///            occurred for each channel.
+    open func send(messages: [String], to channel: String) async -> [(channel: String, error: Swift.Error)] {
+        await withCheckedContinuation { continuation in
+            self.send(messages: messages, to: channel) { errors in
+                continuation.resume(returning: errors)
+            }
+        }
+    }
+    
+    /// Enables or disables emote-only mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - enable: Whether to enable or disable emote-only mode in `channel`.
+    ///   - channel: The name of a channel to enable/disable emote-only mode in.
+    open func emoteOnly(enable: Bool, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.emoteOnly(enable: enable, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Enables or disables slow mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - enable: Whether to enable or disable slow mode in `channel`.
+    ///   - channel: The name of a channel to enable/disable slow mode in.
+    ///   - duration: When `enable` is `true`, the duration a user must wait between sending chat messages.
+    open func slowMode(enable: Bool, in channel: String, duration: Int? = nil) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.slowMode(enable: enable, in: channel, duration: duration) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Enables or disables unique-chat mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - enable: Whether to enable or disable unique-chat mode in `channel`.
+    ///   - channel: The name of a channel to enable/disable unique-chat mode in.
+    open func uniqueChatMode(enable: Bool, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.uniqueChatMode(enable: enable, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Enables or disables subscribers-only mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - enable: Whether to enable or disable subscribers-only mode in `channel`.
+    ///   - channel: The name of a channel in which to enable/disable subscribers-only mode.
+    open func followersOnly(enable: Bool, in channel: String, duration: ChatDuration? = nil) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.followersOnly(enable: enable, in: channel, duration: duration) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Enables or disables subscribers-only mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - enable: Whether to enable or disable subscribers-only mode in `channel`.
+    ///   - channel: The name of a channel in which to enable/disable subscribers-only mode.
+    open func subscribersOnly(enable: Bool, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.subscribersOnly(enable: enable, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Clears all chat in a channel.
+    ///
+    /// - Parameter channel: The name of a channel to clear chat in.
+    open func clearChat(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.clearChat(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Removes a single message from a channel.
+    ///
+    /// - Parameters:
+    ///   - messageId: UUID of the message to delete.
+    ///   - channel: The name of the channel in which to delete the message.
+    open func deleteMessage(messageId: String, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.deleteMessage(messageId: messageId, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Time out a user in chat.
+    ///
+    /// - Parameters:
+    ///   - user: The username of the user who you want to time out.
+    ///   - channel: The name of a channel in which to time out `user`.
+    ///   - duration: An optional duration that specifies for how long to time out `user`.
+    ///   - reason: An optional reason string to show to the user why they were timed out.
+    open func timeout(user: String,
+                      in channel: String,
+                      duration: ChatDuration? = nil,
+                      reason: String? = nil) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.timeout(user: user, in: channel, duration: duration, reason: reason) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Removes a timeout from a user in a channel.
+    ///
+    /// - Parameters:
+    ///   - user: The username of a user to remove a timeout for.
+    ///   - channel: The name of a channel in which to remove the timeout for `user`.
+    open func untimeout(user: String, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.untimeout(user: user, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Permanently bans a user from chatting in a channel.
+    ///
+    /// - Parameters:
+    ///   - user: The username of the user to ban.
+    ///   - channel: The channel in which to ban `user`.
+    ///   - reason: An optional reason string to show to the user why they were banned.
+    open func ban(user: String, in channel: String, reason: String? = nil) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.ban(user: user, in: channel, reason: reason) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Unbans or untimeouts a user in a channel.
+    ///
+    /// - Parameters:
+    ///   - user: The username of the user to unban.
+    ///   - channel: The channel in which to unban `user`.
+    open func unban(user: String, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.unban(user: user, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Starts hosting a channel from another channel.
+    ///
+    /// - Parameters:
+    ///   - channel: The name of the channel to host (their channel).
+    ///   - hostingChannel: The name of the channel doing the hosting (your channel).
+    open func host(channel: String, from hostingChannel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.host(channel: channel, from: hostingChannel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Stops host mode in a channel.
+    ///
+    /// - Parameter channel: The name of the channel you want to turn off host mode for (your channel).
+    open func unhost(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.unhost(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Starts a raid from your channel to another channel.
+    ///
+    /// - Parameters:
+    ///   - channel: The name of the channel to raid (their channel).
+    ///   - hostingChannel: The name of the channel doing the raiding (your channel).
+    open func raid(channel: String, from hostingChannel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.raid(channel: channel, from: hostingChannel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Cancels an in-progress raid in a channel.
+    ///
+    /// - Parameter channel: The name of the channel you want to cancel the raid in (your channel).
+    open func unraid(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.unraid(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Adds a stream marker at the current timestamp for a channel. Only valid when `channel` is live.
+    ///
+    /// - Parameter channel: The name of a channel to create the stream marker for.
+    open func createMarker(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.createMarker(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Grants moderator status to a user.
+    ///
+    /// - Parameters:
+    ///   - user: The username of the user to grant moderator status to.
+    ///   - channel: The name of the channel in which to grant `user` moderator status.
+    open func mod(user: String, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.mod(user: user, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Grants VIP status to a user.
+    ///
+    /// - Parameters:
+    ///   - user: The username of the user to grant VIP status to.
+    ///   - channel: The name of the channel in which to grant `user` VIP status.
+    open func unmod(user: String, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.unmod(user: user, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Grants VIP status to a user.
+    ///
+    /// - Parameters:
+    ///   - user: The username of the user to grant VIP status to.
+    ///   - channel: The name of the channel in which to grant `user` VIP status.
+    open func vip(user: String, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.vip(user: user, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Revokes VIP status from a user.
+    ///
+    /// - Parameters:
+    ///   - user: The username of the user to revoke VIP status from.
+    ///   - channel: The name of the channel in which to revoke `user`'s VIP status.
+    open func unvip(user: String, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.unvip(user: user, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Changes the bot's username color.
+    ///
+    /// - Important: Even though a channel must be specified, this change affects the bot's username color
+    ///              across all of Twitch!
+    ///
+    /// - Parameters:
+    ///   - color: The color to change the bot's username color to.
+    ///   - channel: A name of a channel to send the color change command to. Note that even though a channel must be
+    ///              specified, this change affects the bot's username color across all of Twitch!
+    open func changeUsernameColor(to color: ChatColor, in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.changeUsernameColor(to: color, in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Displays a list of moderators for the given channel.
+    ///
+    /// The channel should send a `Notice` message containing the list of moderators shortly after calling this.
+    ///
+    /// - Parameter channel: The name of a channel to list moderators for.
+    open func listModerators(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.listModerators(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Displays a list of VIPs for the given channel.
+    ///
+    /// The channel should send a `Notice` message containing the list of VIPs shortly after calling this.
+    ///
+    /// - Parameter channel: The name of a channel to list VIPs for.
+    open func listVIPs(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.listVIPs(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Privately messages a user with a given message.
+    ///
+    /// This feature is only available to known or verified bots. Request to increase your bot's status to known
+    /// or verified [here](https://dev.twitch.tv/limit-increase).
+    ///
+    /// - Parameters:
+    ///   - user: The username of the user to send the whisper to.
+    ///   - message: The message to send to the user.
+    open func whisper(user: String, message: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            self.whisper(user: user, message: message) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+}
+
 // For unit testing
 internal protocol ConnectionProtocol: AnyObject {
     var stateUpdateHandler: ((NWConnection.State) -> Void)? { get set }

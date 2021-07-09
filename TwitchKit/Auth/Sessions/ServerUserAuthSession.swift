@@ -122,13 +122,8 @@ public class ServerUserAuthSession: InternalAuthSession {
         accessTokenStore.fetchAuthToken(forUserId: userId, completion: completion)
     }
     
-    @available(iOS 15.0, macOS 12, *)
-    public func currentAccessToken() async throws -> ValidatedUserAccessToken {
-        try await accessTokenStore.authToken(forUserId: userId)
-    }
-    
-    /// Returns (via a completion handler) either the current stored user access token after validating it
-    /// (or refreshing it if it has become invalid and there is a refresh token in the refresh token store).
+    /// Returns (via a completion handler) the current stored user access token after either validating it
+    /// or refreshing it if it has become invalid and there is a refresh token in the refresh token store.
     ///
     /// - Parameters:
     ///   - completion: A closure called when a valid user access token is retrieved, or if an error occurs.
@@ -176,20 +171,6 @@ public class ServerUserAuthSession: InternalAuthSession {
         }
     }
     
-    @available(iOS 15.0, macOS 12, *)
-    public func accessToken() async throws -> (ValidatedUserAccessToken, HTTPURLResponse?) {
-        do {
-            let validatedAccessToken = try await accessTokenStore.authToken(forUserId: userId)
-            if validatedAccessToken.validation.isRecent {
-                return (validatedAccessToken, nil)
-            }
-            
-            return try await validateAndStore(accessToken: validatedAccessToken.unvalidated, refreshToken: nil)
-        } catch {
-            return try await refreshAccessToken()
-        }
-    }
-    
     /// Authorizes a user through Twitch via an auth code, and returns (via a completion handler)
     /// a valid user access token.
     ///
@@ -219,20 +200,6 @@ public class ServerUserAuthSession: InternalAuthSession {
                 completion(.failure(error))
             }
         }.resume()
-    }
-    
-    @available(iOS 15, macOS 12, *)
-    public func newAccessToken(
-        withAuthCode authCode: AuthCode
-    ) async throws -> (ValidatedUserAccessToken, HTTPURLResponse) {
-        let (tokens, _) = try await urlSession.authorize(
-            clientId: clientId,
-            clientSecret: clientSecret,
-            authCode: authCode,
-            redirectURL: redirectURL
-        )
-        
-        return try await validateAndStore(accessToken: tokens.accessToken, refreshToken: tokens.refreshToken)
     }
     
     /// Authorizes a user through Twitch via an auth code, and returns (via a completion handler)
@@ -278,24 +245,6 @@ public class ServerUserAuthSession: InternalAuthSession {
         }.resume()
     }
     
-    @available(iOS 15, macOS 12, *)
-    public func newAccessAndIdTokens(
-        withAuthCode authCode: AuthCode,
-        expectedNonce: String?
-    ) async throws -> (ValidatedUserAccessToken, IdToken, HTTPURLResponse) {
-        let (tokens, _) = try await urlSession.authorize(
-            clientId: clientId,
-            clientSecret: clientSecret,
-            authCode: authCode,
-            redirectURL: redirectURL,
-            nonce: expectedNonce
-        )
-        
-        let (validatedAccessToken, resposne) = try await validateAndStore(accessToken: tokens.accessToken,
-                                                                          refreshToken: tokens.refreshToken)
-        return (validatedAccessToken, tokens.idToken, resposne)
-    }
-    
     /// Refreshes the current user access token if there is a refresh token in the refresh token store.
     ///
     /// - Parameters:
@@ -338,26 +287,6 @@ public class ServerUserAuthSession: InternalAuthSession {
         }
     }
     
-    @available(iOS 15, macOS 12, *)
-    public func refreshAccessToken() async throws -> (ValidatedUserAccessToken, HTTPURLResponse) {
-        let refreshToken = try await refreshTokenStore.authToken(forUserId: userId)
-        
-        do {
-            let (refreshResponse, _) = try await urlSession.refresh(with: refreshToken,
-                                                                    clientId: clientId,
-                                                                    clientSecret: clientSecret,
-                                                                    scopes: scopes)
-            return try await validateAndStore(accessToken: refreshResponse.accessToken,
-                                              refreshToken: refreshResponse.refreshToken)
-        } catch {
-            if let error = error as? APIError, (400...401).contains(error.status) {
-                try? await self.refreshTokenStore.removeAuthToken(forUserId: self.userId)
-            }
-            
-            throw error
-        }
-    }
-    
     /// Revokes the current user access token if one exists in the access token store.
     ///
     /// - Parameters:
@@ -387,15 +316,6 @@ public class ServerUserAuthSession: InternalAuthSession {
                 completion(.failure(error))
             }
         }
-    }
-    
-    @available(iOS 15, macOS 12, *)
-    @discardableResult
-    public func revokeCurrentAccessToken() async throws -> HTTPURLResponse {
-        let accessToken = try await accessTokenStore.authToken(forUserId: userId)
-        let response = try await urlSession.revoke(token: accessToken, clientId: clientId)
-        try await accessTokenStore.removeAuthToken(forUserId: userId)
-        return response
     }
     
     // MARK: - Private
@@ -441,11 +361,114 @@ public class ServerUserAuthSession: InternalAuthSession {
         }.resume()
     }
     
-    @available(iOS 15, macOS 12, *)
+    internal let urlSession: URLSession
+    internal var urlSessionConfiguration: URLSessionConfiguration {
+        urlSession.configuration
+    }
+    
+    internal let accessTokenStore: AnyAuthTokenStore<ValidatedUserAccessToken>
+    internal let refreshTokenStore: AnyAuthTokenStore<RefreshToken>
+}
+
+// MARK: - Async Methods
+
+@available(iOS 15, macOS 12, *)
+extension ServerUserAuthSession {
+    
+    /// Gets the current access token (if one exists) from the access token store.
+    public func currentAccessToken() async throws -> ValidatedUserAccessToken {
+        try await accessTokenStore.authToken(forUserId: userId)
+    }
+    
+    /// Returns the current stored user access token after either validating it or refreshing it if it has become
+    /// invalid and there is a refresh token in the refresh token store.
+    public func accessToken() async throws -> (accessToken: ValidatedUserAccessToken, httpURLResponse: HTTPURLResponse?) {
+        do {
+            let validatedAccessToken = try await accessTokenStore.authToken(forUserId: userId)
+            if validatedAccessToken.validation.isRecent {
+                return (validatedAccessToken, nil)
+            }
+            
+            return try await validateAndStore(accessToken: validatedAccessToken.unvalidated, refreshToken: nil)
+        } catch {
+            return try await refreshAccessToken()
+        }
+    }
+    
+    /// Authorizes a user through Twitch via an auth code, and returns a valid user access token.
+    ///
+    /// - Parameter authCode: The auth code to authorize with.
+    public func newAccessToken(
+        withAuthCode authCode: AuthCode
+    ) async throws -> (accessToken: ValidatedUserAccessToken, httpURLResponse: HTTPURLResponse) {
+        let (tokens, _) = try await urlSession.authorize(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            authCode: authCode,
+            redirectURL: redirectURL
+        )
+        
+        return try await validateAndStore(accessToken: tokens.accessToken, refreshToken: tokens.refreshToken)
+    }
+    
+    /// Authorizes a user through Twitch via an auth code, and returns a valid user access token and an ID token.
+    ///
+    /// - Parameters:
+    ///   - authCode: The auth code to authorize with.
+    ///   - expectedNonce: The nonce value expected to match the nonce value of the returned ID token.
+    ///                    If the ID token's nonce value does not match this one, this is an indication of a
+    ///                    [replay attack](https://en.wikipedia.org/wiki/Replay_attack).
+    public func newAccessAndIdTokens(
+        withAuthCode authCode: AuthCode,
+        expectedNonce: String?
+    ) async throws -> (accessToken: ValidatedUserAccessToken, idToken: IdToken, httpURLResponse: HTTPURLResponse) {
+        let (tokens, _) = try await urlSession.authorize(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            authCode: authCode,
+            redirectURL: redirectURL,
+            nonce: expectedNonce
+        )
+        
+        let (validatedAccessToken, resposne) = try await validateAndStore(accessToken: tokens.accessToken,
+                                                                          refreshToken: tokens.refreshToken)
+        return (validatedAccessToken, tokens.idToken, resposne)
+    }
+    
+    /// Refreshes the current user access token if there is a refresh token in the refresh token store.
+    public func refreshAccessToken() async throws -> (accessToken: ValidatedUserAccessToken, httpURLResponse: HTTPURLResponse) {
+        // swiftlint:disable:previous line_length
+        let refreshToken = try await refreshTokenStore.authToken(forUserId: userId)
+        
+        do {
+            let (refreshResponse, _) = try await urlSession.refresh(with: refreshToken,
+                                                                    clientId: clientId,
+                                                                    clientSecret: clientSecret,
+                                                                    scopes: scopes)
+            return try await validateAndStore(accessToken: refreshResponse.accessToken,
+                                              refreshToken: refreshResponse.refreshToken)
+        } catch {
+            if let error = error as? APIError, (400...401).contains(error.status) {
+                try? await self.refreshTokenStore.removeAuthToken(forUserId: self.userId)
+            }
+            
+            throw error
+        }
+    }
+    
+    /// Revokes the current user access token if one exists in the access token store.
+    @discardableResult
+    public func revokeCurrentAccessToken() async throws -> HTTPURLResponse {
+        let accessToken = try await accessTokenStore.authToken(forUserId: userId)
+        let response = try await urlSession.revoke(token: accessToken, clientId: clientId)
+        try await accessTokenStore.removeAuthToken(forUserId: userId)
+        return response
+    }
+    
     private func validateAndStore(
         accessToken: UserAccessToken,
         refreshToken: RefreshToken?
-    ) async throws -> (ValidatedUserAccessToken, HTTPURLResponse) {
+    ) async throws -> (accessToken: ValidatedUserAccessToken, httpURLResponse: HTTPURLResponse) {
         let (validation, response) = try await urlSession.validate(token: accessToken)
         self.userId = validation.userId
         let newValidatedAccessToken = ValidatedUserAccessToken(stringValue: accessToken.stringValue,
@@ -457,12 +480,4 @@ public class ServerUserAuthSession: InternalAuthSession {
         
         return (newValidatedAccessToken, response)
     }
-    
-    internal let urlSession: URLSession
-    internal var urlSessionConfiguration: URLSessionConfiguration {
-        urlSession.configuration
-    }
-    
-    internal let accessTokenStore: AnyAuthTokenStore<ValidatedUserAccessToken>
-    internal let refreshTokenStore: AnyAuthTokenStore<RefreshToken>
 }

@@ -43,22 +43,6 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, macOS 12, *)
-    internal func authorize(
-        clientId: String,
-        clientSecret: String,
-        authCode: AuthCode,
-        redirectURL: URL
-    ) async throws -> (AuthorizeWithOAuthAuthCodeResponse, HTTPURLResponse) {
-        let request = authorizationRequest(clientId: clientId,
-                                           clientSecret: clientSecret,
-                                           authCode: authCode,
-                                           redirectURL: redirectURL)
-        
-        let (data, response) = try await self.data(for: request)
-        return try self.parse(data: data, response: response, error: nil)
-    }
-    
     // swiftlint:disable:next function_parameter_count
     internal func authorizeTask(
         clientId: String,
@@ -78,23 +62,6 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, macOS 12, *)
-    internal func authorize(
-        clientId: String,
-        clientSecret: String,
-        authCode: AuthCode,
-        redirectURL: URL,
-        nonce: String?
-    ) async throws -> (AuthorizeWithOIDCAuthCodeResponse, HTTPURLResponse) {
-        let request = authorizationRequest(clientId: clientId,
-                                           clientSecret: clientSecret,
-                                           authCode: authCode,
-                                           redirectURL: redirectURL)
-        
-        let (data, response) = try await self.data(for: request)
-        return try self.parse(data: data, response: response, error: nil, expectedNonce: nonce)
-    }
-    
     internal func authorizeTask(
         clientId: String,
         clientSecret: String,
@@ -110,20 +77,6 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, macOS 12, *)
-    internal func authorize(
-        clientId: String,
-        clientSecret: String,
-        scopes: Set<Scope>
-    ) async throws -> (AuthorizeWithClientCredentialsResponse, HTTPURLResponse) {
-        let request = authorizationRequest(clientId: clientId,
-                                           clientSecret: clientSecret,
-                                           scopes: scopes)
-        
-        let (data, response) = try await self.data(for: request)
-        return try self.parse(data: data, response: response, error: nil)
-    }
-    
     internal func validationTask<AccessTokenType>(
         with token: AccessTokenType,
         completion: @escaping (Result<(AccessTokenType.ValidAccessTokenType.Validation,
@@ -136,19 +89,6 @@ extension URLSession {
         return dataTask(with: request) { data, response, error in
             completion(.init { try self.parse(data: data, response: response, error: error) })
         }
-    }
-    
-    @available(iOS 15, macOS 12, *)
-    internal func validate<AccessTokenType>(
-        token: AccessTokenType
-    ) async throws -> (AccessTokenType.ValidAccessTokenType.Validation, HTTPURLResponse)
-    where AccessTokenType: AccessToken {
-        var request = URLRequest(url: URL(string: "https://id.twitch.tv/oauth2/validate")!)
-        // swiftlint:disable:previous force_unwrapping
-        request.addValue("OAuth \(token.stringValue)", forHTTPHeaderField: "Authorization")
-        
-        let (data, response) = try await self.data(for: request)
-        return try self.parse(data: data, response: response, error: nil)
     }
     
     internal func revokeTask<AccessTokenType>(
@@ -179,29 +119,6 @@ extension URLSession {
         }
     }
     
-    @available(iOS 15, macOS 12, *)
-    internal func revoke<AccessTokenType>(
-        token: AccessTokenType,
-        clientId: String
-    ) async throws -> HTTPURLResponse where AccessTokenType: AccessToken {
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "id.twitch.tv"
-        components.path = "/oauth2/revoke"
-        components.queryItems = [
-            .init(name: "client_id", value: clientId),
-            .init(name: "token", value: token.stringValue)
-        ]
-        
-        var request = components.urlRequest
-        request.httpMethod = "POST"
-        
-        let (data, response) = try await self.data(for: request)
-        try self.parseError(data: data, response: response, error: nil)
-        // swiftlint:disable:next force_cast
-        return response as! HTTPURLResponse
-    }
-    
     internal func refreshTask(
         with refreshToken: RefreshToken,
         clientId: String,
@@ -230,35 +147,6 @@ extension URLSession {
         return dataTask(with: request) { data, response, error in
             completion(.init { try self.parse(data: data, response: response, error: error) })
         }
-    }
-    
-    @available(iOS 15, macOS 12, *)
-    internal func refresh(
-        with refreshToken: RefreshToken,
-        clientId: String,
-        clientSecret: String,
-        scopes: Set<Scope>
-    ) async throws -> (RefreshAccessTokenResponse, HTTPURLResponse) {
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "id.twitch.tv"
-        components.path = "/oauth2/token"
-        components.queryItems = [
-            .init(name: "grant_type", value: "refresh_token"),
-            .init(name: "refresh_token", value: refreshToken.rawValue),
-            .init(name: "client_id", value: clientId),
-            .init(name: "client_secret", value: clientSecret)
-        ]
-        
-        if !scopes.isEmpty {
-            components.addQueryValue(scopes.map(\.rawValue).joined(separator: " "), for: "scope")
-        }
-        
-        var request = components.urlRequest
-        request.httpMethod = "POST"
-        
-        let (data, response) = try await self.data(for: request)
-        return try self.parse(data: data, response: response, error: nil)
     }
     
     internal func apiTask<Request>(
@@ -311,52 +199,6 @@ extension URLSession {
         return dataTask(with: urlRequest) { data, response, error in
             completion(.init { try self.parse(data: data, response: response, error: error) })
         }
-    }
-    
-    @available(iOS 15, macOS 12, *)
-    internal func callAPI<Request>(
-        with request: Request,
-        clientId: String,
-        rawAccessToken: String?,
-        userId: String?
-    ) async throws -> (responseBody: Request.ResponseBody, response: HTTPURLResponse) where Request: APIRequest {
-        var request = request
-        if let userId = userId {
-            request.update(with: userId)
-        }
-        
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.twitch.tv"
-        components.path = "/\(request.apiVersion.rawValue)" + (request.path.hasPrefix("/") ? "" : "/") + request.path
-        components.queryItems = request.queryParams.compactMap {
-            let name = $0.0
-            return $0.1.flatMap { .init(name: name.rawValue, value: $0) }
-        }
-        
-        var urlRequest = components.urlRequest
-        urlRequest.httpMethod = request.method.rawValue
-        
-        if let requestBody = request.body,
-           !(requestBody is EmptyCodable) {
-            let bodyData = try JSONEncoder.camelCaseToSnakeCase.encode(requestBody)
-            urlRequest.httpBody = bodyData
-            urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        }
-        
-        if request.apiVersion == .kraken {
-            urlRequest.addValue("application/vnd.twitchtv.v5+json", forHTTPHeaderField: "Accept")
-        }
-        
-        urlRequest.addValue(clientId, forHTTPHeaderField: "Client-Id")
-        
-        if let rawAccessToken = rawAccessToken {
-            urlRequest.addValue("\(request.apiVersion.authorizationHeaderPrefix) \(rawAccessToken)",
-                                forHTTPHeaderField: "Authorization")
-        }
-        
-        let (data, response) = try await self.data(for: urlRequest)
-        return try self.parse(data: data, response: response, error: nil)
     }
     
     // MARK: - Private
@@ -450,5 +292,161 @@ extension URLSession {
                            status: statusCode,
                            message: "Response did not contain a 2XX response code.")
         }
+    }
+}
+
+// MARK: - Async Methods
+
+@available(iOS 15, macOS 12, *)
+extension URLSession {
+    internal func authorize(
+        clientId: String,
+        clientSecret: String,
+        authCode: AuthCode,
+        redirectURL: URL
+    ) async throws -> (authorizeResponse: AuthorizeWithOAuthAuthCodeResponse, httpURLResponse: HTTPURLResponse) {
+        let request = authorizationRequest(clientId: clientId,
+                                           clientSecret: clientSecret,
+                                           authCode: authCode,
+                                           redirectURL: redirectURL)
+        
+        let (data, response) = try await self.data(for: request)
+        return try self.parse(data: data, response: response, error: nil)
+    }
+    
+    internal func authorize(
+        clientId: String,
+        clientSecret: String,
+        authCode: AuthCode,
+        redirectURL: URL,
+        nonce: String?
+    ) async throws -> (authorizeResponse: AuthorizeWithOIDCAuthCodeResponse, httpURLResponse: HTTPURLResponse) {
+        let request = authorizationRequest(clientId: clientId,
+                                           clientSecret: clientSecret,
+                                           authCode: authCode,
+                                           redirectURL: redirectURL)
+        
+        let (data, response) = try await self.data(for: request)
+        return try self.parse(data: data, response: response, error: nil, expectedNonce: nonce)
+    }
+    
+    internal func authorize(
+        clientId: String,
+        clientSecret: String,
+        scopes: Set<Scope>
+    ) async throws -> (authorizeResponse: AuthorizeWithClientCredentialsResponse, httpURLResponse: HTTPURLResponse) {
+        let request = authorizationRequest(clientId: clientId,
+                                           clientSecret: clientSecret,
+                                           scopes: scopes)
+        
+        let (data, response) = try await self.data(for: request)
+        return try self.parse(data: data, response: response, error: nil)
+    }
+    
+    internal func validate<AccessTokenType>(
+        token: AccessTokenType
+    ) async throws -> (validation: AccessTokenType.ValidAccessTokenType.Validation, httpURLResponse: HTTPURLResponse)
+    where AccessTokenType: AccessToken {
+        var request = URLRequest(url: URL(string: "https://id.twitch.tv/oauth2/validate")!)
+        // swiftlint:disable:previous force_unwrapping
+        request.addValue("OAuth \(token.stringValue)", forHTTPHeaderField: "Authorization")
+        
+        let (data, response) = try await self.data(for: request)
+        return try self.parse(data: data, response: response, error: nil)
+    }
+    
+    internal func revoke<AccessTokenType>(
+        token: AccessTokenType,
+        clientId: String
+    ) async throws -> HTTPURLResponse where AccessTokenType: AccessToken {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "id.twitch.tv"
+        components.path = "/oauth2/revoke"
+        components.queryItems = [
+            .init(name: "client_id", value: clientId),
+            .init(name: "token", value: token.stringValue)
+        ]
+        
+        var request = components.urlRequest
+        request.httpMethod = "POST"
+        
+        let (data, response) = try await self.data(for: request)
+        try self.parseError(data: data, response: response, error: nil)
+        // swiftlint:disable:next force_cast
+        return response as! HTTPURLResponse
+    }
+    
+    internal func refresh(
+        with refreshToken: RefreshToken,
+        clientId: String,
+        clientSecret: String,
+        scopes: Set<Scope>
+    ) async throws -> (refreshResponse: RefreshAccessTokenResponse, httpURLResponse: HTTPURLResponse) {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "id.twitch.tv"
+        components.path = "/oauth2/token"
+        components.queryItems = [
+            .init(name: "grant_type", value: "refresh_token"),
+            .init(name: "refresh_token", value: refreshToken.rawValue),
+            .init(name: "client_id", value: clientId),
+            .init(name: "client_secret", value: clientSecret)
+        ]
+        
+        if !scopes.isEmpty {
+            components.addQueryValue(scopes.map(\.rawValue).joined(separator: " "), for: "scope")
+        }
+        
+        var request = components.urlRequest
+        request.httpMethod = "POST"
+        
+        let (data, response) = try await self.data(for: request)
+        return try self.parse(data: data, response: response, error: nil)
+    }
+    
+    internal func callAPI<Request>(
+        with request: Request,
+        clientId: String,
+        rawAccessToken: String?,
+        userId: String?
+    ) async throws -> (body: Request.ResponseBody, httpURLResponse: HTTPURLResponse) where Request: APIRequest {
+        var request = request
+        if let userId = userId {
+            request.update(with: userId)
+        }
+        
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "api.twitch.tv"
+        components.path = "/\(request.apiVersion.rawValue)" + (request.path.hasPrefix("/") ? "" : "/") + request.path
+        components.queryItems = request.queryParams.compactMap {
+            let name = $0.0
+            return $0.1.flatMap { .init(name: name.rawValue, value: $0) }
+        }
+        
+        var urlRequest = components.urlRequest
+        urlRequest.httpMethod = request.method.rawValue
+        
+        if let requestBody = request.body,
+           !(requestBody is EmptyCodable) {
+            let bodyData = try JSONEncoder.camelCaseToSnakeCase.encode(requestBody)
+            urlRequest.httpBody = bodyData
+            urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        
+        if request.apiVersion == .kraken {
+            urlRequest.addValue("application/vnd.twitchtv.v5+json", forHTTPHeaderField: "Accept")
+        }
+        
+        urlRequest.addValue(clientId, forHTTPHeaderField: "Client-Id")
+        
+        if let rawAccessToken = rawAccessToken {
+            urlRequest.addValue("\(request.apiVersion.authorizationHeaderPrefix) \(rawAccessToken)",
+                                forHTTPHeaderField: "Authorization")
+        }
+        
+        let (data, response) = try await self.data(for: urlRequest)
+        return try self.parse(data: data, response: response, error: nil)
     }
 }
