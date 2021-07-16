@@ -19,7 +19,7 @@ class AppServerEndpointListViewController: PlatformIndependentTableViewControlle
             self.apiSession = apiSession
             
             if #available(iOS 15, macOS 12, *) {
-                async {
+                Task {
                     let request = LegacyGetChatBadgesByChannelRequest(channelId: twitchChannelId)
                     let badges = try await apiSession.perform(request).body
                     print("Subscriber badge:", badges.subscriber?.image ?? "nil")
