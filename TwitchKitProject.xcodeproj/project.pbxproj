@@ -507,6 +507,8 @@
 		2F98A31526D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31326D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift */; };
 		2F98A31726D8C23500076B2E /* GetGlobalChatBadgesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31626D8C23500076B2E /* GetGlobalChatBadgesRequest.swift */; };
 		2F98A31826D8C23500076B2E /* GetGlobalChatBadgesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31626D8C23500076B2E /* GetGlobalChatBadgesRequest.swift */; };
+		2F98A31B26D93CCE00076B2E /* GetPollsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31A26D93CCE00076B2E /* GetPollsRequest.swift */; };
+		2F98A31C26D93CCE00076B2E /* GetPollsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31A26D93CCE00076B2E /* GetPollsRequest.swift */; };
 		2FA06D74258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA06D73258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift */; };
 		2FA06D75258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA06D73258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift */; };
 		2FA51E702574B195009B7A0D /* SessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA51E6F2574B195009B7A0D /* SessionCell.swift */; };
@@ -643,6 +645,12 @@
 		2FC716242584CDE20044A051 /* TwitchChatView-macOS.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FC716232584CDD10044A051 /* TwitchChatView-macOS.xib */; };
 		2FCA4C792574461C00EB7F99 /* ServerAppAPISession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA4C782574461C00EB7F99 /* ServerAppAPISession.swift */; };
 		2FCA4C7A2574461C00EB7F99 /* ServerAppAPISession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA4C782574461C00EB7F99 /* ServerAppAPISession.swift */; };
+		2FCAA97B26D9AFC100520B21 /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA97926D9AFA000520B21 /* Poll.swift */; };
+		2FCAA97C26D9AFC200520B21 /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA97926D9AFA000520B21 /* Poll.swift */; };
+		2FCAA97E26D9AFE700520B21 /* CreatePollRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA97D26D9AFE700520B21 /* CreatePollRequest.swift */; };
+		2FCAA97F26D9AFE700520B21 /* CreatePollRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA97D26D9AFE700520B21 /* CreatePollRequest.swift */; };
+		2FCAA98126D9DC9300520B21 /* EndPollRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98026D9DC9300520B21 /* EndPollRequest.swift */; };
+		2FCAA98226D9DC9300520B21 /* EndPollRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98026D9DC9300520B21 /* EndPollRequest.swift */; };
 		2FD6851F2584D1CF003A4C00 /* TwitchClipViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6851E2584D1CF003A4C00 /* TwitchClipViewTests.swift */; };
 		2FD685202584D1CF003A4C00 /* TwitchClipViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6851E2584D1CF003A4C00 /* TwitchClipViewTests.swift */; };
 		2FD685332584D328003A4C00 /* TwitchClipView-iOS.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FD685252584D208003A4C00 /* TwitchClipView-iOS.xib */; };
@@ -1081,6 +1089,7 @@
 		2F98A31026D8B87100076B2E /* BadgeSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeSet.swift; sourceTree = "<group>"; };
 		2F98A31326D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetChannelChatBadgesRequest.swift; sourceTree = "<group>"; };
 		2F98A31626D8C23500076B2E /* GetGlobalChatBadgesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetGlobalChatBadgesRequest.swift; sourceTree = "<group>"; };
+		2F98A31A26D93CCE00076B2E /* GetPollsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPollsRequest.swift; sourceTree = "<group>"; };
 		2FA06D73258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAppAuthSessionTests.swift; sourceTree = "<group>"; };
 		2FA51E6F2574B195009B7A0D /* SessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCell.swift; sourceTree = "<group>"; };
 		2FA51E762574BAD5009B7A0D /* CodingUserInfoKey+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CodingUserInfoKey+Extensions.swift"; sourceTree = "<group>"; };
@@ -1151,6 +1160,9 @@
 		2FC7161D2584CDB00044A051 /* TwitchChatView-iOS.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "TwitchChatView-iOS.xib"; sourceTree = "<group>"; };
 		2FC716232584CDD10044A051 /* TwitchChatView-macOS.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "TwitchChatView-macOS.xib"; sourceTree = "<group>"; };
 		2FCA4C782574461C00EB7F99 /* ServerAppAPISession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAppAPISession.swift; sourceTree = "<group>"; };
+		2FCAA97926D9AFA000520B21 /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
+		2FCAA97D26D9AFE700520B21 /* CreatePollRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePollRequest.swift; sourceTree = "<group>"; };
+		2FCAA98026D9DC9300520B21 /* EndPollRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPollRequest.swift; sourceTree = "<group>"; };
 		2FD6851E2584D1CF003A4C00 /* TwitchClipViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchClipViewTests.swift; sourceTree = "<group>"; };
 		2FD685252584D208003A4C00 /* TwitchClipView-iOS.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "TwitchClipView-iOS.xib"; sourceTree = "<group>"; };
 		2FD6852A2584D221003A4C00 /* TwitchClipView-macOS.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "TwitchClipView-macOS.xib"; sourceTree = "<group>"; };
@@ -1368,6 +1380,7 @@
 				2F7DBC79255C91E00022E56E /* Games */,
 				2F7DBC7A255C91F40022E56E /* HypeTrain */,
 				2F7DBC6A255C90AF0022E56E /* Moderation */,
+				2FCAA97826D9AF8900520B21 /* Polls */,
 				2F7DBC7B255C925C0022E56E /* Search */,
 				2F7DBC6B255C90BC0022E56E /* Streams */,
 				2F7DBC7C255C929A0022E56E /* Subscriptions */,
@@ -2095,6 +2108,7 @@
 				2FF81B6625544047009DE6B2 /* Games */,
 				2FF81B672554404A009DE6B2 /* HypeTrain */,
 				2F60B7D525536FEB003C6941 /* Moderation */,
+				2F98A31926D93CB000076B2E /* Polls */,
 				2FF81B682554405B009DE6B2 /* Search */,
 				2FF81B6925544066009DE6B2 /* Streams */,
 				2FF81B6A25544071009DE6B2 /* Subscriptions */,
@@ -2172,6 +2186,16 @@
 				2F98A31026D8B87100076B2E /* BadgeSet.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		2F98A31926D93CB000076B2E /* Polls */ = {
+			isa = PBXGroup;
+			children = (
+				2F98A31A26D93CCE00076B2E /* GetPollsRequest.swift */,
+				2FCAA97D26D9AFE700520B21 /* CreatePollRequest.swift */,
+				2FCAA98026D9DC9300520B21 /* EndPollRequest.swift */,
+			);
+			path = Polls;
 			sourceTree = "<group>";
 		};
 		2FA51E6E2574B174009B7A0D /* Views */ = {
@@ -2364,6 +2388,14 @@
 				2F840BE325590F6300B92591 /* SessionListViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		2FCAA97826D9AF8900520B21 /* Polls */ = {
+			isa = PBXGroup;
+			children = (
+				2FCAA97926D9AFA000520B21 /* Poll.swift */,
+			);
+			path = Polls;
 			sourceTree = "<group>";
 		};
 		2FD685412584D5C0003A4C00 /* Tokens */ = {
@@ -3089,6 +3121,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FA62AC2256B41CD00D66483 /* PubSubConnectionDelegate.swift in Sources */,
+				2F98A31B26D93CCE00076B2E /* GetPollsRequest.swift in Sources */,
 				2FC4F67E25633604002ECE17 /* ChatEmoteRanges.swift in Sources */,
 				2F1CB9F8257598C000A9BCB9 /* TwitchWebView.swift in Sources */,
 				2F836A3C25802F1B000EEFF2 /* LegacyGetAllChatEmoticonSetsRequest.swift in Sources */,
@@ -3205,6 +3238,7 @@
 				2FD78197257267D400257026 /* EventSubChannelUnban.swift in Sources */,
 				2F60B88B25538E85003C6941 /* GetAllStreamTagsRequest.swift in Sources */,
 				2FD781692572674800257026 /* EventSubChannelFollow.swift in Sources */,
+				2FCAA98126D9DC9300520B21 /* EndPollRequest.swift in Sources */,
 				2F836A9225804D24000EEFF2 /* LegacyThumbnails.swift in Sources */,
 				2F7DBC84255C94BB0022E56E /* Extension.swift in Sources */,
 				2FC7154C25846A6A0044A051 /* EventSubWebhookCallbackVerification.swift in Sources */,
@@ -3269,6 +3303,7 @@
 				2F041F3125631B4E0076639C /* ChatMessageUserChannelMembership.swift in Sources */,
 				2F836BB4258082BD000EEFF2 /* LegacyUnfollowChannelRequest.swift in Sources */,
 				2F1FA045255B3F40005FE5D9 /* CreateClipRequest.swift in Sources */,
+				2FCAA97E26D9AFE700520B21 /* CreatePollRequest.swift in Sources */,
 				2FA62AFF256B439400D66483 /* PubSubWhisperEvent.swift in Sources */,
 				2F7DBC0A255C8CB40022E56E /* StreamMarker.swift in Sources */,
 				2F836AAF25805057000EEFF2 /* LegacyCollectionItem.swift in Sources */,
@@ -3343,6 +3378,7 @@
 				2FD781872572678F00257026 /* EventSubChannelBan.swift in Sources */,
 				2F041EE52563191E0076639C /* ChatMessage.swift in Sources */,
 				2F1FA014255AC95F005FE5D9 /* GetBitsLeaderboardRequest.swift in Sources */,
+				2FCAA97B26D9AFC100520B21 /* Poll.swift in Sources */,
 				2F7DBCD6255CA8880022E56E /* WebhookSubscription.swift in Sources */,
 				2F1F9FC1255AB772005FE5D9 /* GetExtensionAnalyticsRequest.swift in Sources */,
 				2F1CB9E625750B1A00A9BCB9 /* TwitchPlayerView.swift in Sources */,
@@ -3474,6 +3510,7 @@
 				2F836A4625802F89000EEFF2 /* LegacyGetAllChatEmoticonsRequest.swift in Sources */,
 				2F7DBAB0255C7E570022E56E /* GetUserFollowsRequest.swift in Sources */,
 				2FF81BB5255468E5009DE6B2 /* InternetDateConvertingStrategy.swift in Sources */,
+				2FCAA97C26D9AFC200520B21 /* Poll.swift in Sources */,
 				2F98A31226D8B87100076B2E /* BadgeSet.swift in Sources */,
 				2FADFB9525813C58007011FC /* AuthSession.swift in Sources */,
 				2F041F1925631AD30076639C /* ChatMessageUserNotice.swift in Sources */,
@@ -3522,6 +3559,7 @@
 				2F7DBC24255C8E1F0022E56E /* ChannelInformation.swift in Sources */,
 				2FD781E72572695E00257026 /* EventSubStreamOffline.swift in Sources */,
 				2F1CBA0C2575995200A9BCB9 /* TwitchClipView.swift in Sources */,
+				2FCAA98226D9DC9300520B21 /* EndPollRequest.swift in Sources */,
 				2F836BD72580868F000EEFF2 /* LegacyUnblockUserRequest.swift in Sources */,
 				2F836A6A258042DC000EEFF2 /* LegacyClip.swift in Sources */,
 				2F836B7D25806547000EEFF2 /* LegacyGetFollowedStreamsRequest.swift in Sources */,
@@ -3632,6 +3670,7 @@
 				2F7DBAA1255C7BE30022E56E /* GetUsersRequest.swift in Sources */,
 				2F836B87258065E2000EEFF2 /* LegacyGetUserEmotesRequest.swift in Sources */,
 				2F7DBC3E255C8F5F0022E56E /* StreamTag.swift in Sources */,
+				2FCAA97F26D9AFE700520B21 /* CreatePollRequest.swift in Sources */,
 				2FF65352255B7DC8004D59EA /* GetHypeTrainEventsRequest.swift in Sources */,
 				2FD7819D2572680700257026 /* EventSubChannelPointsCustomReward.swift in Sources */,
 				2F60B8A525538E86003C6941 /* IdToken.swift in Sources */,
@@ -3714,6 +3753,7 @@
 				2F60B8A925538E86003C6941 /* Pagination.swift in Sources */,
 				2F1B1CA1257F2CCC006425D2 /* ServerAppAuthSession.swift in Sources */,
 				2F60B8A025538E86003C6941 /* EmptyCodable.swift in Sources */,
+				2F98A31C26D93CCE00076B2E /* GetPollsRequest.swift in Sources */,
 				2F7DBD21255CD3F60022E56E /* LegacyIngestServer.swift in Sources */,
 				2FD781F32572696B00257026 /* EventSubUserAuthorizationRevoke.swift in Sources */,
 				2FD78129257261A500257026 /* EventSubSubscriptionType.swift in Sources */,
