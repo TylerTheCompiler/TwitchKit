@@ -491,6 +491,24 @@
 		2F8E1F7D257F650D00BDF800 /* EventSubServerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD78105256CD26200257026 /* EventSubServerConnection.swift */; };
 		2F8E1F9C257F6BB800BDF800 /* TypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8E1F9B257F6BB800BDF800 /* TypeAliases.swift */; };
 		2F8E1F9D257F6BB800BDF800 /* TypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8E1F9B257F6BB800BDF800 /* TypeAliases.swift */; };
+		2F98A30126D8860000076B2E /* GetChannelEmotesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30026D8860000076B2E /* GetChannelEmotesRequest.swift */; };
+		2F98A30226D8860000076B2E /* GetChannelEmotesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30026D8860000076B2E /* GetChannelEmotesRequest.swift */; };
+		2F98A30526D88AD700076B2E /* Emote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30426D88AD700076B2E /* Emote.swift */; };
+		2F98A30626D88AD700076B2E /* Emote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30426D88AD700076B2E /* Emote.swift */; };
+		2F98A30826D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30726D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift */; };
+		2F98A30926D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30726D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift */; };
+		2F98A30B26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30A26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift */; };
+		2F98A30C26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30A26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift */; };
+		2F98A30E26D8B53D00076B2E /* GetEmoteSetsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30D26D8B53D00076B2E /* GetEmoteSetsRequest.swift */; };
+		2F98A30F26D8B53D00076B2E /* GetEmoteSetsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A30D26D8B53D00076B2E /* GetEmoteSetsRequest.swift */; };
+		2F98A31126D8B87100076B2E /* BadgeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31026D8B87100076B2E /* BadgeSet.swift */; };
+		2F98A31226D8B87100076B2E /* BadgeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31026D8B87100076B2E /* BadgeSet.swift */; };
+		2F98A31426D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31326D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift */; };
+		2F98A31526D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31326D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift */; };
+		2F98A31726D8C23500076B2E /* GetGlobalChatBadgesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31626D8C23500076B2E /* GetGlobalChatBadgesRequest.swift */; };
+		2F98A31826D8C23500076B2E /* GetGlobalChatBadgesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31626D8C23500076B2E /* GetGlobalChatBadgesRequest.swift */; };
+		2F98A31B26D93CCE00076B2E /* GetPollsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31A26D93CCE00076B2E /* GetPollsRequest.swift */; };
+		2F98A31C26D93CCE00076B2E /* GetPollsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98A31A26D93CCE00076B2E /* GetPollsRequest.swift */; };
 		2FA06D74258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA06D73258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift */; };
 		2FA06D75258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA06D73258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift */; };
 		2FA51E702574B195009B7A0D /* SessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA51E6F2574B195009B7A0D /* SessionCell.swift */; };
@@ -619,6 +637,24 @@
 		2FC716242584CDE20044A051 /* TwitchChatView-macOS.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FC716232584CDD10044A051 /* TwitchChatView-macOS.xib */; };
 		2FCA4C792574461C00EB7F99 /* ServerAppAPISession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA4C782574461C00EB7F99 /* ServerAppAPISession.swift */; };
 		2FCA4C7A2574461C00EB7F99 /* ServerAppAPISession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA4C782574461C00EB7F99 /* ServerAppAPISession.swift */; };
+		2FCAA97B26D9AFC100520B21 /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA97926D9AFA000520B21 /* Poll.swift */; };
+		2FCAA97C26D9AFC200520B21 /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA97926D9AFA000520B21 /* Poll.swift */; };
+		2FCAA97E26D9AFE700520B21 /* CreatePollRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA97D26D9AFE700520B21 /* CreatePollRequest.swift */; };
+		2FCAA97F26D9AFE700520B21 /* CreatePollRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA97D26D9AFE700520B21 /* CreatePollRequest.swift */; };
+		2FCAA98126D9DC9300520B21 /* EndPollRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98026D9DC9300520B21 /* EndPollRequest.swift */; };
+		2FCAA98226D9DC9300520B21 /* EndPollRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98026D9DC9300520B21 /* EndPollRequest.swift */; };
+		2FCAA98526D9DFB700520B21 /* GetPredictionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98426D9DFB700520B21 /* GetPredictionsRequest.swift */; };
+		2FCAA98626D9DFB700520B21 /* GetPredictionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98426D9DFB700520B21 /* GetPredictionsRequest.swift */; };
+		2FCAA98926D9E04B00520B21 /* Prediction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98826D9E04B00520B21 /* Prediction.swift */; };
+		2FCAA98A26D9E04B00520B21 /* Prediction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98826D9E04B00520B21 /* Prediction.swift */; };
+		2FCAA98C26D9E9D900520B21 /* EmptyIfNull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98B26D9E9D900520B21 /* EmptyIfNull.swift */; };
+		2FCAA98D26D9E9D900520B21 /* EmptyIfNull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98B26D9E9D900520B21 /* EmptyIfNull.swift */; };
+		2FCAA98F26D9EBAE00520B21 /* CreatePredictionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98E26D9EBAE00520B21 /* CreatePredictionRequest.swift */; };
+		2FCAA99026D9EBAE00520B21 /* CreatePredictionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA98E26D9EBAE00520B21 /* CreatePredictionRequest.swift */; };
+		2FCAA99226D9F02400520B21 /* EndPredictionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA99126D9F02400520B21 /* EndPredictionRequest.swift */; };
+		2FCAA99326D9F02400520B21 /* EndPredictionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA99126D9F02400520B21 /* EndPredictionRequest.swift */; };
+		2FCAA99526D9F8B200520B21 /* ArrayOfOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA99426D9F8B200520B21 /* ArrayOfOne.swift */; };
+		2FCAA99626D9F8B200520B21 /* ArrayOfOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAA99426D9F8B200520B21 /* ArrayOfOne.swift */; };
 		2FD6851F2584D1CF003A4C00 /* TwitchClipViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6851E2584D1CF003A4C00 /* TwitchClipViewTests.swift */; };
 		2FD685202584D1CF003A4C00 /* TwitchClipViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6851E2584D1CF003A4C00 /* TwitchClipViewTests.swift */; };
 		2FD685332584D328003A4C00 /* TwitchClipView-iOS.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FD685252584D208003A4C00 /* TwitchClipView-iOS.xib */; };
@@ -1049,6 +1085,15 @@
 		2F8836932582D3250051D494 /* URLComponentsExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLComponentsExtensionTests.swift; sourceTree = "<group>"; };
 		2F8836A62582DD740051D494 /* URLSessionTwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTwitchTests.swift; sourceTree = "<group>"; };
 		2F8E1F9B257F6BB800BDF800 /* TypeAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAliases.swift; sourceTree = "<group>"; };
+		2F98A30026D8860000076B2E /* GetChannelEmotesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetChannelEmotesRequest.swift; sourceTree = "<group>"; };
+		2F98A30426D88AD700076B2E /* Emote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emote.swift; sourceTree = "<group>"; };
+		2F98A30726D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmoteImageTemplateURLStrategy.swift; sourceTree = "<group>"; };
+		2F98A30A26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetGlobalEmotesRequest.swift; sourceTree = "<group>"; };
+		2F98A30D26D8B53D00076B2E /* GetEmoteSetsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetEmoteSetsRequest.swift; sourceTree = "<group>"; };
+		2F98A31026D8B87100076B2E /* BadgeSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeSet.swift; sourceTree = "<group>"; };
+		2F98A31326D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetChannelChatBadgesRequest.swift; sourceTree = "<group>"; };
+		2F98A31626D8C23500076B2E /* GetGlobalChatBadgesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetGlobalChatBadgesRequest.swift; sourceTree = "<group>"; };
+		2F98A31A26D93CCE00076B2E /* GetPollsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPollsRequest.swift; sourceTree = "<group>"; };
 		2FA06D73258B1ACB0033CC40 /* ServerAppAuthSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAppAuthSessionTests.swift; sourceTree = "<group>"; };
 		2FA51E6F2574B195009B7A0D /* SessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCell.swift; sourceTree = "<group>"; };
 		2FA51E762574BAD5009B7A0D /* CodingUserInfoKey+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CodingUserInfoKey+Extensions.swift"; sourceTree = "<group>"; };
@@ -1115,6 +1160,15 @@
 		2FC7161D2584CDB00044A051 /* TwitchChatView-iOS.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "TwitchChatView-iOS.xib"; sourceTree = "<group>"; };
 		2FC716232584CDD10044A051 /* TwitchChatView-macOS.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "TwitchChatView-macOS.xib"; sourceTree = "<group>"; };
 		2FCA4C782574461C00EB7F99 /* ServerAppAPISession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAppAPISession.swift; sourceTree = "<group>"; };
+		2FCAA97926D9AFA000520B21 /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
+		2FCAA97D26D9AFE700520B21 /* CreatePollRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePollRequest.swift; sourceTree = "<group>"; };
+		2FCAA98026D9DC9300520B21 /* EndPollRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPollRequest.swift; sourceTree = "<group>"; };
+		2FCAA98426D9DFB700520B21 /* GetPredictionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPredictionsRequest.swift; sourceTree = "<group>"; };
+		2FCAA98826D9E04B00520B21 /* Prediction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prediction.swift; sourceTree = "<group>"; };
+		2FCAA98B26D9E9D900520B21 /* EmptyIfNull.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyIfNull.swift; sourceTree = "<group>"; };
+		2FCAA98E26D9EBAE00520B21 /* CreatePredictionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePredictionRequest.swift; sourceTree = "<group>"; };
+		2FCAA99126D9F02400520B21 /* EndPredictionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPredictionRequest.swift; sourceTree = "<group>"; };
+		2FCAA99426D9F8B200520B21 /* ArrayOfOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayOfOne.swift; sourceTree = "<group>"; };
 		2FD6851E2584D1CF003A4C00 /* TwitchClipViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchClipViewTests.swift; sourceTree = "<group>"; };
 		2FD685252584D208003A4C00 /* TwitchClipView-iOS.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "TwitchClipView-iOS.xib"; sourceTree = "<group>"; };
 		2FD6852A2584D221003A4C00 /* TwitchClipView-macOS.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "TwitchClipView-macOS.xib"; sourceTree = "<group>"; };
@@ -1326,11 +1380,14 @@
 				2F7DBC71255C90F80022E56E /* Analytics */,
 				2F7DBC72255C91270022E56E /* Bits */,
 				2F4163872572AD6D00E94D2A /* ChannelPoints */,
+				2F98A30326D88AC900076B2E /* Chat */,
 				2F7DBC77255C91670022E56E /* Clips */,
 				2F7DBC78255C91960022E56E /* Entitlements */,
 				2F7DBC79255C91E00022E56E /* Games */,
 				2F7DBC7A255C91F40022E56E /* HypeTrain */,
 				2F7DBC6A255C90AF0022E56E /* Moderation */,
+				2FCAA97826D9AF8900520B21 /* Polls */,
+				2FCAA98726D9E03700520B21 /* Predictions */,
 				2F7DBC7B255C925C0022E56E /* Search */,
 				2F7DBC6B255C90BC0022E56E /* Streams */,
 				2F7DBC7C255C929A0022E56E /* Subscriptions */,
@@ -1794,6 +1851,7 @@
 				2F7DBCF1255CD0A60022E56E /* TemplateURLStrategy.swift */,
 				2F7DBCFC255CD0E40022E56E /* ImageTemplateURLStrategy.swift */,
 				2F7DBD0B255CD1080022E56E /* StreamKeyTemplateURLStrategy.swift */,
+				2F98A30726D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift */,
 			);
 			path = TemplateURLs;
 			sourceTree = "<group>";
@@ -2050,12 +2108,15 @@
 				2FF81B6225543FDF009DE6B2 /* Analytics */,
 				2FF81B6325543FEA009DE6B2 /* Bits */,
 				2F41636025728BED00E94D2A /* ChannelPoints */,
+				2F98A2FF26D883F700076B2E /* Chat */,
 				2FF81B6425543FF2009DE6B2 /* Clips */,
 				2FF81B6525544038009DE6B2 /* Entitlements */,
 				2FD7821325726F9700257026 /* EventSub */,
 				2FF81B6625544047009DE6B2 /* Games */,
 				2FF81B672554404A009DE6B2 /* HypeTrain */,
 				2F60B7D525536FEB003C6941 /* Moderation */,
+				2F98A31926D93CB000076B2E /* Polls */,
+				2FCAA98326D9DF9100520B21 /* Predictions */,
 				2FF81B682554405B009DE6B2 /* Search */,
 				2FF81B6925544066009DE6B2 /* Streams */,
 				2FF81B6A25544071009DE6B2 /* Subscriptions */,
@@ -2112,6 +2173,37 @@
 				2F389BA92566FE2100028BF0 /* ConvertibleToNSNumber.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2F98A2FF26D883F700076B2E /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				2F98A30026D8860000076B2E /* GetChannelEmotesRequest.swift */,
+				2F98A30A26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift */,
+				2F98A30D26D8B53D00076B2E /* GetEmoteSetsRequest.swift */,
+				2F98A31326D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift */,
+				2F98A31626D8C23500076B2E /* GetGlobalChatBadgesRequest.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		2F98A30326D88AC900076B2E /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				2F98A30426D88AD700076B2E /* Emote.swift */,
+				2F98A31026D8B87100076B2E /* BadgeSet.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		2F98A31926D93CB000076B2E /* Polls */ = {
+			isa = PBXGroup;
+			children = (
+				2F98A31A26D93CCE00076B2E /* GetPollsRequest.swift */,
+				2FCAA97D26D9AFE700520B21 /* CreatePollRequest.swift */,
+				2FCAA98026D9DC9300520B21 /* EndPollRequest.swift */,
+			);
+			path = Polls;
 			sourceTree = "<group>";
 		};
 		2FA51E6E2574B174009B7A0D /* Views */ = {
@@ -2300,6 +2392,32 @@
 				2F840BE325590F6300B92591 /* SessionListViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		2FCAA97826D9AF8900520B21 /* Polls */ = {
+			isa = PBXGroup;
+			children = (
+				2FCAA97926D9AFA000520B21 /* Poll.swift */,
+			);
+			path = Polls;
+			sourceTree = "<group>";
+		};
+		2FCAA98326D9DF9100520B21 /* Predictions */ = {
+			isa = PBXGroup;
+			children = (
+				2FCAA98426D9DFB700520B21 /* GetPredictionsRequest.swift */,
+				2FCAA98E26D9EBAE00520B21 /* CreatePredictionRequest.swift */,
+				2FCAA99126D9F02400520B21 /* EndPredictionRequest.swift */,
+			);
+			path = Predictions;
+			sourceTree = "<group>";
+		};
+		2FCAA98726D9E03700520B21 /* Predictions */ = {
+			isa = PBXGroup;
+			children = (
+				2FCAA98826D9E04B00520B21 /* Prediction.swift */,
+			);
+			path = Predictions;
 			sourceTree = "<group>";
 		};
 		2FD685412584D5C0003A4C00 /* Tokens */ = {
@@ -2531,6 +2649,8 @@
 				2FF81BA3255468B2009DE6B2 /* Dates */,
 				2F60B7D825537073003C6941 /* Pagination.swift */,
 				2F47B366258ADC2300CADB1F /* SafeURL.swift */,
+				2FCAA98B26D9E9D900520B21 /* EmptyIfNull.swift */,
+				2FCAA99426D9F8B200520B21 /* ArrayOfOne.swift */,
 			);
 			path = PropertyWrappers;
 			sourceTree = "<group>";
@@ -3025,6 +3145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FA62AC2256B41CD00D66483 /* PubSubConnectionDelegate.swift in Sources */,
+				2F98A31B26D93CCE00076B2E /* GetPollsRequest.swift in Sources */,
 				2FC4F67E25633604002ECE17 /* ChatEmoteRanges.swift in Sources */,
 				2F1CB9F8257598C000A9BCB9 /* TwitchWebView.swift in Sources */,
 				2F836A3C25802F1B000EEFF2 /* LegacyGetAllChatEmoticonSetsRequest.swift in Sources */,
@@ -3059,6 +3180,7 @@
 				2F7DBAAF255C7E570022E56E /* GetUserFollowsRequest.swift in Sources */,
 				2FF81BB4255468E5009DE6B2 /* InternetDateConvertingStrategy.swift in Sources */,
 				2FADFB9425813C58007011FC /* AuthSession.swift in Sources */,
+				2F98A31426D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift in Sources */,
 				2F041F1A25631AD30076639C /* ChatMessageUserNotice.swift in Sources */,
 				2F07534825808F2D008AFFD1 /* LegacyGetFollowedVideosRequest.swift in Sources */,
 				2F1F9FD0255ABE13005FE5D9 /* CodableDateInterval.swift in Sources */,
@@ -3097,6 +3219,8 @@
 				2F7DBB53255C88480022E56E /* EntitlementGrant.swift in Sources */,
 				2F7DBACD255C82930022E56E /* GetUserExtensionsRequest.swift in Sources */,
 				2F60B88025538E85003C6941 /* ClientAuthSessionPresentationContextProviding.swift in Sources */,
+				2FCAA98C26D9E9D900520B21 /* EmptyIfNull.swift in Sources */,
+				2F98A30126D8860000076B2E /* GetChannelEmotesRequest.swift in Sources */,
 				2F7DBBF4255C8C3E0022E56E /* StreamKey.swift in Sources */,
 				2F83699F258011BD000EEFF2 /* LegacyFollow.swift in Sources */,
 				2FD7814F2572645A00257026 /* EventSubEvent.swift in Sources */,
@@ -3137,8 +3261,10 @@
 				2F836B4225805E7A000EEFF2 /* LegacyStream.swift in Sources */,
 				2F4163BE2572F21D00E94D2A /* UpdateCustomRewardRequest.swift in Sources */,
 				2FD78197257267D400257026 /* EventSubChannelUnban.swift in Sources */,
+				2FCAA99226D9F02400520B21 /* EndPredictionRequest.swift in Sources */,
 				2F60B88B25538E85003C6941 /* GetAllStreamTagsRequest.swift in Sources */,
 				2FD781692572674800257026 /* EventSubChannelFollow.swift in Sources */,
+				2FCAA98126D9DC9300520B21 /* EndPollRequest.swift in Sources */,
 				2F836A9225804D24000EEFF2 /* LegacyThumbnails.swift in Sources */,
 				2F7DBC84255C94BB0022E56E /* Extension.swift in Sources */,
 				2FC7154C25846A6A0044A051 /* EventSubWebhookCallbackVerification.swift in Sources */,
@@ -3163,14 +3289,17 @@
 				2F1FA099255B525E005FE5D9 /* GetDropsEntitlementsRequest.swift in Sources */,
 				2F60B87A25538E85003C6941 /* Claim.swift in Sources */,
 				2F83699425800F9D000EEFF2 /* LegacyGetChannelFollowersRequest.swift in Sources */,
+				2FCAA99526D9F8B200520B21 /* ArrayOfOne.swift in Sources */,
 				2F4163562572734000E94D2A /* GetEventSubSubscriptionsRequest.swift in Sources */,
 				2FCA4C7A2574461C00EB7F99 /* ServerAppAPISession.swift in Sources */,
 				2F836940257FFEC4000EEFF2 /* LegacyGetUserByIdRequest.swift in Sources */,
 				2F041F4D25631BF90076639C /* ChatMessageUnhostMode.swift in Sources */,
+				2F98A30E26D8B53D00076B2E /* GetEmoteSetsRequest.swift in Sources */,
 				2F07535225808FF7008AFFD1 /* LegacyUpdateVideoRequest.swift in Sources */,
 				2F60B88C25538E85003C6941 /* AppAccessToken.swift in Sources */,
 				2F60B87225538E85003C6941 /* URLSession+TwitchExtensions.swift in Sources */,
 				2F7DBB3D255C878D0022E56E /* CreatedClip.swift in Sources */,
+				2F98A31726D8C23500076B2E /* GetGlobalChatBadgesRequest.swift in Sources */,
 				2F836933257FFDEF000EEFF2 /* LegacyCurrentUser.swift in Sources */,
 				2F4163912572ADA900E94D2A /* GetCustomRewardsRequest.swift in Sources */,
 				2F7DBB8B255C89C50022E56E /* HypeTrainEvent.swift in Sources */,
@@ -3178,6 +3307,7 @@
 				2F83687A257FED6B000EEFF2 /* LegacyGetCheermotesRequest.swift in Sources */,
 				2FC4F643256334A8002ECE17 /* ChatColor.swift in Sources */,
 				2F389CA22569030B00028BF0 /* TwitchAppDeepLink.swift in Sources */,
+				2F98A30826D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift in Sources */,
 				2F4163892572AD8600E94D2A /* CustomChannelPointsReward.swift in Sources */,
 				2FD781B32572686200257026 /* EventSubHypeTrainContribution.swift in Sources */,
 				2F1FA0B3255B5A00005FE5D9 /* GetUserDropsEntitlementsRequest.swift in Sources */,
@@ -3200,6 +3330,7 @@
 				2F041F3125631B4E0076639C /* ChatMessageUserChannelMembership.swift in Sources */,
 				2F836BB4258082BD000EEFF2 /* LegacyUnfollowChannelRequest.swift in Sources */,
 				2F1FA045255B3F40005FE5D9 /* CreateClipRequest.swift in Sources */,
+				2FCAA97E26D9AFE700520B21 /* CreatePollRequest.swift in Sources */,
 				2FA62AFF256B439400D66483 /* PubSubWhisperEvent.swift in Sources */,
 				2F7DBC0A255C8CB40022E56E /* StreamMarker.swift in Sources */,
 				2F836AAF25805057000EEFF2 /* LegacyCollectionItem.swift in Sources */,
@@ -3216,9 +3347,11 @@
 				2FD7819E2572680700257026 /* EventSubChannelPointsCustomReward.swift in Sources */,
 				2F60B88225538E85003C6941 /* IdToken.swift in Sources */,
 				2F836843257F8AAF000EEFF2 /* LegacyGetAllTeamsRequest.swift in Sources */,
+				2FCAA98526D9DFB700520B21 /* GetPredictionsRequest.swift in Sources */,
 				2F60B88425538E85003C6941 /* String+Extensions.swift in Sources */,
 				2F8369A5258011D5000EEFF2 /* LegacyGetChannelTeamsRequest.swift in Sources */,
 				2F60B87625538E85003C6941 /* AnyAuthTokenStore.swift in Sources */,
+				2F98A30526D88AD700076B2E /* Emote.swift in Sources */,
 				2F7DBBD9255C8BC10022E56E /* ModeratorEvent.swift in Sources */,
 				2F60B86F25538E85003C6941 /* IncompatibleAccessToken.swift in Sources */,
 				2FF0A9802558B136002FA9E8 /* KeychainUserAccessTokenStore.swift in Sources */,
@@ -3266,12 +3399,14 @@
 				2F8369D125801A2E000EEFF2 /* LegacyChannelSubscription.swift in Sources */,
 				2F7DBB14255C868C0022E56E /* Cheermote.swift in Sources */,
 				2F8369D725801A91000EEFF2 /* LegacyCheckChannelSubscriptionByUserRequest.swift in Sources */,
+				2FCAA98F26D9EBAE00520B21 /* CreatePredictionRequest.swift in Sources */,
 				2FD781CF257268FC00257026 /* EventSubHypeTrainProgress.swift in Sources */,
 				2F41634B257271D800E94D2A /* DeleteEventSubSubscriptionRequest.swift in Sources */,
 				2FD781AD2572685100257026 /* EventSubChannelPointsCustomRewardRedemption.swift in Sources */,
 				2FD781872572678F00257026 /* EventSubChannelBan.swift in Sources */,
 				2F041EE52563191E0076639C /* ChatMessage.swift in Sources */,
 				2F1FA014255AC95F005FE5D9 /* GetBitsLeaderboardRequest.swift in Sources */,
+				2FCAA97B26D9AFC100520B21 /* Poll.swift in Sources */,
 				2F7DBCD6255CA8880022E56E /* WebhookSubscription.swift in Sources */,
 				2F1F9FC1255AB772005FE5D9 /* GetExtensionAnalyticsRequest.swift in Sources */,
 				2F1CB9E625750B1A00A9BCB9 /* TwitchPlayerView.swift in Sources */,
@@ -3282,6 +3417,7 @@
 				2FA62AEA256B433300D66483 /* PubSubChannelPointsEvent.swift in Sources */,
 				2F7DBB62255C88EB0022E56E /* CodeStatus.swift in Sources */,
 				2F7DBBE4255C8C000022E56E /* Channel.swift in Sources */,
+				2F98A30B26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift in Sources */,
 				2F836A08258022C2000EEFF2 /* LegacyResetChannelStreamKeyRequest.swift in Sources */,
 				2F60B88525538E85003C6941 /* WebAuthenticationSession.swift in Sources */,
 				2F60B87B25538E85003C6941 /* AuthToken.swift in Sources */,
@@ -3309,6 +3445,8 @@
 				2F1B1C86257F2AC9006425D2 /* ClientAuthSession.swift in Sources */,
 				2FF65367255B94EC004D59EA /* GetBanEventsRequest.swift in Sources */,
 				2F7DBB09255C86760022E56E /* GameReport.swift in Sources */,
+				2FCAA98926D9E04B00520B21 /* Prediction.swift in Sources */,
+				2F98A31126D8B87100076B2E /* BadgeSet.swift in Sources */,
 				2F836BFA258089B3000EEFF2 /* LegacyGetVideoRequest.swift in Sources */,
 				2F4163AB2572F0CD00E94D2A /* CustomChannelPointsRewardRedemption.swift in Sources */,
 				2F7DBAF6255C86230022E56E /* ExtensionReport.swift in Sources */,
@@ -3365,6 +3503,8 @@
 			files = (
 				2FA62AC3256B41CD00D66483 /* PubSubConnectionDelegate.swift in Sources */,
 				2FC4F68325633604002ECE17 /* ChatEmoteRanges.swift in Sources */,
+				2F98A30F26D8B53D00076B2E /* GetEmoteSetsRequest.swift in Sources */,
+				2FCAA98626D9DFB700520B21 /* GetPredictionsRequest.swift in Sources */,
 				2F1CB9F9257598C000A9BCB9 /* TwitchWebView.swift in Sources */,
 				2F836A3725802F1A000EEFF2 /* LegacyGetAllChatEmoticonSetsRequest.swift in Sources */,
 				2F8369E625801B88000EEFF2 /* LegacyGetChannelVideosRequest.swift in Sources */,
@@ -3397,6 +3537,8 @@
 				2F836A4625802F89000EEFF2 /* LegacyGetAllChatEmoticonsRequest.swift in Sources */,
 				2F7DBAB0255C7E570022E56E /* GetUserFollowsRequest.swift in Sources */,
 				2FF81BB5255468E5009DE6B2 /* InternetDateConvertingStrategy.swift in Sources */,
+				2FCAA97C26D9AFC200520B21 /* Poll.swift in Sources */,
+				2F98A31226D8B87100076B2E /* BadgeSet.swift in Sources */,
 				2FADFB9525813C58007011FC /* AuthSession.swift in Sources */,
 				2F041F1925631AD30076639C /* ChatMessageUserNotice.swift in Sources */,
 				2F07534D25808F2E008AFFD1 /* LegacyGetFollowedVideosRequest.swift in Sources */,
@@ -3444,6 +3586,7 @@
 				2F7DBC24255C8E1F0022E56E /* ChannelInformation.swift in Sources */,
 				2FD781E72572695E00257026 /* EventSubStreamOffline.swift in Sources */,
 				2F1CBA0C2575995200A9BCB9 /* TwitchClipView.swift in Sources */,
+				2FCAA98226D9DC9300520B21 /* EndPollRequest.swift in Sources */,
 				2F836BD72580868F000EEFF2 /* LegacyUnblockUserRequest.swift in Sources */,
 				2F836A6A258042DC000EEFF2 /* LegacyClip.swift in Sources */,
 				2F836B7D25806547000EEFF2 /* LegacyGetFollowedStreamsRequest.swift in Sources */,
@@ -3455,6 +3598,7 @@
 				2F836C0925808C8A000EEFF2 /* LegacyGetTopVideosRequest.swift in Sources */,
 				2F1FA005255AC7FC005FE5D9 /* GetGameAnalyticsRequest.swift in Sources */,
 				2F1FA093255B4FC8005FE5D9 /* GetCodeStatusRequest.swift in Sources */,
+				2F98A31826D8C23500076B2E /* GetGlobalChatBadgesRequest.swift in Sources */,
 				2F41639C2572B19900E94D2A /* GetCustomRewardRedemptionsRequest.swift in Sources */,
 				2F836B1D25805AB6000EEFF2 /* LegacyGame.swift in Sources */,
 				2F60B8AD25538E86003C6941 /* Scope.swift in Sources */,
@@ -3466,11 +3610,13 @@
 				2FF65386255B9AF9004D59EA /* GetModeratorEventsRequest.swift in Sources */,
 				2FF81B7B25545421009DE6B2 /* StartCommercialRequest.swift in Sources */,
 				2F836AF6258057C3000EEFF2 /* LegacyDeleteItemFromCollectionRequest.swift in Sources */,
+				2FCAA99026D9EBAE00520B21 /* CreatePredictionRequest.swift in Sources */,
 				2F60B8A625538E86003C6941 /* CheckAutoModRequest.swift in Sources */,
 				2FD781E02572693F00257026 /* EventSubHypeTrainEnd.swift in Sources */,
 				2F836A9B25804D54000EEFF2 /* LegacyCollection.swift in Sources */,
 				2F7DBCA3255CA13C0022E56E /* ExtensionUpdate.swift in Sources */,
 				2F041EED2563196B0076639C /* ChatMessageClearChat.swift in Sources */,
+				2FCAA99626D9F8B200520B21 /* ArrayOfOne.swift in Sources */,
 				2FC4F6F92565E0C9002ECE17 /* ChatMessageWhisper.swift in Sources */,
 				2F7DBA7C255C66080022E56E /* CreateUserFollowsRequest.swift in Sources */,
 				2F836B4325805E7A000EEFF2 /* LegacyStream.swift in Sources */,
@@ -3482,6 +3628,7 @@
 				2F7DBC89255C94BC0022E56E /* Extension.swift in Sources */,
 				2FC7154D25846A6A0044A051 /* EventSubWebhookCallbackVerification.swift in Sources */,
 				2F83696225800A90000EEFF2 /* LegacyCurrentChannel.swift in Sources */,
+				2FCAA99326D9F02400520B21 /* EndPredictionRequest.swift in Sources */,
 				2F83698F25800F33000EEFF2 /* LegacyGetChannelEditorsRequest.swift in Sources */,
 				2F7DBB33255C872D0022E56E /* ExtensionTransaction.swift in Sources */,
 				2F836B5F258061CE000EEFF2 /* LegacyGetLiveStreamsRequest.swift in Sources */,
@@ -3497,6 +3644,7 @@
 				2F4163CA2572F4F200E94D2A /* UpdateCustomRewardRedemptionStatusRequest.swift in Sources */,
 				2F83694C258003B3000EEFF2 /* APISession.swift in Sources */,
 				2FADCA732577B0C30085D9F9 /* ReplaceStreamTagsRequest.swift in Sources */,
+				2F98A31526D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift in Sources */,
 				2F836A78258043F5000EEFF2 /* LegacyGetTopClipsRequest.swift in Sources */,
 				2F1FA09E255B525F005FE5D9 /* GetDropsEntitlementsRequest.swift in Sources */,
 				2F60B89D25538E86003C6941 /* Claim.swift in Sources */,
@@ -3524,6 +3672,7 @@
 				2F836A8C25804BC5000EEFF2 /* LegacyGetCollectionMetadataRequest.swift in Sources */,
 				2FD78158257266F300257026 /* EventSubChannelUpdate.swift in Sources */,
 				2F7DBD0C255CD1080022E56E /* StreamKeyTemplateURLStrategy.swift in Sources */,
+				2F98A30626D88AD700076B2E /* Emote.swift in Sources */,
 				2FA62AF2256B435200D66483 /* PubSubSubscriptionEvent.swift in Sources */,
 				2FD781162572569A00257026 /* InternetDateWithOptionalFractionalSecondsConvertingStrategy.swift in Sources */,
 				2F041F04256319C30076639C /* ChatMessageGlobalUserState.swift in Sources */,
@@ -3534,6 +3683,7 @@
 				2F041EDB2563179E0076639C /* DispatchQueue.swift in Sources */,
 				2FD781C32572689400257026 /* EventSubHypeTrainBegin.swift in Sources */,
 				2F1F9FE0255ABFF4005FE5D9 /* OptionalCodableDateInterval.swift in Sources */,
+				2FCAA98D26D9E9D900520B21 /* EmptyIfNull.swift in Sources */,
 				2F836833257F873D000EEFF2 /* LegacyGetUsersRequest.swift in Sources */,
 				2FD7813B2572626C00257026 /* CreateEventSubSubscriptionRequest.swift in Sources */,
 				2F041F3025631B4E0076639C /* ChatMessageUserChannelMembership.swift in Sources */,
@@ -3551,6 +3701,7 @@
 				2F7DBAA1255C7BE30022E56E /* GetUsersRequest.swift in Sources */,
 				2F836B87258065E2000EEFF2 /* LegacyGetUserEmotesRequest.swift in Sources */,
 				2F7DBC3E255C8F5F0022E56E /* StreamTag.swift in Sources */,
+				2FCAA97F26D9AFE700520B21 /* CreatePollRequest.swift in Sources */,
 				2FF65352255B7DC8004D59EA /* GetHypeTrainEventsRequest.swift in Sources */,
 				2FD7819D2572680700257026 /* EventSubChannelPointsCustomReward.swift in Sources */,
 				2F60B8A525538E86003C6941 /* IdToken.swift in Sources */,
@@ -3617,6 +3768,7 @@
 				2F8369CB258018E2000EEFF2 /* LegacySortDirection.swift in Sources */,
 				2FF81BC025546A0F009DE6B2 /* InternetDateWithFractionalSecondsConvertingStrategy.swift in Sources */,
 				2F836B3B25805E10000EEFF2 /* LegacySearchStreamsRequest.swift in Sources */,
+				2F98A30226D8860000076B2E /* GetChannelEmotesRequest.swift in Sources */,
 				2FA62AEB256B433300D66483 /* PubSubChannelPointsEvent.swift in Sources */,
 				2F7DBB63255C88EB0022E56E /* CodeStatus.swift in Sources */,
 				2F7DBBE9255C8C010022E56E /* Channel.swift in Sources */,
@@ -3631,10 +3783,12 @@
 				2F60B8A925538E86003C6941 /* Pagination.swift in Sources */,
 				2F1B1CA1257F2CCC006425D2 /* ServerAppAuthSession.swift in Sources */,
 				2F60B8A025538E86003C6941 /* EmptyCodable.swift in Sources */,
+				2F98A31C26D93CCE00076B2E /* GetPollsRequest.swift in Sources */,
 				2F7DBD21255CD3F60022E56E /* LegacyIngestServer.swift in Sources */,
 				2FD781F32572696B00257026 /* EventSubUserAuthorizationRevoke.swift in Sources */,
 				2FD78129257261A500257026 /* EventSubSubscriptionType.swift in Sources */,
 				2F7DBC03255C8C7F0022E56E /* Stream.swift in Sources */,
+				2FCAA98A26D9E04B00520B21 /* Prediction.swift in Sources */,
 				2F836A4D2580309E000EEFF2 /* LegacyEmoteDetail.swift in Sources */,
 				2F8E1F7B257F650D00BDF800 /* EventSubServer.swift in Sources */,
 				2F41636725728C0E00E94D2A /* CreateCustomRewardRequest.swift in Sources */,
@@ -3645,8 +3799,10 @@
 				2F836A54258031F1000EEFF2 /* LegacyChatBadge.swift in Sources */,
 				2FADFB9C25813D79007011FC /* ClientIdAuthSession.swift in Sources */,
 				2F1B1C87257F2AC9006425D2 /* ClientAuthSession.swift in Sources */,
+				2F98A30926D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift in Sources */,
 				2FF6536C255B94ED004D59EA /* GetBanEventsRequest.swift in Sources */,
 				2F7DBB0E255C86760022E56E /* GameReport.swift in Sources */,
+				2F98A30C26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift in Sources */,
 				2F836BFF258089B3000EEFF2 /* LegacyGetVideoRequest.swift in Sources */,
 				2F4163AA2572F0CD00E94D2A /* CustomChannelPointsRewardRedemption.swift in Sources */,
 				2F7DBAF7255C86230022E56E /* ExtensionReport.swift in Sources */,

@@ -10,12 +10,12 @@ public protocol APIRequest {
     
     /// An `Encodable` type that represents the request's post body.
     ///
-    /// The default type is `EmptyCodable` for requests that do not use a post body.
+    /// The default type is `EmptyCodable` for requests that do not contain a post body.
     associatedtype RequestBody: Encodable = EmptyCodable
     
     /// A `Decodable` type that represents the request's response body.
     ///
-    /// The default type is `EmptyCodable` for requests whose responses that have no body.
+    /// The default type is `EmptyCodable` for requests whose responses have no body.
     associatedtype ResponseBody: Decodable = EmptyCodable
     
     /// If the request type can use a user access token, this is set to `ValidatedUserAccessToken`
@@ -30,7 +30,7 @@ public protocol APIRequest {
     
     /// A type that represents the keys of the query parameters of the request.
     ///
-    /// The default type is `EmptyQueryParamKey` for requests that take no query parameters.
+    /// The default type is `EmptyQueryParamKey` for requests that do not contain query parameters.
     associatedtype QueryParamKey: RawRepresentable & Equatable
         = EmptyQueryParamKey where QueryParamKey.RawValue == String
     
