@@ -69,22 +69,8 @@ public struct CreatePollRequest: APIRequest {
     public struct ResponseBody: Decodable {
         
         /// The poll that was created.
-        public let poll: Poll
-        
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            guard let poll = try container.decode([Poll].self, forKey: .poll).first else {
-                throw DecodingError.valueNotFound(
-                    Poll.self,
-                    .init(
-                        codingPath: container.codingPath,
-                        debugDescription: "Expected to decode Poll, but array of Polls was empty."
-                    )
-                )
-            }
-            
-            self.poll = poll
-        }
+        @ArrayOfOne
+        public private(set) var poll: Poll
         
         private enum CodingKeys: String, CodingKey {
             case poll = "data"

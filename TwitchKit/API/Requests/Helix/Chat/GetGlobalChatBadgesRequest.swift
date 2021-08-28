@@ -10,7 +10,8 @@ public struct GetGlobalChatBadgesRequest: APIRequest {
     public struct ResponseBody: Decodable {
         
         /// An array of chat badge sets.
-        public let badgeSets: [BadgeSet]
+        @EmptyIfNull
+        public private(set) var badgeSets: [BadgeSet]
         
         private enum CodingKeys: String, CodingKey {
             case badgeSets = "data"

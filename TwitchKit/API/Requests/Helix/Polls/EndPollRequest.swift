@@ -9,6 +9,7 @@
 public struct EndPollRequest: APIRequest {
     public typealias AppToken = IncompatibleAccessToken
     
+    /// A status with which a Poll can be ended.
     public enum Status: String, Encodable {
         
         /// End the poll manually, but allow it to be viewed publicly.
@@ -32,23 +33,9 @@ public struct EndPollRequest: APIRequest {
     
     public struct ResponseBody: Decodable {
         
-        /// The poll that was created.
-        public let poll: Poll
-        
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            guard let poll = try container.decode([Poll].self, forKey: .poll).first else {
-                throw DecodingError.valueNotFound(
-                    Poll.self,
-                    .init(
-                        codingPath: container.codingPath,
-                        debugDescription: "Expected to decode Poll, but array of Polls was empty."
-                    )
-                )
-            }
-            
-            self.poll = poll
-        }
+        /// The poll that was ended.
+        @ArrayOfOne
+        public private(set) var poll: Poll
         
         private enum CodingKeys: String, CodingKey {
             case poll = "data"

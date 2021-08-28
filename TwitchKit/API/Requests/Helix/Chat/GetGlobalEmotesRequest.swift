@@ -17,13 +17,14 @@ public struct GetGlobalEmotesRequest: APIRequest {
     public struct ResponseBody: Decodable {
         
         /// An array of global emotes.
-        public let emotes: [Emote]
+        @EmptyIfNull
+        public private(set) var emotes: [Emote]
         
         /// A templated URL for an emote's image.
         ///
         /// Use the values from an emote's identifier, format, scale, and theme mode to replace the like-named placeholder
         /// strings in the templated URL to create a CDN (content delivery network) URL that you use to fetch the emote.
-        public var templateURL: TemplateURL<EmoteImageTemplateURLStrategy>
+        public let templateURL: TemplateURL<EmoteImageTemplateURLStrategy>
         
         private enum CodingKeys: String, CodingKey {
             case emotes = "data"

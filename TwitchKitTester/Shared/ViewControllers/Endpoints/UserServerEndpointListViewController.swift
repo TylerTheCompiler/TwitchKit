@@ -17,20 +17,20 @@ class UserServerEndpointListViewController: PlatformIndependentTableViewControll
             
             apiSession = ServerUserAPISession(authSession: authSession)
             
-            apiSession?.perform(GetPollsRequest()) {
+            apiSession?.perform(GetPredictionsRequest()) {
                 switch $0.result {
                 case .success(let responseBody):
-                    print("Get Polls result:", responseBody.polls)
+                    print("Get Predictions result:", responseBody.predictions)
                 case .failure(let error):
                     print("Error:", error)
                 }
             }
             
-            let req = CreatePollRequest(title: "Will this work?")
+            let req = CreatePredictionRequest(title: "Will this work?", blueOutcome: "Yes", pinkOutcome: "No")
             apiSession?.perform(req) {
                 switch $0.result {
                 case .success(let responseBody):
-                    print("Create Poll result:", responseBody.poll)
+                    print("Create Prediction result:", responseBody.prediction)
                 case .failure(let error):
                     print("Error:", error)
                 }
