@@ -22,9 +22,8 @@ class UserServerEndpointListViewController: PlatformIndependentTableViewControll
             
             Task {
                 do {
-                    let req = GetTeamRequest(teamName: "mindcrack")
-                    let team = try await apiSession.perform(req).body.team
-                    print(team)
+                    let req = GetChannelStreamScheduleRequest()
+                    print(try await apiSession.perform(req).body.schedule)
                 } catch {
                     print("Error:", error)
                 }

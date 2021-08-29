@@ -1,5 +1,5 @@
 //
-//  CheckAutoModRequest.swift
+//  CheckAutoModStatusRequest.swift
 //  TwitchKit
 //
 //  Created by Tyler Prevost on 11/4/20.
@@ -14,7 +14,7 @@
 ///
 /// For more information about AutoMod, see
 /// [How to Use AutoMod](https://help.twitch.tv/s/article/how-to-use-automod?language=en_US).
-public struct CheckAutoModRequest: APIRequest {
+public struct CheckAutoModStatusRequest: APIRequest {
     public typealias AppToken = IncompatibleAccessToken
     
     public struct RequestBody: Equatable, Encodable {

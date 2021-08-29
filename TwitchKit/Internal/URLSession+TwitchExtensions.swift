@@ -262,6 +262,11 @@ extension URLSession {
             return (EmptyCodable() as! T, response)
         }
         
+        if T.self == Data.self {
+            // swiftlint:disable:next force_cast
+            return (data as! T, response)
+        }
+        
         do {
             let decoder = JSONDecoder.snakeCaseToCamelCase
             decoder.userInfo[.expectedNonce] = expectedNonce

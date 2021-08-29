@@ -19,70 +19,15 @@ class AppServerEndpointListViewController: PlatformIndependentTableViewControlle
             let apiSession = ServerAppAPISession(authSession: authSession)
             self.apiSession = apiSession
             
-            if #available(iOS 15, macOS 12, *) {
-                Task {
-                    let emotesResponse = try await apiSession.perform(GetGlobalEmotesRequest()).body
-                    let badgeSets = try await apiSession.perform(GetGlobalChatBadgesRequest()).body.badgeSets
-                    print("Emotes:", emotesResponse.emotes)
-                    print("Badge Sets:", badgeSets)
-                    
-                    let templateURL = emotesResponse.templateURL
-                    let emoteCellViewModels = emotesResponse.emotes.map {
-                        EmoteCellViewModel(emote: $0, templateURL: templateURL)
-                    }
-                    
-                    let badgeCellViewModels = badgeSets.flatMap { badgeSet in
-                        badgeSet.badges.map { BadgeCellViewModel(badge: $0, setId: badgeSet.setId) }
-                    }
-                    
-                    DispatchQueue.main.async {
-                        let emotesViewController = EmotesViewController()
-                        emotesViewController.emoteCellViewModels = emoteCellViewModels
-                        emotesViewController.badgeCellViewModels = badgeCellViewModels
-                        self.present(emotesViewController, animated: true)
-                    }
-                }
-            } else {
-                var emoteCellViewModels = [EmoteCellViewModel]()
-                var badgeCellViewModels = [BadgeCellViewModel]()
-                
-                let group = DispatchGroup()
-                group.enter()
-                apiSession.perform(GetGlobalEmotesRequest()) { result in
-                    switch result {
-                    case .success((let responseBody, _)):
-                        let templateURL = responseBody.templateURL
-                        emoteCellViewModels = responseBody.emotes.map {
-                            EmoteCellViewModel(emote: $0, templateURL: templateURL)
-                        }
-                        
-                    case .failure(let error):
-                        print("Error:", error)
-                    }
-                    
-                    group.leave()
-                }
-                
-                group.enter()
-                apiSession.perform(GetGlobalChatBadgesRequest()) { result in
-                    switch result {
-                    case .success((let responseBody, _)):
-                        badgeCellViewModels = responseBody.badgeSets.flatMap { badgeSet in
-                            badgeSet.badges.map { BadgeCellViewModel(badge: $0, setId: badgeSet.setId) }
-                        }
-                        
-                    case .failure(let error):
-                        print("Error:", error)
-                    }
-                    
-                    group.leave()
-                }
-                
-                group.notify(queue: .main) {
-                    let emotesViewController = EmotesViewController()
-                    emotesViewController.emoteCellViewModels = emoteCellViewModels
-                    emotesViewController.badgeCellViewModels = badgeCellViewModels
-                    self.present(emotesViewController, animated: true)
+            guard #available(iOS 15, *) else { return }
+            
+            Task {
+                do {
+                    let req = GetChanneliCalendarRequest(broadcasterId: "29999098")
+                    let data = try await apiSession.perform(req).body
+                    print(String(decoding: data, as: UTF8.self))
+                } catch {
+                    print("Error:", error)
                 }
             }
         }

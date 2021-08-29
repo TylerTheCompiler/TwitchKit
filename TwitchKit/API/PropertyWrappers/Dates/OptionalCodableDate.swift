@@ -21,8 +21,13 @@ public struct OptionalCodableDate<Strategy>: Codable where Strategy: DateConvert
     }
     
     public init(from decoder: Decoder) throws {
-        let dateString = try decoder.singleValueContainer().decode(String.self)
-        wrappedValue = Strategy.date(from: dateString)
+        let container = try decoder.singleValueContainer()
+        if container.decodeNil() {
+            wrappedValue = nil
+        } else {
+            let dateString = try container.decode(String.self)
+            wrappedValue = Strategy.date(from: dateString)
+        }
     }
     
     public func encode(to encoder: Encoder) throws {

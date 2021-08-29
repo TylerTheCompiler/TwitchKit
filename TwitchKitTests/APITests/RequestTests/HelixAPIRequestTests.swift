@@ -563,25 +563,6 @@ class HelixAPIClipRequestTests: XCTestCase {
 }
 
 class HelixAPIEntitlementRequestTests: XCTestCase {
-    func test_CreateEntitlementGrantsUploadURLRequest() {
-        let manifestId = "SomeManifestId"
-        let type = CreateEntitlementGrantsUploadURLRequest.EntitlementType.bulkDropsGrant
-        
-        let req = CreateEntitlementGrantsUploadURLRequest(
-            manifestId: manifestId,
-            type: type
-        )
-        
-        XCTAssertEqual(req.apiVersion, .helix)
-        XCTAssertEqual(req.method, .post)
-        XCTAssertEqual(req.path, "/entitlements/upload")
-        XCTAssertEqual(req.equatableQueryParams, [
-            .init(.manifestId, manifestId),
-            .init(.type, type.rawValue)
-        ])
-        XCTAssertEqual(req.body, nil)
-    }
-    
     func test_GetCodeStatusRequest() {
         let codes = ["Code1", "Code2", "Code3"]
         
@@ -871,12 +852,12 @@ class HelixAPIHypeTrainRequestTests: XCTestCase {
 
 class HelixAPIModerationRequestTests: XCTestCase {
     
-    func test_CheckAutoModRequest() {
+    func test_CheckAutoModStatusRequest() {
         let messages = [AutoModMessage(id: "Id1", text: "Text1", userId: "UserId1"),
                         AutoModMessage(id: "Id2", text: "Text2", userId: "UserId2"),
                         AutoModMessage(id: "Id3", text: "Text3", userId: "UserId3")]
         
-        var req = CheckAutoModRequest(messages: messages)
+        var req = CheckAutoModStatusRequest(messages: messages)
         
         req.update(with: userId)
         
@@ -1315,39 +1296,6 @@ class HelixAPITagRequestTests: XCTestCase {
 class HelixAPIUserRequestTests: XCTestCase {
     let fromId = "FromUserId"
     let toId = "ToUserId"
-    
-    func test_CreateUserFollowsRequest() {
-        let allowNotifications = true
-        
-        let req = CreateUserFollowsRequest(
-            fromId: fromId,
-            toId: toId,
-            allowNotifications: allowNotifications
-        )
-        
-        XCTAssertEqual(req.apiVersion, .helix)
-        XCTAssertEqual(req.method, .post)
-        XCTAssertEqual(req.path, "/users/follows")
-        XCTAssertEqual(req.equatableQueryParams, [])
-        XCTAssertEqual(req.body, .init(
-            fromId: fromId,
-            toId: toId,
-            allowNotifications: allowNotifications
-        ))
-    }
-    
-    func test_DeleteUserFollowsRequest() {
-        let req = DeleteUserFollowsRequest(fromId: fromId, toId: toId)
-        
-        XCTAssertEqual(req.apiVersion, .helix)
-        XCTAssertEqual(req.method, .delete)
-        XCTAssertEqual(req.path, "/users/follows")
-        XCTAssertEqual(req.equatableQueryParams, [
-            .init(.fromId, fromId),
-            .init(.toId, toId)
-        ])
-        XCTAssertEqual(req.body, nil)
-    }
     
     func test_GetUserActiveExtensionsRequest() {
         let req = GetUserActiveExtensionsRequest(userId: userId)
