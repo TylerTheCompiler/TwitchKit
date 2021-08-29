@@ -264,7 +264,7 @@ extension URLSession {
         
         if T.self == Data.self {
             // swiftlint:disable:next force_cast
-            return (data as! T, response)
+            return ((data ?? Data()) as! T, response)
         }
         
         do {
