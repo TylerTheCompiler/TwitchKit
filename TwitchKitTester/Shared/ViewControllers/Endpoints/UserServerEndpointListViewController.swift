@@ -15,23 +15,17 @@ class UserServerEndpointListViewController: PlatformIndependentTableViewControll
                 return
             }
             
-            apiSession = ServerUserAPISession(authSession: authSession)
+            let apiSession = ServerUserAPISession(authSession: authSession)
+            self.apiSession = apiSession
             
-            apiSession?.perform(GetPredictionsRequest()) {
-                switch $0 {
-                case .success((let responseBody, _)):
-                    print("Get Predictions result:", responseBody.predictions)
-                case .failure(let error):
-                    print("Error:", error)
-                }
-            }
+            guard #available(iOS 15, *) else { return }
             
-            let req = CreatePredictionRequest(title: "Will this work?", blueOutcome: "Yes", pinkOutcome: "No")
-            apiSession?.perform(req) {
-                switch $0 {
-                case .success((let responseBody, _)):
-                    print("Create Prediction result:", responseBody.prediction)
-                case .failure(let error):
+            Task {
+                do {
+                    let req = GetTeamRequest(teamName: "mindcrack")
+                    let team = try await apiSession.perform(req).body.team
+                    print(team)
+                } catch {
                     print("Error:", error)
                 }
             }

@@ -17,6 +17,9 @@ public struct BitLeader: Decodable {
     /// ID of the user (viewer) in the leaderboard entry.
     public let userId: String
     
-    /// Display name corresponding to user_id.
+    /// User login name.
+    public let userLogin: String
+    
+    /// Display name corresponding to `userId`.
     public let userName: String
 }

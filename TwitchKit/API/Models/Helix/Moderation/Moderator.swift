@@ -9,8 +9,11 @@
 public struct Moderator: Decodable {
     
     /// User ID of a user who is a moderator.
-    private let userId: String
+    public let userId: String
+    
+    /// Login of a moderator in the channel.
+    public let userLogin: String
     
     /// Display name of a user who is a moderator.
-    private let userName: String
+    public let userName: String
 }

@@ -18,9 +18,13 @@ public struct GetBroadcasterSubscriptionsRequest: APIRequest {
         @Pagination
         public private(set) var cursor: Pagination.Cursor?
         
+        /// The number of Twitch users subscribed to the broadcaster.
+        public let total: Int
+        
         private enum CodingKeys: String, CodingKey {
             case subscriptions = "data"
             case cursor = "pagination"
+            case total
         }
     }
     

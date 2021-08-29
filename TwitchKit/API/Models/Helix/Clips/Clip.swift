@@ -46,6 +46,9 @@ public struct Clip: Decodable {
     /// Number of times the clip has been viewed.
     public let viewCount: Int
     
+    /// Duration of the Clip in seconds (up to 0.1 precision).
+    public let duration: TimeInterval
+    
     /// Date when the clip was created.
     @InternetDate
     public private(set) var createdAt: Date
@@ -67,6 +70,7 @@ public struct Clip: Decodable {
         case language
         case title
         case viewCount
+        case duration
         case createdAt
         case thumbnailUrl
     }

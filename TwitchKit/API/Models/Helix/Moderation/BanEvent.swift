@@ -24,11 +24,17 @@ public struct BanEvent: Decodable {
         /// The ID of the channel in which the ban event took place.
         public let broadcasterId: String
         
+        /// Broadcaster’s user login name.
+        public let broadcasterLogin: String
+        
         /// The username of the channel in which the ban event took place.
         public let broadcasterName: String
         
         /// User ID of the user who has been banned or unbanned.
         public let userId: String
+        
+        /// Login of the banned user.
+        public let userLogin: String
         
         /// Display name of the user who has been banned or unbanned.
         public let userName: String

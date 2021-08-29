@@ -20,6 +20,9 @@ public struct Stream: Decodable {
     /// ID of the user who is streaming.
     public let userId: String
     
+    /// Login of the user who is streaming.
+    public let userLogin: String
+    
     /// Display name corresponding to `userId`.
     public let userName: String
     
@@ -47,6 +50,10 @@ public struct Stream: Decodable {
     
     /// Shows tag IDs that apply to the stream.
     public let tagIds: [String]
+    
+    /// Indicates if the broadcaster has specified their channel contains mature content that may be
+    /// inappropriate for younger audiences.
+    public let isMature: Bool
     
     /// Template thumbnail URL of the stream.
     public let thumbnailUrl: TemplateURL<ImageTemplateURLStrategy>

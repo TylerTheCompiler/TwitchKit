@@ -29,7 +29,11 @@ public typealias OptionalInternetDateIntervalWithFractionalSeconds =
 /// and `.withFractionalSeconds` options to convert between `Date` and `String` values.
 public enum InternetDateWithFractionalSecondsConvertingStrategy: DateConvertingStrategy {
     public static func date(from string: String) -> Date? {
-        ISO8601DateFormatter.internetDateWithFractionalSecondsFormatter.date(from: string)
+        if let date = ISO8601DateFormatter.internetDateWithFractionalSecondsFormatter.date(from: string) {
+            return date
+        }
+        
+        return DateFormatter.longFormatWithFractionalSecondsDateFormatter.date(from: string)
     }
     
     public static func string(from date: Date) -> String {

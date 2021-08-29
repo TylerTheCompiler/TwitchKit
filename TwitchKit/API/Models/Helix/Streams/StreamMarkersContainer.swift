@@ -24,6 +24,9 @@ public struct StreamMarkersContainer: Decodable {
     /// Display name corresponding to `userId`.
     public let userName: String
     
+    /// Login corresponding to `userId`.
+    public let userLogin: String
+    
     /// The videos containing stream markers.
     public let videos: [Video]
 }

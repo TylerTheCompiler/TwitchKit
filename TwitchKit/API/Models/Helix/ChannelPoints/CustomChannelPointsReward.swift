@@ -57,6 +57,9 @@ public struct CustomChannelPointsReward: Decodable {
     /// ID of the channel the reward is for.
     public let broadcasterId: String
     
+    /// Broadcaster’s user login name.
+    public let broadcasterLogin: String
+    
     /// Display name of the channel the reward is for.
     public let broadcasterName: String
     

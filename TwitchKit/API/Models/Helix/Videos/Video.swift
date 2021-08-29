@@ -31,11 +31,27 @@ public struct Video: Decodable {
         case `private`
     }
     
+    /// A portion of a Twitch video (VOD).
+    public struct Segment: Decodable {
+        
+        /// Duration of the muted segment in seconds.
+        public let duration: Int
+        
+        /// Offset in the video (in seconds) at which the muted segment begins.
+        public let offset: Int
+    }
+    
     /// ID of the video.
     public let id: String
     
+    /// ID of the stream that the video originated from if `type` is `.archive`. Otherwise nil.
+    public let streamId: String?
+    
     /// ID of the user who owns the video.
     public let userId: String
+    
+    /// Login of the user who owns the video.
+    public let userLogin: String
     
     /// Display name corresponding to `userId`.
     public let userName: String
@@ -75,4 +91,8 @@ public struct Video: Decodable {
     
     /// Length of the video.
     public let duration: String
+    
+    /// Array of muted segments in the video. If there are no muted segments, the value will be null.
+    @EmptyIfNull
+    public private(set) var mutedSegments: [Segment]
 }

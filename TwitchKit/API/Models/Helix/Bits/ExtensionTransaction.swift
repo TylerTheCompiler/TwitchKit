@@ -56,11 +56,17 @@ public struct ExtensionTransaction: Decodable {
     /// Twitch User ID of the channel the transaction occurred on.
     public let broadcasterId: String
     
+    /// Login name of the broadcaster.
+    public let broadcasterLogin: String
+    
     /// Twitch Display Name of the broadcaster.
     public let broadcasterName: String
     
     /// Twitch User ID of the user who generated the transaction.
     public let userId: String
+    
+    /// Login name of the user who generated the transaction.
+    public let userLogin: String
     
     /// Twitch Display Name of the user who generated the transaction.
     public let userName: String

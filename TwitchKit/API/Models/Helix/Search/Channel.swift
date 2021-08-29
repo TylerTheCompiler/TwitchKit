@@ -11,11 +11,17 @@ public struct Channel: Decodable {
     /// Channel language (Broadcaster Language field from the Channels service).
     public let broadcasterLanguage: String
     
+    /// Login of the broadcaster.
+    public let broadcasterLogin: String
+    
     /// Display name corresponding to `userId`.
     public let displayName: String
     
     /// ID of the game being played on the stream.
     public let gameId: String
+    
+    /// Name of the game being played on the stream.
+    public let gameName: String
     
     /// Channel ID.
     public let id: String
@@ -24,7 +30,7 @@ public struct Channel: Decodable {
     public let isLive: Bool
     
     /// Shows tag IDs that apply to the stream (live only).
-    public let tagsIds: [String]
+    public let tagIds: [String]
     
     /// Template thumbnail URL of the stream.
     public let thumbnailUrl: TemplateURL<ImageTemplateURLStrategy>

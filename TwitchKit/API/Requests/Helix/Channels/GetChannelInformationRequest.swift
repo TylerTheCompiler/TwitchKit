@@ -10,10 +10,11 @@ public struct GetChannelInformationRequest: APIRequest {
     public struct ResponseBody: Decodable {
         
         /// An array of one object - the returned channel information.
-        public let channelInformations: [ChannelInformation]
+        @ArrayOfOne
+        public private(set) var channelInformation: ChannelInformation
         
         private enum CodingKeys: String, CodingKey {
-            case channelInformations = "data"
+            case channelInformation = "data"
         }
     }
     

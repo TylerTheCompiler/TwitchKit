@@ -42,13 +42,19 @@ extension CustomChannelPointsReward {
         /// The ID of the broadcaster that the reward belongs to.
         public let broadcasterId: String
         
+        /// Broadcaster’s user login name.
+        public let broadcasterLogin: String
+        
         /// The display name of the broadcaster that the reward belongs to.
         public let broadcasterName: String
         
         /// The ID of the redemption.
         public let id: String
         
-        /// The ID of the user that redeemed the reward
+        /// The login of the user who redeemed the reward.
+        public let userLogin: String
+        
+        /// The ID of the user that redeemed the reward.
         public let userId: String
         
         /// The display name of the user that redeemed the reward.

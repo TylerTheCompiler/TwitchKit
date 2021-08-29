@@ -24,11 +24,17 @@ public struct ModeratorEvent: Decodable {
         /// ID of the broadcaster adding or removing moderators.
         public let broadcasterId: String
         
+        /// Login of the broadcaster.
+        public let broadcasterLogin: String
+        
         /// Name of the broadcaster adding or removing moderators.
         public let broadcasterName: String
         
         /// ID of the user being added or removed as moderator.
         public let userId: String
+        
+        /// Login of the user.
+        public let userLogin: String
         
         /// Name of the user being added or removed as moderator.
         public let userName: String

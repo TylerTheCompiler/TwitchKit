@@ -21,7 +21,11 @@ public typealias OptionalInternetDateInterval = OptionalCodableDateInterval<Inte
 /// to convert between `Date` and `String` values.
 public enum InternetDateConvertingStrategy: DateConvertingStrategy {
     public static func date(from string: String) -> Date? {
-        ISO8601DateFormatter.internetDateFormatter.date(from: string)
+        if let date = ISO8601DateFormatter.internetDateFormatter.date(from: string) {
+            return date
+        }
+        
+        return DateFormatter.longFormatDateFormatter.date(from: string)
     }
     
     public static func string(from date: Date) -> String {

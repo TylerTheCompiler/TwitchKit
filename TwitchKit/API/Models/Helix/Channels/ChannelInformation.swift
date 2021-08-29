@@ -15,6 +15,8 @@ public struct ChannelInformation: Decodable {
     public let broadcasterName: String
     
     /// Language of the channel.
+    ///
+    /// A language value is either the ISO 639-1 two-letter code for a supported stream language or "other".
     public let broadcasterLanguage: String
     
     /// Current game ID being played on the channel.
@@ -25,4 +27,7 @@ public struct ChannelInformation: Decodable {
     
     /// Title of the stream.
     public let title: String
+    
+    /// Stream delay in seconds
+    public let delay: Int
 }
