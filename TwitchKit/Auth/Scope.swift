@@ -66,11 +66,11 @@ public enum Scope: String, Codable, CaseIterable, CustomStringConvertible {
     /// Manage Clips for a channel.
     case clipsEdit = "clips:edit"
     
-    /// View a channel's moderation data including Moderators, Bans, Timeouts, and Automod settings.
+    /// View a channel's moderation data including Moderators, Bans, Timeouts, and AutoMod settings.
     case moderationRead = "moderation:read"
     
     /// Manage messages held for review by AutoMod in channels where you are a moderator.
-    case moderatorManageAutomod = "moderator:manage:automod"
+    case moderatorManageAutoMod = "moderator:manage:automod"
     
     /// Manage a user object.
     case userEdit = "user:edit"

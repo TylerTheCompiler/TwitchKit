@@ -27,6 +27,7 @@ class SessionListViewController: PlatformIndependentTableViewController {
     private let serverRefreshTokenStore = KeychainRefreshTokenStore(identifier: "server")
     private let appAccessTokenStore = KeychainAppAccessTokenStore(identifier: "server")
     
+    private var tempClientAuthSession: ClientAuthSession?
     private var pendingAuthCode: AuthCode?
     private var pendingAuthCodeAndExpectedNonce: (AuthCode, String?)?
     
@@ -493,7 +494,7 @@ extension SessionListViewController {
     }
     
     private func createNewUserServerAuthSession() {
-        let clientSession = ClientAuthSession(
+        tempClientAuthSession = ClientAuthSession(
             clientId: TesterAppData.shared.clientId,
             redirectURL: TesterAppData.shared.redirectURL,
             scopes: TesterAppData.shared.scopes,
@@ -503,7 +504,8 @@ extension SessionListViewController {
             presentationContextProvider: self
         )
         
-        clientSession.getAuthCode { result in
+        tempClientAuthSession?.getAuthCode { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success((let authCode, let nonce)):
                 let session = ServerUserAuthSession(
@@ -515,8 +517,9 @@ extension SessionListViewController {
                     refreshTokenStore: self.serverRefreshTokenStore
                 )
                 
-                session.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { result in
+                session.getNewAccessAndIdTokens(withAuthCode: authCode, expectedNonce: nonce) { [weak self] result in
                     DispatchQueue.main.async {
+                        guard let self = self else { return }
                         switch result {
                         case .success((let validatedAccessToken, _, _)):
                             self.addUserServerAuthSession(session, for: validatedAccessToken.validation.userId)
@@ -524,11 +527,14 @@ extension SessionListViewController {
                         case .failure(let error):
                             print("Server authorize error:", error)
                         }
+                        
+                        self.tempClientAuthSession = nil
                     }
                 }
                 
             case .failure(let error):
                 print("Get auth code error:", error)
+                self.tempClientAuthSession = nil
             }
         }
     }

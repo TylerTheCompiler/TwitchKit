@@ -21,6 +21,10 @@
 		2F02BD5D26DC246C00CA29B9 /* DeleteChannelStreamScheduleSegmentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F02BD5A26DC23C800CA29B9 /* DeleteChannelStreamScheduleSegmentRequest.swift */; };
 		2F02BD5F26DC29D500CA29B9 /* UpdateDropsEntitlementsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F02BD5E26DC29D500CA29B9 /* UpdateDropsEntitlementsRequest.swift */; };
 		2F02BD6026DC29D500CA29B9 /* UpdateDropsEntitlementsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F02BD5E26DC29D500CA29B9 /* UpdateDropsEntitlementsRequest.swift */; };
+		2F02BD6226DC626B00CA29B9 /* PubSubAutoModQueueEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F02BD6126DC5D8D00CA29B9 /* PubSubAutoModQueueEvent.swift */; };
+		2F02BD6326DC626B00CA29B9 /* PubSubAutoModQueueEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F02BD6126DC5D8D00CA29B9 /* PubSubAutoModQueueEvent.swift */; };
+		2F02BD6526DC63AF00CA29B9 /* PubSubUserModerationNotificationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F02BD6426DC62A400CA29B9 /* PubSubUserModerationNotificationEvent.swift */; };
+		2F02BD6626DC63B000CA29B9 /* PubSubUserModerationNotificationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F02BD6426DC62A400CA29B9 /* PubSubUserModerationNotificationEvent.swift */; };
 		2F03A2122585511B00A660EB /* KeychainAuthTokenStoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A2112585511B00A660EB /* KeychainAuthTokenStoringTests.swift */; };
 		2F03A2132585511B00A660EB /* KeychainAuthTokenStoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A2112585511B00A660EB /* KeychainAuthTokenStoringTests.swift */; };
 		2F041EC32563087E0076639C /* ReaderWriterValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F041EC22563087E0076639C /* ReaderWriterValue.swift */; };
@@ -873,6 +877,8 @@
 		2F02BD5726DC1F9F00CA29B9 /* UpdateChannelStreamScheduleSegmentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateChannelStreamScheduleSegmentRequest.swift; sourceTree = "<group>"; };
 		2F02BD5A26DC23C800CA29B9 /* DeleteChannelStreamScheduleSegmentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteChannelStreamScheduleSegmentRequest.swift; sourceTree = "<group>"; };
 		2F02BD5E26DC29D500CA29B9 /* UpdateDropsEntitlementsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDropsEntitlementsRequest.swift; sourceTree = "<group>"; };
+		2F02BD6126DC5D8D00CA29B9 /* PubSubAutoModQueueEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PubSubAutoModQueueEvent.swift; sourceTree = "<group>"; };
+		2F02BD6426DC62A400CA29B9 /* PubSubUserModerationNotificationEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PubSubUserModerationNotificationEvent.swift; sourceTree = "<group>"; };
 		2F03A2112585511B00A660EB /* KeychainAuthTokenStoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainAuthTokenStoringTests.swift; sourceTree = "<group>"; };
 		2F041EC22563087E0076639C /* ReaderWriterValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderWriterValue.swift; sourceTree = "<group>"; };
 		2F041ED5256317920076639C /* DispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueue.swift; sourceTree = "<group>"; };
@@ -2341,6 +2347,8 @@
 				2FA62AE9256B433300D66483 /* PubSubChannelPointsEvent.swift */,
 				2FA62AF0256B435200D66483 /* PubSubSubscriptionEvent.swift */,
 				2FA62AF7256B437600D66483 /* PubSubModerationEvent.swift */,
+				2F02BD6126DC5D8D00CA29B9 /* PubSubAutoModQueueEvent.swift */,
+				2F02BD6426DC62A400CA29B9 /* PubSubUserModerationNotificationEvent.swift */,
 				2FA62AFE256B439400D66483 /* PubSubWhisperEvent.swift */,
 				2FA62B05256B43F200D66483 /* PubSubWhisperThreadEvent.swift */,
 			);
@@ -3353,6 +3361,7 @@
 				2FA9C9DA255F79550091A077 /* Chatbot.swift in Sources */,
 				2F7DBC23255C8E1F0022E56E /* ChannelInformation.swift in Sources */,
 				2FD781EC2572695E00257026 /* EventSubStreamOffline.swift in Sources */,
+				2F02BD6526DC63AF00CA29B9 /* PubSubUserModerationNotificationEvent.swift in Sources */,
 				2F1CBA072575995100A9BCB9 /* TwitchClipView.swift in Sources */,
 				2F836BD22580868F000EEFF2 /* LegacyUnblockUserRequest.swift in Sources */,
 				2F836A69258042DC000EEFF2 /* LegacyClip.swift in Sources */,
@@ -3438,6 +3447,7 @@
 				2F1FA0B3255B5A00005FE5D9 /* GetUserDropsEntitlementsRequest.swift in Sources */,
 				2F836A1225802889000EEFF2 /* LegacyGetChatBadgesByChannelRequest.swift in Sources */,
 				2F836A8725804BC4000EEFF2 /* LegacyGetCollectionMetadataRequest.swift in Sources */,
+				2F02BD6226DC626B00CA29B9 /* PubSubAutoModQueueEvent.swift in Sources */,
 				2FD78157257266F300257026 /* EventSubChannelUpdate.swift in Sources */,
 				2F7DBD0D255CD1080022E56E /* StreamKeyTemplateURLStrategy.swift in Sources */,
 				2FA62AF1256B435200D66483 /* PubSubSubscriptionEvent.swift in Sources */,
@@ -3838,6 +3848,7 @@
 				2F041F3025631B4E0076639C /* ChatMessageUserChannelMembership.swift in Sources */,
 				2F29AA1126DB59EA0007607D /* GetFollowedStreamsRequest.swift in Sources */,
 				2F29AA1C26DB60CC0007607D /* ManageHeldAutoModMessageRequest.swift in Sources */,
+				2F02BD6626DC63B000CA29B9 /* PubSubUserModerationNotificationEvent.swift in Sources */,
 				2F836BB9258082BD000EEFF2 /* LegacyUnfollowChannelRequest.swift in Sources */,
 				2F1FA04A255B3F41005FE5D9 /* CreateClipRequest.swift in Sources */,
 				2FA62B00256B439400D66483 /* PubSubWhisperEvent.swift in Sources */,
@@ -3958,6 +3969,7 @@
 				2F98A30926D88CD600076B2E /* EmoteImageTemplateURLStrategy.swift in Sources */,
 				2FF6536C255B94ED004D59EA /* GetBanEventsRequest.swift in Sources */,
 				2F7DBB0E255C86760022E56E /* GameReport.swift in Sources */,
+				2F02BD6326DC626B00CA29B9 /* PubSubAutoModQueueEvent.swift in Sources */,
 				2F98A30C26D8AF4D00076B2E /* GetGlobalEmotesRequest.swift in Sources */,
 				2F836BFF258089B3000EEFF2 /* LegacyGetVideoRequest.swift in Sources */,
 				2F4163AA2572F0CD00E94D2A /* CustomChannelPointsRewardRedemption.swift in Sources */,

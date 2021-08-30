@@ -26,8 +26,10 @@ class PubSubViewController: PlatformIndependentViewController {
                     self.pubSubConnection = pubSub
                     pubSub.delegate = self
                     pubSub.connect()
-                    pubSub.listen(to: [.moderatorActions(channelId: accessToken.validation.userId)])
-                    pubSub.listen(to: [.whispers(userId: accessToken.validation.userId)])
+                    pubSub.listen(to: [.userModerationNotifications(
+                        userId: accessToken.validation.userId,
+                        channelId: "29999098"
+                    )])
                     
                 case .failure:
                     break

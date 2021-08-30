@@ -31,37 +31,43 @@ extension PubSub {
         }
         
         /// A message that is received when anyone cheers in a specified channel. (Version 1)
-        case bitsV1(BitsEvent)
+        case bitsV1(BitsEvent, topic: Topic)
         
         /// A message that is received when anyone cheers in a specified channel. (Version 2)
-        case bitsV2(BitsEvent)
+        case bitsV2(BitsEvent, topic: Topic)
         
         /// A message that is received when a user earns a new Bits badge in a particular channel, and chooses to
         /// share the notification with chat.
-        case bitsBadgeUnlock(BitsBadgeEvent)
+        case bitsBadgeUnlock(BitsBadgeEvent, topic: Topic)
         
         /// A message that is received when a custom reward is redeemed in a channel.
-        case channelPoints(ChannelPointsEvent)
+        case channelPoints(ChannelPointsEvent, topic: Topic)
         
         /// A message that is received when anyone subscribes (first month), resubscribes (subsequent months), or
         /// gifts a subscription to a channel. Subgift subscription messages contain recipient information.
-        case channelSubscription(SubscriptionEvent)
+        case channelSubscription(SubscriptionEvent, topic: Topic)
         
         /// Supports moderators listening to the topic, as well as users listening to the topic to receive their own
         /// events.
         ///
         /// Examples of moderator actions are bans, unbans, timeouts, deleting messages, changing chat mode
         /// (followers-only, subs-only), changing AutoMod levels, and adding a mod.
-        case moderatorAction(ModerationEvent)
+        case moderatorAction(ModerationEvent, topic: Topic)
+        
+        /// AutoMod flags a message as potentially inappropriate, and when a moderator takes action on a message.
+        case autoModQueue(AutoModQueueEvent, topic: Topic)
+        
+        /// A user's message held by AutoMod has been approved or denied.
+        case userModerationNotification(UserModerationNotificationEvent, topic: Topic)
         
         /// A message that is received when anyone whispers the specified user.
-        case whisperReceived(WhisperEvent)
+        case whisperReceived(WhisperEvent, topic: Topic)
         
         /// A message that is received when the user whispers another user.
-        case whisperSent(WhisperEvent)
+        case whisperSent(WhisperEvent, topic: Topic)
         
         /// A message that is received when the user receives a whisper thread event.
-        case whisperThread(WhisperThreadEvent)
+        case whisperThread(WhisperThreadEvent, topic: Topic)
         
         /// A message that is received when the server is about to restart (typically for maintenance) and will
         /// disconnect the client within 30 seconds. During this time, Twitch recommends that clients reconnect to
@@ -77,35 +83,42 @@ extension PubSub {
             
             switch topic {
             case .bitsV1:
-                self = try .bitsV1(container.decode(BitsEvent.self))
+                self = try .bitsV1(container.decode(BitsEvent.self), topic: topic)
                 
             case .bitsV2:
-                self = try .bitsV2(container.decode(BitsEvent.self))
+                self = try .bitsV2(container.decode(BitsEvent.self), topic: topic)
                 
             case .bitsBadgeUnlocks:
-                self = try .bitsBadgeUnlock(container.decode(BitsBadgeEvent.self))
+                self = try .bitsBadgeUnlock(container.decode(BitsBadgeEvent.self), topic: topic)
                 
             case .channelPoints:
-                self = try .channelPoints(container.decode(ChannelPointsEvent.self))
+                self = try .channelPoints(container.decode(ChannelPointsEvent.self), topic: topic)
                 
             case .channelSubscriptions:
-                self = try .channelSubscription(container.decode(SubscriptionEvent.self))
+                self = try .channelSubscription(container.decode(SubscriptionEvent.self), topic: topic)
                 
             case .moderatorActions:
-                self = try .moderatorAction(container.decode(ModerationEvent.self))
+                self = try .moderatorAction(container.decode(ModerationEvent.self), topic: topic)
+                
+            case .autoModQueue:
+                self = try .autoModQueue(container.decode(AutoModQueueEvent.self), topic: topic)
+                
+            case .userModerationNotifications:
+                self = try .userModerationNotification(container.decode(UserModerationNotificationEvent.self),
+                                                       topic: topic)
                 
             case .whispers:
                 let keyedContainer = try decoder.container(keyedBy: CodingKeys.self)
                 let whisperType = try keyedContainer.decode(WhisperEventType.self, forKey: .type)
                 switch whisperType {
                 case .sent:
-                    self = try .whisperSent(container.decode(WhisperEvent.self))
+                    self = try .whisperSent(container.decode(WhisperEvent.self), topic: topic)
                     
                 case .received:
-                    self = try .whisperReceived(container.decode(WhisperEvent.self))
+                    self = try .whisperReceived(container.decode(WhisperEvent.self), topic: topic)
                     
                 case .thread:
-                    self = try .whisperThread(container.decode(WhisperThreadEvent.self))
+                    self = try .whisperThread(container.decode(WhisperThreadEvent.self), topic: topic)
                 }
             }
         }
