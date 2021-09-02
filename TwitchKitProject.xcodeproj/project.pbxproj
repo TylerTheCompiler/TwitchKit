@@ -181,6 +181,10 @@
 		2F47B368258ADC2300CADB1F /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F47B366258ADC2300CADB1F /* SafeURL.swift */; };
 		2F4D1021258DD8CD0000A080 /* ChatbotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */; };
 		2F4D1022258DD8CD0000A080 /* ChatbotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */; };
+		2F5DA50626E06EB00090C179 /* GetCreatorGoalsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5DA50526E06EB00090C179 /* GetCreatorGoalsRequest.swift */; };
+		2F5DA50726E06EB00090C179 /* GetCreatorGoalsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5DA50526E06EB00090C179 /* GetCreatorGoalsRequest.swift */; };
+		2F5DA50A26E06FC30090C179 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5DA50926E06FC30090C179 /* Goal.swift */; };
+		2F5DA50B26E06FC30090C179 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5DA50926E06FC30090C179 /* Goal.swift */; };
 		2F60B7602551151A003C6941 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60B75F2551151A003C6941 /* AppDelegate.swift */; };
 		2F60B7622551151A003C6941 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60B7612551151A003C6941 /* SceneDelegate.swift */; };
 		2F60B7672551151A003C6941 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F60B7652551151A003C6941 /* Main.storyboard */; };
@@ -955,6 +959,8 @@
 		2F4163D725730C2800E94D2A /* TesterAppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesterAppData.swift; sourceTree = "<group>"; };
 		2F47B366258ADC2300CADB1F /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
 		2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotTests.swift; sourceTree = "<group>"; };
+		2F5DA50526E06EB00090C179 /* GetCreatorGoalsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCreatorGoalsRequest.swift; sourceTree = "<group>"; };
+		2F5DA50926E06FC30090C179 /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
 		2F60B75C2551151A003C6941 /* TwitchKitTester-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TwitchKitTester-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F60B75F2551151A003C6941 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F60B7612551151A003C6941 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -1445,6 +1451,7 @@
 				2F7DBC77255C91670022E56E /* Clips */,
 				2F7DBC78255C91960022E56E /* Entitlements */,
 				2F7DBC79255C91E00022E56E /* Games */,
+				2F5DA50826E06FB60090C179 /* Goals */,
 				2F7DBC7A255C91F40022E56E /* HypeTrain */,
 				2F7DBC6A255C90AF0022E56E /* Moderation */,
 				2FCAA97826D9AF8900520B21 /* Polls */,
@@ -1592,6 +1599,22 @@
 				2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */,
 			);
 			path = ChatbotTests;
+			sourceTree = "<group>";
+		};
+		2F5DA50426E06E830090C179 /* Goals */ = {
+			isa = PBXGroup;
+			children = (
+				2F5DA50526E06EB00090C179 /* GetCreatorGoalsRequest.swift */,
+			);
+			path = Goals;
+			sourceTree = "<group>";
+		};
+		2F5DA50826E06FB60090C179 /* Goals */ = {
+			isa = PBXGroup;
+			children = (
+				2F5DA50926E06FC30090C179 /* Goal.swift */,
+			);
+			path = Goals;
 			sourceTree = "<group>";
 		};
 		2F60B7532551151A003C6941 = {
@@ -2235,6 +2258,7 @@
 				2FF81B6525544038009DE6B2 /* Entitlements */,
 				2FD7821325726F9700257026 /* EventSub */,
 				2FF81B6625544047009DE6B2 /* Games */,
+				2F5DA50426E06E830090C179 /* Goals */,
 				2FF81B672554404A009DE6B2 /* HypeTrain */,
 				2F60B7D525536FEB003C6941 /* Moderation */,
 				2F98A31926D93CB000076B2E /* Polls */,
@@ -3378,6 +3402,7 @@
 				2F836B1C25805AB6000EEFF2 /* LegacyGame.swift in Sources */,
 				2F60B88A25538E85003C6941 /* Scope.swift in Sources */,
 				2FD78133257261F500257026 /* EventSubSubscriptionCondition.swift in Sources */,
+				2F5DA50A26E06FC30090C179 /* Goal.swift in Sources */,
 				2FC4F64E256334D3002ECE17 /* ChatBadge.swift in Sources */,
 				2F02BD5926DC1F9F00CA29B9 /* UpdateChannelStreamScheduleSegmentRequest.swift in Sources */,
 				2F836A0225802289000EEFF2 /* LegacyCommercial.swift in Sources */,
@@ -3494,6 +3519,7 @@
 				2F7DBBD9255C8BC10022E56E /* ModeratorEvent.swift in Sources */,
 				2F60B86F25538E85003C6941 /* IncompatibleAccessToken.swift in Sources */,
 				2FF0A9802558B136002FA9E8 /* KeychainUserAccessTokenStore.swift in Sources */,
+				2F5DA50626E06EB00090C179 /* GetCreatorGoalsRequest.swift in Sources */,
 				2F041F4C25631BF90076639C /* ChatMessageUserState.swift in Sources */,
 				2F836B2225805BC9000EEFF2 /* LegacySearchChannelsRequest.swift in Sources */,
 				2F60B88D25538E85003C6941 /* RefreshToken.swift in Sources */,
@@ -3665,6 +3691,7 @@
 				2F8E1F7D257F650D00BDF800 /* EventSubServerConnection.swift in Sources */,
 				2FF653B1255BAAD0004D59EA /* GetStreamsRequest.swift in Sources */,
 				2F836B0A25805947000EEFF2 /* LegacyGetTopGamesRequest.swift in Sources */,
+				2F5DA50B26E06FC30090C179 /* Goal.swift in Sources */,
 				2F836A62258040AD000EEFF2 /* LegacyGetClipRequest.swift in Sources */,
 				2F83692C257FFD82000EEFF2 /* LegacyCheermote.swift in Sources */,
 				2F60B89725538E86003C6941 /* AuthTokenStoring.swift in Sources */,
@@ -3775,6 +3802,7 @@
 				2F02BD5326DC0F9D00CA29B9 /* UpdateChannelStreamScheduleRequest.swift in Sources */,
 				2F041EED2563196B0076639C /* ChatMessageClearChat.swift in Sources */,
 				2FCAA99626D9F8B200520B21 /* ArrayOfOne.swift in Sources */,
+				2F5DA50726E06EB00090C179 /* GetCreatorGoalsRequest.swift in Sources */,
 				2FC4F6F92565E0C9002ECE17 /* ChatMessageWhisper.swift in Sources */,
 				2F836B4325805E7A000EEFF2 /* LegacyStream.swift in Sources */,
 				2F4163BF2572F21D00E94D2A /* UpdateCustomRewardRequest.swift in Sources */,

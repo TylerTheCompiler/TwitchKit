@@ -22,8 +22,8 @@ class UserServerEndpointListViewController: PlatformIndependentTableViewControll
             
             Task {
                 do {
-                    let req = GetChannelStreamScheduleRequest()
-                    print(try await apiSession.perform(req).body.schedule)
+                    let req = GetCreatorGoalsRequest()
+                    print(try await apiSession.perform(req).body.goals)
                 } catch {
                     print("Error:", error)
                 }

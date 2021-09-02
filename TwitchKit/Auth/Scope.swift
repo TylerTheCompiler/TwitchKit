@@ -45,6 +45,9 @@ public enum Scope: String, Codable, CaseIterable, CustomStringConvertible {
     /// View a list of users with the editor role for a channel.
     case channelReadEditors = "channel:read:editors"
     
+    /// View Creator Goals for a channel.
+    case channelReadGoals = "channel:read:goals"
+    
     /// View Hype Train information for a channel.
     case channelReadHypeTrain = "channel:read:hype_train"
     
