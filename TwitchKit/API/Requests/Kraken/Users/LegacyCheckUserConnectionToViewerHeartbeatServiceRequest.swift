@@ -7,7 +7,7 @@
 
 /// Checks whether an authenticated Twitch user is connected to VHS.
 ///
-/// If a connection to the service exists for the specified user, the linked game user’s ID is returned;
+/// If a connection to the service exists for the specified user, the linked game user's ID is returned;
 /// otherwise, an HTTP 404 response is returned.
 public struct LegacyCheckUserConnectionToViewerHeartbeatServiceRequest: APIRequest {
     public typealias AppToken = IncompatibleAccessToken

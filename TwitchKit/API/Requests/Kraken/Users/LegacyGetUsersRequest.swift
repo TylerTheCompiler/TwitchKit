@@ -7,7 +7,7 @@
 
 /// Gets the user objects for the specified Twitch login names (up to 100).
 ///
-/// If a specified user’s Twitch-registered email address is not verified, null is returned for that user.
+/// If a specified user's Twitch-registered email address is not verified, null is returned for that user.
 public struct LegacyGetUsersRequest: APIRequest {
     public typealias AppToken = IncompatibleAccessToken
     

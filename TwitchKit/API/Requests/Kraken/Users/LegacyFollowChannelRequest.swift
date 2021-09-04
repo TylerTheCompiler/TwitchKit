@@ -26,7 +26,7 @@ public struct LegacyFollowChannelRequest: APIRequest {
     /// - Parameters:
     ///   - userId: The user ID of the user who will be following the channel.
     ///   - channelId: The channel ID of the channel to follow.
-    ///   - turnOnNotifications: If true, the user gets email or push notifications (depending on the user’s
+    ///   - turnOnNotifications: If true, the user gets email or push notifications (depending on the user's
     ///                          notification settings) when the channel goes live. Default: false.
     public init(userId: String, channelId: String, turnOnNotifications: Bool? = nil) {
         path = "/users/\(userId)/follows/channels/\(channelId)"

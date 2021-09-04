@@ -7,8 +7,8 @@
 
 /// Gets information on follow relationships between two Twitch users.
 ///
-/// This can return information like “who is qotrok following,” “who is following qotrok,” or “is user X following
-/// user Y.” Information returned is sorted in order, most recent follow first.
+/// This can return information like "who is qotrok following," "who is following qotrok," or "is user X following
+/// user Y." Information returned is sorted in order, most recent follow first.
 public struct GetUserFollowsRequest: APIRequest {
     public struct ResponseBody: Decodable {
         

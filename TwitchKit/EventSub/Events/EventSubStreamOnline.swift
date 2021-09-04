@@ -21,10 +21,10 @@ extension EventSub.Event {
         /// The event id.
         public let id: String
         
-        /// The broadcaster’s user id.
+        /// The broadcaster's user id.
         public let broadcasterUserId: String
         
-        /// The broadcaster’s user name.
+        /// The broadcaster's user name.
         public let broadcasterUserName: String
         
         /// The stream type. Valid values are: live, playlist, watch_party, premiere, rerun.

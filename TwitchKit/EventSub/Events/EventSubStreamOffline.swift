@@ -10,10 +10,10 @@ extension EventSub.Event {
     /// <#Description#>
     public struct StreamOffline: Decodable {
         
-        /// The broadcaster’s user id.
+        /// The broadcaster's user id.
         public let broadcasterUserId: String
         
-        /// The broadcaster’s user name.
+        /// The broadcaster's user name.
         public let broadcasterUserName: String
     }
 }

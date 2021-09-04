@@ -10,16 +10,16 @@ extension EventSub.Event {
     /// <#Description#>
     public struct UserUpdate: Decodable {
         
-        /// The user’s user id.
+        /// The user's user id.
         public let userId: String
         
-        /// The user’s user name.
+        /// The user's user name.
         public let userName: String
         
-        /// The user’s email. Only included if you have the user:read:emailscope for the user.
+        /// The user's email. Only included if you have the user:read:emailscope for the user.
         public let email: String?
         
-        /// The user’s description.
+        /// The user's description.
         public let description: String
     }
 }

@@ -20,7 +20,7 @@ public enum Claim: String, CaseIterable, CustomStringConvertible, CodingKey {
     /// A claim used for requesting the display name of the authorizing user.
     case preferredUsername
     
-    /// A claim used for requesting the date of the last update to the authorizing user’s profile.
+    /// A claim used for requesting the date of the last update to the authorizing user's profile.
     case updatedAt
     
     public var description: String { rawValue }

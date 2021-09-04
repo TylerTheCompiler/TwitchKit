@@ -49,7 +49,7 @@ extension EventSub {
         /// The status of the subscription.
         public let status: Status
         
-        /// The notification’s subscription type.
+        /// The notification's subscription type.
         public let type: SubscriptionType
         
         /// The version of the subscription.

@@ -10,19 +10,19 @@ extension EventSub.Event {
     /// <#Description#>
     public struct ChannelUpdate: Decodable {
         
-        /// The broadcaster’s user ID.
+        /// The broadcaster's user ID.
         public let broadcasterUserId: String
         
-        /// The broadcaster’s user name.
+        /// The broadcaster's user name.
         public let broadcasterUserName: String
         
-        /// The channel’s stream title.
+        /// The channel's stream title.
         public let title: String
         
-        /// The channel’s broadcast language.
+        /// The channel's broadcast language.
         public let language: String
         
-        /// The channel’s category ID.
+        /// The channel's category ID.
         public let categoryId: String
         
         /// The category name.

@@ -20,7 +20,7 @@ public struct UpdateUserRequest: APIRequest {
     
     /// Creates a new Update User request.
     ///
-    /// - Parameter description: User’s account description.
+    /// - Parameter description: User's account description.
     public init(description: String? = nil) {
         queryParams = [(.description, description)]
     }

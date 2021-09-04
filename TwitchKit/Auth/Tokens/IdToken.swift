@@ -52,7 +52,7 @@ public struct IdToken: RawRepresentable, Codable {
         /// Display name of the authorizing user.
         public let preferredUsername: String?
         
-        /// Date of the last update to the authorizing user’s profile.
+        /// Date of the last update to the authorizing user's profile.
         public let updatedDate: Date?
     }
     

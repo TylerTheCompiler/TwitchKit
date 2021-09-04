@@ -5,7 +5,7 @@
 //  Created by Tyler Prevost on 12/8/20.
 //
 
-/// Gets a specified user’s block list. List sorted by recency, newest first.
+/// Gets a specified user's block list. List sorted by recency, newest first.
 public struct LegacyGetUserBlockListRequest: APIRequest {
     public typealias AppToken = IncompatibleAccessToken
     

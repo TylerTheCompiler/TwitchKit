@@ -20,7 +20,7 @@ public struct CreateCustomRewardRequest: APIRequest {
         /// The prompt for the viewer when they are redeeming the reward
         public let prompt: String?
         
-        /// Is the reward currently enabled, if false the reward won’t show up to viewers. Defaults true
+        /// Is the reward currently enabled, if false the reward won't show up to viewers. Defaults true
         public let isEnabled: Bool?
         
         /// Custom background color for the reward. Format: Hex with # prefix. Example: #00E5CB.
@@ -78,7 +78,7 @@ public struct CreateCustomRewardRequest: APIRequest {
     ///   - title: The title of the reward.
     ///   - cost: The cost of the reward in channel points.
     ///   - prompt: The prompt for the viewer when they are redeeming the reward.
-    ///   - isEnabled: Whether the reward is currently enabled. If false, the reward won’t show up to viewers.
+    ///   - isEnabled: Whether the reward is currently enabled. If false, the reward won't show up to viewers.
     ///                Default: true.
     ///   - backgroundColor: Custom background color for the reward. Format: Hex with # prefix. Example: #00E5CB.
     ///   - isUserInputRequired: Whether the user need to enter information when redeeming the reward. Default: false.

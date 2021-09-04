@@ -65,13 +65,13 @@ extension EventSub.Event {
         /// The requested broadcaster name.
         public let broadcasterUserName: String
         
-        /// Is the reward currently enabled. If false, the reward won’t show up to viewers.
+        /// Is the reward currently enabled. If false, the reward won't show up to viewers.
         public let isEnabled: Bool
         
-        /// Is the reward currently paused. If true, viewers can’t redeem.
+        /// Is the reward currently paused. If true, viewers can't redeem.
         public let isPaused: Bool
         
-        /// Is the reward currently in stock. If false, viewers can’t redeem.
+        /// Is the reward currently in stock. If false, viewers can't redeem.
         public let isInStock: Bool
         
         /// The reward title.
@@ -109,12 +109,12 @@ extension EventSub.Event {
         /// Whether a cooldown is enabled and what the cooldown is in seconds.
         public let globalCooldown: GlobalCooldown
         
-        /// Timestamp of the cooldown expiration. Nil if the reward isn’t on cooldown.
+        /// Timestamp of the cooldown expiration. Nil if the reward isn't on cooldown.
         @OptionalInternetDateWithOptionalFractionalSeconds
         public private(set) var cooldownExpiresAt: Date?
         
         /// The number of redemptions redeemed during the current live stream. Counts against the
-        /// `maxPerStream` limit. Nil if the broadcasters stream isn’t live or `maxPerStream` isn’t enabled.
+        /// `maxPerStream` limit. Nil if the broadcasters stream isn't live or `maxPerStream` isn't enabled.
         public let redemptionsRedeemedCurrentStream: Int?
     }
 }

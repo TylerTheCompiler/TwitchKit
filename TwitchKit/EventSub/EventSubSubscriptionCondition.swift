@@ -76,7 +76,7 @@ extension EventSub {
         /// - broadcasterUserId: The broadcaster user ID you want to get stream offline notifications for.
         case streamOffline(broadcasterUserId: String)
         
-        /// - clientId: Your application’s client ID. The provided client ID must match the client ID in the
+        /// - clientId: Your application's client ID. The provided client ID must match the client ID in the
         /// application access token.
         case userAuthorizationRevoke(clientId: String)
         

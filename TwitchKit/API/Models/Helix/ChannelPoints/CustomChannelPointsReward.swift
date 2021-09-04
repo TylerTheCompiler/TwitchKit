@@ -57,7 +57,7 @@ public struct CustomChannelPointsReward: Decodable {
     /// ID of the channel the reward is for.
     public let broadcasterId: String
     
-    /// Broadcaster’s user login name.
+    /// Broadcaster's user login name.
     public let broadcasterLogin: String
     
     /// Display name of the channel the reward is for.
@@ -84,7 +84,7 @@ public struct CustomChannelPointsReward: Decodable {
     /// Custom background color for the reward. Format: Hex with # prefix. Example: #00E5CB.
     public let backgroundColor: String
     
-    /// Whether the reward is currently enabled. If false, the reward won’t show up to viewers.
+    /// Whether the reward is currently enabled. If false, the reward won't show up to viewers.
     public let isEnabled: Bool
     
     /// Whether the user needs to enter information when redeeming the reward.
@@ -99,10 +99,10 @@ public struct CustomChannelPointsReward: Decodable {
     /// Whether a cooldown is enabled and what the cooldown is.
     public let globalCooldownSetting: GlobalCooldown
     
-    /// Whether the reward is currently paused. If true, viewers can’t redeem the reward.
+    /// Whether the reward is currently paused. If true, viewers can't redeem the reward.
     public let isPaused: Bool
     
-    /// Whether the reward is currently in stock. If false, viewers can’t redeem the reward.
+    /// Whether the reward is currently in stock. If false, viewers can't redeem the reward.
     public let isInStock: Bool
     
     /// Whether redemptions should be set to FULFILLED status immediately when redeemed and skip the request
@@ -110,11 +110,11 @@ public struct CustomChannelPointsReward: Decodable {
     public let shouldRedemptionsSkipRequestQueue: Bool
     
     /// The number of redemptions redeemed during the current live stream. Counts against the
-    /// `maxPerStreamSetting` limit. Nil if the broadcasters stream isn’t live or `maxPerStreamSetting`
-    /// isn’t enabled.
+    /// `maxPerStreamSetting` limit. Nil if the broadcasters stream isn't live or `maxPerStreamSetting`
+    /// isn't enabled.
     public let redemptionsRedeemedCurrentStream: Int?
     
-    /// Timestamp of the cooldown expiration. Nil if the reward isn’t on cooldown.
+    /// Timestamp of the cooldown expiration. Nil if the reward isn't on cooldown.
     @OptionalInternetDateWithOptionalFractionalSeconds
     public private(set) var cooldownExpiresAt: Date?
 }

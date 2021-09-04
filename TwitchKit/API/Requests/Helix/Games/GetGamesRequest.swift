@@ -37,7 +37,7 @@ public struct GetGamesRequest: APIRequest {
     ///
     /// - Parameters:
     ///   - gameIds: Game IDs. At most 100 ID values can be specified.
-    ///   - gameNames: Game names. The names must be exact matches. For example, “Pokemon” will not return a list of
+    ///   - gameNames: Game names. The names must be exact matches. For example, "Pokemon" will not return a list of
     ///                Pokemon games; instead, query any specific Pokemon games in which you are interested. At most
     ///                100 name values can be specified.
     ///   - cursor: Cursor for forward pagination.

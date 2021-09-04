@@ -13,7 +13,7 @@ extension PubSub.Message {
         /// Additional `BitsEvent` information.
         public struct Data: Decodable {
             
-            /// Information about a user’s new badge level, if a cheer was not anonymous and the user reached a
+            /// Information about a user's new badge level, if a cheer was not anonymous and the user reached a
             /// new badge level with a cheer.
             public struct BadgeEntitlement: Decodable {
                 
@@ -48,7 +48,7 @@ extension PubSub.Message {
             /// Event type associated with this use of Bits (for example, `"cheer"`).
             public let context: String
             
-            /// Information about a user’s new badge level, if the cheer was not anonymous and the user reached a
+            /// Information about a user's new badge level, if the cheer was not anonymous and the user reached a
             /// new badge level with this cheer. Otherwise, nil.
             public let badgeEntitlement: BadgeEntitlement?
             

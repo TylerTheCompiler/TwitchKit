@@ -34,7 +34,7 @@ public struct RedeemCodeRequest: APIRequest {
     /// - Parameters:
     ///   - userId: Represents a numeric Twitch user ID. The user account which is going to receive the entitlement
     ///             associated with the code.
-    ///   - codes: The codes to redeem to the authenticated user’s account. Codes are fifteen character (plus optional
+    ///   - codes: The codes to redeem to the authenticated user's account. Codes are fifteen character (plus optional
     ///            hyphen separators) alphanumeric strings, e.g. ABCDE-12345-FGHIJ. 1-20 codes are allowed.
     public init(userId: String, codes: [String]) {
         queryParams = [

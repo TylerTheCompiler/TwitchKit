@@ -90,9 +90,9 @@ internal final class WebAuthenticationSession: NSObject {
     
     /// Indicates whether the session should ask the browser for a private authentication session.
     ///
-    /// Set this to true to request that the browser doesn’t share cookies or other browsing data between the
-    /// authentication session and the user’s normal browser session. Whether the request is honored depends on the
-    /// user’s default web browser. Safari always honors the request.
+    /// Set this to true to request that the browser doesn't share cookies or other browsing data between the
+    /// authentication session and the user's normal browser session. Whether the request is honored depends on the
+    /// user's default web browser. Safari always honors the request.
     ///
     /// The value of this property is nil by default.
     /// Set this property before you call `start`. Otherwise it has no effect.

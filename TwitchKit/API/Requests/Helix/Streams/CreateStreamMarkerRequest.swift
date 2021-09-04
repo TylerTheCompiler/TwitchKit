@@ -13,7 +13,7 @@
 ///
 /// Markers cannot be created in some cases (an error will occur):
 ///
-/// * If the specified user’s stream is not live.
+/// * If the specified user's stream is not live.
 /// * If VOD (past broadcast) storage is not enabled for the stream.
 /// * For premieres (live, first-viewing events that combine uploaded videos with live chat).
 /// * For reruns (subsequent (not live) streaming of any past broadcast, including past premieres).

@@ -5,7 +5,7 @@
 //  Created by Tyler Prevost on 11/10/20.
 //
 
-/// Get all of a broadcaster’s subscriptions.
+/// Get all of a broadcaster's subscriptions.
 public struct GetBroadcasterSubscriptionsRequest: APIRequest {
     public typealias AppToken = IncompatibleAccessToken
     

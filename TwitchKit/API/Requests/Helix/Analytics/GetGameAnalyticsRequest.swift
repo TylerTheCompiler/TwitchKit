@@ -12,7 +12,7 @@
 /// The response has an array of games information elements and can contain a pagination field
 /// containing information required to query for more streams.
 ///
-/// If you specify a future date, the response will be “Report Not Found For Date Range.”
+/// If you specify a future date, the response will be "Report Not Found For Date Range."
 /// If you leave `dateInterval` nil, the API returns the most recent date of data.
 public struct GetGameAnalyticsRequest: APIRequest {
     public typealias AppToken = IncompatibleAccessToken
@@ -72,12 +72,12 @@ public struct GetGameAnalyticsRequest: APIRequest {
     /// user's games.
     ///
     /// The response includes multiple URLs (paginated), pointing to separate analytics reports for each of the
-    /// authenticated user’s games.
+    /// authenticated user's games.
     ///
     /// - Parameters:
     ///   - reportType: Type of analytics report that is returned. If this is non-nil, the response includes
     ///                 one URL, for the specified report type. If this is nil, the response includes multiple
-    ///                 URLs (paginated), one for each report type available for the authenticated user’s games.
+    ///                 URLs (paginated), one for each report type available for the authenticated user's games.
     ///   - dateInterval: Starting and ending date/times for returned reports. If the start date is earlier than
     ///                   the default start date, the default start date is used. Default: 365 days before the
     ///                   report was issued. The report covers the entire ending date; e.g.,

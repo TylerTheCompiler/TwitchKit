@@ -16,7 +16,7 @@ public struct WebhookSubscription: Decodable {
     @SafeURL
     public private(set) var callback: URL?
     
-    /// Date and time when this subscription expires. Encoded as RFC3339. The timezone is always UTC (“Z”).
+    /// Date and time when this subscription expires. Encoded as RFC3339. The timezone is always UTC ("Z").
     @InternetDate
     public private(set) var expiresAt: Date
 }

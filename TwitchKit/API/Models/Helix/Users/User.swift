@@ -23,36 +23,36 @@ public struct User: Decodable {
         case normal = ""
     }
     
-    /// User’s ID.
+    /// User's ID.
     public let id: String
     
-    /// User’s login name.
+    /// User's login name.
     public let login: String
     
-    /// User’s display name.
+    /// User's display name.
     public let displayName: String
     
-    /// User’s type.
+    /// User's type.
     public let type: UserType
     
-    /// User’s broadcaster type.
+    /// User's broadcaster type.
     public let broadcasterType: BroadcasterType
     
-    /// User’s channel description.
+    /// User's channel description.
     public let description: String
     
-    /// URL of the user’s profile image.
+    /// URL of the user's profile image.
     @SafeURL
     public private(set) var profileImageUrl: URL?
     
-    /// URL of the user’s offline image.
+    /// URL of the user's offline image.
     @SafeURL
     public private(set) var offlineImageUrl: URL?
     
-    /// Total number of views of the user’s channel.
+    /// Total number of views of the user's channel.
     public let viewCount: Int
     
-    /// User’s email address. Returned if the request includes the `.userReadEmail` `Scope`.
+    /// User's email address. Returned if the request includes the `.userReadEmail` `Scope`.
     public let email: String?
     
     /// Date when the user was created.

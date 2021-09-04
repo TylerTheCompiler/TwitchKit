@@ -76,7 +76,7 @@ extension PubSub.Message {
         /// Cumulative number of tenure months of the subscription.
         public let cumulativeMonths: Int
         
-        /// Denotes the user’s most recent (and contiguous) subscription tenure streak in the channel.
+        /// Denotes the user's most recent (and contiguous) subscription tenure streak in the channel.
         public let streakMonths: Int
         
         /// Event type associated with the subscription product.

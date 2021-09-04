@@ -155,8 +155,8 @@ extension ChatMessage {
 
             /// This room is now in <duration> followers-only mode.
             ///
-            /// Examples: “This room is now in 2 week followers-only mode.” or “This room is now in 1 minute
-            /// followers-only mode.”
+            /// Examples: "This room is now in 2 week followers-only mode." or "This room is now in 1 minute
+            /// followers-only mode."
             case followersOn = "followers_on"
 
             /// This room is now in followers-only mode.
@@ -266,7 +266,7 @@ extension ChatMessage {
             /// No channel is currently being hosted.
             case notHosting = "not_hosting"
 
-            /// You don’t have permission to perform that action.
+            /// You don't have permission to perform that action.
             case noPermission = "no_permission"
 
             /// This room is no longer in r9k mode.
@@ -354,104 +354,104 @@ extension ChatMessage {
             /// <user> is no longer timed out in this channel.
             case untimeoutSuccess = "untimeout_success"
 
-            /// Usage: “/ban <username> [reason]” Permanently prevent a user from chatting. Reason is optional and
-            /// will be shown to the target and other moderators. Use “/unban” to remove a ban.
+            /// Usage: "/ban <username> [reason]" Permanently prevent a user from chatting. Reason is optional and
+            /// will be shown to the target and other moderators. Use "/unban" to remove a ban.
             case usageBan = "usage_ban"
 
-            /// Usage: “/clear” Clear chat history for all users in this room.
+            /// Usage: "/clear" Clear chat history for all users in this room.
             case usageClear = "usage_clear"
 
-            /// Usage: “/color” <color> Change your username color. Color must be in hex (#000000) or one of the
+            /// Usage: "/color" <color> Change your username color. Color must be in hex (#000000) or one of the
             /// following: Blue, BlueViolet, CadetBlue, Chocolate, Coral, DodgerBlue, Firebrick, GoldenRod, Green,
             /// HotPink, OrangeRed, Red, SeaGreen, SpringGreen, YellowGreen.
             case usageColor = "usage_color"
 
-            /// Usage: “/commercial [length]” Triggers a commercial. Length (optional) must be a positive number
+            /// Usage: "/commercial [length]" Triggers a commercial. Length (optional) must be a positive number
             /// of seconds.
             case usageCommercial = "usage_commercial"
 
-            /// Usage: “/disconnect” Reconnects to chat.
+            /// Usage: "/disconnect" Reconnects to chat.
             case usageDisconnect = "usage_disconnect"
 
-            /// Usage: /emoteonlyoff” Disables emote-only mode.
+            /// Usage: /emoteonlyoff" Disables emote-only mode.
             case usageEmoteOnlyOff = "usage_emote_only_off"
 
-            /// Usage: “/emoteonly” Enables emote-only mode (only emoticons may be used in chat). Use
+            /// Usage: "/emoteonly" Enables emote-only mode (only emoticons may be used in chat). Use
             /// /emoteonlyoff to disable.
             case usageEmoteOnlyOn = "usage_emote_only_on"
 
-            /// Usage: /followersoff” Disables followers-only mode.
+            /// Usage: /followersoff" Disables followers-only mode.
             case usageFollowersOff = "usage_followers_off"
 
-            /// Usage: “/followers Enables followers-only mode (only users who have followed for “duration” may
-            /// chat). Examples: “30m”, “1 week”, “5 days 12 hours”. Must be less than 3 months.
+            /// Usage: "/followers Enables followers-only mode (only users who have followed for "duration" may
+            /// chat). Examples: "30m", "1 week", "5 days 12 hours". Must be less than 3 months.
             case usageFollowersOn = "usage_followers_on"
 
-            /// Usage: “/help” Lists the commands available to you in this room.
+            /// Usage: "/help" Lists the commands available to you in this room.
             case usageHelp = "usage_help"
 
-            /// Usage: “/host <channel>” Host another channel. Use “/unhost” to unset host mode.
+            /// Usage: "/host <channel>" Host another channel. Use "/unhost" to unset host mode.
             case usageHost = "usage_host"
 
-            /// Usage: “/marker <optional comment>” Adds a stream marker (with an optional comment, max 140
+            /// Usage: "/marker <optional comment>" Adds a stream marker (with an optional comment, max 140
             /// characters) at the current timestamp. You can use markers in the Highlighter for easier editing.
             case usageMarker = "usage_marker"
 
-            /// Usage: “/me <message>” Send an “emote” message in the third person.
+            /// Usage: "/me <message>" Send an "emote" message in the third person.
             case usageMe = "usage_me"
 
-            /// Usage: “/mod <username>” Grant mod status to a user. Use “/mods” to list the moderators of this
+            /// Usage: "/mod <username>" Grant mod status to a user. Use "/mods" to list the moderators of this
             /// channel.
             case usageMod = "usage_mod"
 
-            /// Usage: “/mods” Lists the moderators of this channel.
+            /// Usage: "/mods" Lists the moderators of this channel.
             case usageMods = "usage_mods"
 
-            /// Usage: “/r9kbetaoff” Disables r9k mode.
+            /// Usage: "/r9kbetaoff" Disables r9k mode.
             case usageR9kOff = "usage_r9k_off"
 
-            /// Usage: “/r9kbeta” Enables r9k mode. Use “/r9kbetaoff“ to disable.
+            /// Usage: "/r9kbeta" Enables r9k mode. Use "/r9kbetaoff" to disable.
             case usageR9kOn = "usage_r9k_on"
 
-            /// Usage: “/raid <channel>” Raid another channel. Use “/unraid” to cancel the Raid.
+            /// Usage: "/raid <channel>" Raid another channel. Use "/unraid" to cancel the Raid.
             case usageRaid = "usage_raid"
 
-            /// Usage: “/slowoff” Disables slow mode.
+            /// Usage: "/slowoff" Disables slow mode.
             case usageSlowOff = "usage_slow_off"
 
-            /// Usage: “/slow” [duration] Enables slow mode (limit how often users may send messages). Duration
-            /// (optional, default=<number>) must be a positive integer number of seconds. Use “/slowoff” to
+            /// Usage: "/slow" [duration] Enables slow mode (limit how often users may send messages). Duration
+            /// (optional, default=<number>) must be a positive integer number of seconds. Use "/slowoff" to
             /// disable.
             case usageSlowOn = "usage_slow_on"
 
-            /// Usage: “/subscribersoff” Disables subscribers-only mode.
+            /// Usage: "/subscribersoff" Disables subscribers-only mode.
             case usageSubsOff = "usage_subs_off"
 
-            /// Usage: “/subscribers” Enables subscribers-only mode (only subscribers may chat in this channel).
-            /// Use “/subscribersoff” to disable.
+            /// Usage: "/subscribers" Enables subscribers-only mode (only subscribers may chat in this channel).
+            /// Use "/subscribersoff" to disable.
             case usageSubsOn = "usage_subs_on"
 
-            /// Usage: “/timeout <username> [duration][time unit] [reason]" Temporarily prevent a user from
+            /// Usage: "/timeout <username> [duration][time unit] [reason]" Temporarily prevent a user from
             /// chatting. Duration (optional, default=10 minutes) must be a positive integer; time unit (optional,
             /// default=s) must be one of s, m, h, d, w; maximum duration is 2 weeks. Combinations like 1d2h are
             /// also allowed. Reason is optional and will be shown to case the target user and other moderators.
-            /// Use “untimeout” to remove a timeout.
+            /// Use "untimeout" to remove a timeout.
             case usageTimeout = "usage_timeout"
 
-            /// Usage: “/unban <username>” Removes a ban on a user.
+            /// Usage: "/unban <username>" Removes a ban on a user.
             case usageUnban = "usage_unban"
 
-            /// Usage: “/unhost” Stop hosting another channel.
+            /// Usage: "/unhost" Stop hosting another channel.
             case usageUnhost = "usage_unhost"
 
-            /// Usage: “/unmod <username>” Revoke mod status from a user. Use “/mods” to list the moderators of
+            /// Usage: "/unmod <username>" Revoke mod status from a user. Use "/mods" to list the moderators of
             /// this channel.
             case usageUnmod = "usage_unmod"
 
-            /// Usage: “/unraid” Cancel the Raid.
+            /// Usage: "/unraid" Cancel the Raid.
             case usageUnraid = "usage_unraid"
 
-            /// Usage: “/raid <username>” Removes a timeout on a user.
+            /// Usage: "/raid <username>" Removes a timeout on a user.
             case usageUntimeout = "usage_untimeout"
 
             /// You have been banned from sending whispers.

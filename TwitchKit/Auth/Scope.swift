@@ -20,14 +20,14 @@ public enum Scope: String, Codable, CaseIterable, CustomStringConvertible {
     /// Run commercials on a channel.
     case channelEditCommercial = "channel:edit:commercial"
     
-    /// Manage a channel’s broadcast configuration, including updating channel configuration and managing stream
+    /// Manage a channel's broadcast configuration, including updating channel configuration and managing stream
     /// markers and stream tags.
     case channelManageBroadcast = "channel:manage:broadcast"
     
-    /// Manage a channel’s Extension configuration, including activating Extensions.
+    /// Manage a channel's Extension configuration, including activating Extensions.
     case channelManageExtensions = "channel:manage:extensions"
     
-    /// Manage a channel’s polls.
+    /// Manage a channel's polls.
     case channelManagePolls = "channel:manage:polls"
     
     /// Manage a channel's Channel Points Predictions
@@ -39,7 +39,7 @@ public enum Scope: String, Codable, CaseIterable, CustomStringConvertible {
     /// Manage a channel's stream schedule.
     case channelManageSchedule = "channel:manage:schedule"
     
-    /// Manage a channel’s videos, including deleting videos.
+    /// Manage a channel's videos, including deleting videos.
     case channelManageVideos = "channel:manage:videos"
     
     /// View a list of users with the editor role for a channel.
@@ -54,13 +54,13 @@ public enum Scope: String, Codable, CaseIterable, CustomStringConvertible {
     /// View a channel's polls.
     case channelReadPolls = "channel:read:polls"
     
-    /// View a channel’s Channel Points Predictions.
+    /// View a channel's Channel Points Predictions.
     case channelReadPredictions = "channel:read:predictions"
     
     /// View Channel Points custom rewards and their redemptions on a channel.
     case channelReadRedemptions = "channel:read:redemptions"
     
-    /// Read an authorized user’s stream key.
+    /// Read an authorized user's stream key.
     case channelReadStreamKey = "channel:read:stream_key"
     
     /// View a list of all subscribers to a channel and check if a user is subscribed to a channel.
@@ -114,19 +114,19 @@ public enum Scope: String, Codable, CaseIterable, CustomStringConvertible {
     /// Legacy Twitch API v5 scope. Write channel metadata (game, status, etc).
     case channelEditor = "channel_editor"
     
-    /// Legacy Twitch API v5 scope. Manage a user’s followed channels.
+    /// Legacy Twitch API v5 scope. Manage a user's followed channels.
     case userFollowsEdit = "user_follows_edit"
     
-    /// Legacy Twitch API v5 scope. View a channel’s email address and stream key.
+    /// Legacy Twitch API v5 scope. View a channel's email address and stream key.
     case channelRead = "channel_read"
     
-    /// Legacy Twitch API v5 scope. View a user’s information.
+    /// Legacy Twitch API v5 scope. View a user's information.
     case userRead = "user_read"
     
-    /// Legacy Twitch API v5 scope. Read a user’s block list.
+    /// Legacy Twitch API v5 scope. Read a user's block list.
     case userBlocksRead = "user_blocks_read"
     
-    /// Legacy Twitch API v5 scope. Manage a user’s block list.
+    /// Legacy Twitch API v5 scope. Manage a user's block list.
     case userBlocksEdit = "user_blocks_edit"
     
     /// Legacy Twitch API v5 scope. Perform moderation actions in a channel. The user requesting the scope must be a

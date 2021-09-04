@@ -5,7 +5,7 @@
 //  Created by Tyler Prevost on 11/10/20.
 //
 
-/// Gets a list of markers for either a specified user’s most recent stream or a specified VOD/video (stream),
+/// Gets a list of markers for either a specified user's most recent stream or a specified VOD/video (stream),
 /// ordered by recency.
 ///
 /// A marker is an arbitrary point in a stream that the broadcaster wants to mark; e.g., to easily return to later.

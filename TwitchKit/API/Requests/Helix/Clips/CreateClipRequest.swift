@@ -45,8 +45,8 @@ public struct CreateClipRequest: APIRequest {
     /// - Parameters:
     ///   - broadcasterId: ID of the stream from which the clip will be made.
     ///   - hasDelay: If false, the clip is captured from the live stream when the API is called; otherwise, a delay
-    ///               is added before the clip is captured (to account for the brief delay between the broadcaster’s
-    ///               stream and the viewer’s experience of that stream). Default: false.
+    ///               is added before the clip is captured (to account for the brief delay between the broadcaster's
+    ///               stream and the viewer's experience of that stream). Default: false.
     public init(broadcasterId: String, hasDelay: Bool? = nil) {
         queryParams = [
             (.broadcasterId, broadcasterId),

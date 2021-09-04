@@ -25,7 +25,7 @@ public struct UpdateCustomRewardRequest: APIRequest {
         /// Custom background color for the reward. Format: Hex with # prefix. Example: #00E5CB.
         public let backgroundColor: String?
         
-        /// Is the reward currently enabled, if false the reward won’t show up to viewers. Defaults true
+        /// Is the reward currently enabled, if false the reward won't show up to viewers. Defaults true
         public let isEnabled: Bool?
         
         /// Does the user need to enter information when redeeming the reward. Defaults false
@@ -49,7 +49,7 @@ public struct UpdateCustomRewardRequest: APIRequest {
         /// The cooldown in seconds if enabled
         public let globalCooldownSeconds: Int?
         
-        /// Whether the reward is currently paused. If true, viewers can’t redeem.
+        /// Whether the reward is currently paused. If true, viewers can't redeem.
         public let isPaused: Bool?
         
         /// Should redemptions be set to FULFILLED status immediately when redeemed and skip the request queue
@@ -85,7 +85,7 @@ public struct UpdateCustomRewardRequest: APIRequest {
     ///   - prompt: The prompt for the viewer when they are redeeming the reward.
     ///   - cost: The cost of the reward in channel points.
     ///   - backgroundColor: Custom background color for the reward. Format: Hex with # prefix. Example: #00E5CB.
-    ///   - isEnabled: Whether the reward is currently enabled. If false, the reward won’t show up to viewers.
+    ///   - isEnabled: Whether the reward is currently enabled. If false, the reward won't show up to viewers.
     ///                Default: true.
     ///   - isUserInputRequired: Whether the user need to enter information when redeeming the reward. Default: false.
     ///   - isMaxPerStreamEnabled: Whether a maximum per stream is enabled. Default: false.
@@ -94,7 +94,7 @@ public struct UpdateCustomRewardRequest: APIRequest {
     ///   - maxPerUserPerStream: The maximum number of redemptions per user per stream if enabled.
     ///   - isGlobalCooldownEnabled: Whether a cooldown is enabled. Default: false.
     ///   - globalCooldownSeconds: The global cooldown in seconds if enabled.
-    ///   - isPaused: Whether the reward is currently paused. If true, viewers can’t redeem.
+    ///   - isPaused: Whether the reward is currently paused. If true, viewers can't redeem.
     ///   - shouldRedemptionsSkipRequestQueue: Whether redemptions should be set to FULFILLED status immediately when
     ///                                        redeemed and skip the request queue instead of the normal UNFULFILLED
     ///                                        status. Default: false.

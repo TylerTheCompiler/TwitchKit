@@ -6,7 +6,7 @@
 //
 
 /// Creates a connection between a user (an authenticated Twitch user, who must be associated with one of your
-/// game-user accounts) and VHS, and starts returning the user’s VHS data in each heartbeat. The game user is
+/// game-user accounts) and VHS, and starts returning the user's VHS data in each heartbeat. The game user is
 /// specified by a required `identifier` parameter.
 ///
 /// An HTTP 422 response is returned if the game (identified by a client ID) is not configured. An HTTP 409

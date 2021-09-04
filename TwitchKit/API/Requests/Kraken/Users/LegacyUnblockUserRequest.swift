@@ -7,7 +7,7 @@
 
 /// Unblocks a user; that is, deletes a specified target user from the blocks list of a specified source user.
 ///
-/// There is an error if the target user is not on the source user’s block list (404 Not Found) or the delete
+/// There is an error if the target user is not on the source user's block list (404 Not Found) or the delete
 /// failed (422 Unprocessable Entity).
 public struct LegacyUnblockUserRequest: APIRequest {
     public typealias AppToken = IncompatibleAccessToken

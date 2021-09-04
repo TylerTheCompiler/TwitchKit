@@ -5,7 +5,7 @@
 //  Created by Tyler Prevost on 11/4/20.
 //
 
-/// Determines whether a string message meets the channel’s AutoMod requirements.
+/// Determines whether a string message meets the channel's AutoMod requirements.
 ///
 /// AutoMod is a moderation tool that blocks inappropriate or harassing chat with powerful moderator control.
 /// AutoMod detects misspellings and evasive language automatically. AutoMod uses machine learning and natural

@@ -24,10 +24,10 @@ public struct Goal: Decodable {
     /// An ID that uniquely identifies the broadcaster.
     public let broadcasterId: String
     
-    /// The broadcaster’s display name.
+    /// The broadcaster's display name.
     public let broadcasterName: String
     
-    /// The broadcaster’s user handle.
+    /// The broadcaster's user handle.
     public let broadcasterLogin: String
     
     /// The type of goal.
@@ -46,7 +46,7 @@ public struct Goal: Decodable {
     /// by 2, not 1.
     public let currentAmount: Int
     
-    /// The goal’s target value.
+    /// The goal's target value.
     ///
     /// For example, if the broadcaster has 200 followers before creating the goal, and their goal is to double that
     /// number, this field is set to 400.
