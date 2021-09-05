@@ -69,7 +69,7 @@ open class KeychainAuthTokenStore<Token>: AuthTokenStoring where Token: AuthToke
             
             completion(.init {
                 guard status != errSecItemNotFound else { throw KeychainAuthTokenStoreError.missingToken }
-                guard status == noErr else { throw KeychainAuthTokenStoreError.unhandledError(status: status) }
+                guard status == errSecSuccess else { throw KeychainAuthTokenStoreError.unhandledError(status: status) }
                 
                 guard let data = result as? Data else {
                     throw KeychainAuthTokenStoreError.unexpectedItemData
@@ -114,7 +114,7 @@ open class KeychainAuthTokenStore<Token>: AuthTokenStoring where Token: AuthToke
             if let authToken = authToken {
                 let readStatus = keychainInteracting.getItem(query as CFDictionary, nil)
                 
-                if readStatus == noErr {
+                if readStatus == errSecSuccess {
                     // Update
                     var attributesToUpdate = [String: AnyObject]()
                     let data = try JSONEncoder.camelCaseToSnakeCase.encode([authToken])
@@ -125,7 +125,7 @@ open class KeychainAuthTokenStore<Token>: AuthTokenStoring where Token: AuthToke
                     let updateStatus = keychainInteracting.updateItem(query as CFDictionary,
                                                                       attributesToUpdate as CFDictionary)
                     
-                    guard updateStatus == noErr else {
+                    guard updateStatus == errSecSuccess else {
                         throw KeychainAuthTokenStoreError.unhandledError(status: updateStatus)
                     }
                 } else if readStatus == errSecItemNotFound {
@@ -137,7 +137,7 @@ open class KeychainAuthTokenStore<Token>: AuthTokenStoring where Token: AuthToke
                     
                     let addStatus = keychainInteracting.addItem(query as CFDictionary, nil)
                     
-                    guard addStatus == noErr else {
+                    guard addStatus == errSecSuccess else {
                         throw KeychainAuthTokenStoreError.unhandledError(status: addStatus)
                     }
                 } else {
@@ -147,7 +147,7 @@ open class KeychainAuthTokenStore<Token>: AuthTokenStoring where Token: AuthToke
                 // Delete
                 let deleteStatus = keychainInteracting.deleteItem(query as CFDictionary)
                 
-                guard deleteStatus == noErr else {
+                guard deleteStatus == errSecSuccess else {
                     throw KeychainAuthTokenStoreError.unhandledError(status: deleteStatus)
                 }
             }

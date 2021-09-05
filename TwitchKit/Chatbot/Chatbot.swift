@@ -29,7 +29,7 @@ open class Chatbot {
         
         /// A Twitch chatbot error that means a task was expecting valid data,
         /// but the data was not in the expected format or was otherwise invalid in some way.
-        case invalidData(Data)
+        case invalidData([UInt8])
     }
     
     /// The auth session to use to get the user access token when connecting the chatbot to Twitch.
@@ -284,80 +284,107 @@ open class Chatbot {
     
     // MARK: - Sending commands to a channel
     
-    /// Enables or disables emote-only mode in a channel.
+    /// Enables emote-only mode in a channel.
     ///
     /// - Parameters:
-    ///   - enable: Whether to enable or disable emote-only mode in `channel`.
-    ///   - channel: The name of a channel to enable/disable emote-only mode in.
+    ///   - channel: The name of a channel to enable emote-only mode in.
     ///   - completion: A closure to be called when the command succeeds or fails.
-    open func emoteOnly(enable: Bool, in channel: String, completion: Completion? = nil) {
-        send(message: enable ? "/emoteonly" : "/emoteonlyoff", to: channel, completion: completion)
+    open func enableEmoteOnlyMode(in channel: String, completion: Completion? = nil) {
+        send(message: "/emoteonly", to: channel, completion: completion)
     }
     
-    /// Enables or disables slow mode in a channel.
+    /// Disables emote-only mode in a channel.
     ///
     /// - Parameters:
-    ///   - enable: Whether to enable or disable slow mode in `channel`.
-    ///   - channel: The name of a channel to enable/disable slow mode in.
-    ///   - duration: When `enable` is `true`, the duration a user must wait between sending chat messages.
+    ///   - channel: The name of a channel to disable emote-only mode in.
     ///   - completion: A closure to be called when the command succeeds or fails.
-    open func slowMode(enable: Bool, in channel: String, duration: Int? = nil, completion: Completion? = nil) {
-        var message: String
-        if enable {
-            message = "/slow"
-            if let duration = duration, duration > 0 {
-                message += " \(duration)"
-            }
-        } else {
-            message = "/slowoff"
+    open func disableEmoteOnlyMode(in channel: String, completion: Completion? = nil) {
+        send(message: "/emoteonlyoff", to: channel, completion: completion)
+    }
+    
+    /// Enables slow mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - channel: The name of a channel to enable slow mode in.
+    ///   - duration: The duration (in seconds) a user must wait between sending chat messages. Default: nil.
+    ///   - completion: A closure to be called when the command succeeds or fails.
+    open func enableSlowMode(in channel: String, duration: Int? = nil, completion: Completion? = nil) {
+        var message = "/slow"
+        if let duration = duration, duration > 0 {
+            message += " \(duration)"
         }
         
         send(message: message, to: channel, completion: completion)
     }
     
-    /// Enables or disables unique-chat mode in a channel.
+    /// Disables slow mode in a channel.
     ///
     /// - Parameters:
-    ///   - enable: Whether to enable or disable unique-chat mode in `channel`.
-    ///   - channel: The name of a channel to enable/disable unique-chat mode in.
+    ///   - channel: The name of a channel to disable slow mode in.
     ///   - completion: A closure to be called when the command succeeds or fails.
-    open func uniqueChatMode(enable: Bool, in channel: String, completion: Completion? = nil) {
-        send(message: enable ? "/uniquechat" : "/uniquechatoff", to: channel, completion: completion)
+    open func disableSlowMode(in channel: String, completion: Completion? = nil) {
+        send(message: "/slowoff", to: channel, completion: completion)
     }
     
-    /// Enables or disables followers-only mode in a channel.
+    /// Enables unique-chat mode in a channel.
     ///
     /// - Parameters:
-    ///   - enable: Whether to enable or disable followers-only mode in `channel`.
-    ///   - channel: The name of a channel in which to enable/disable followers-only mode.
-    ///   - duration: When `enable` is `true`, the duration a user must be following `channel` before being
-    ///               able to chat. Default: nil
+    ///   - channel: The name of a channel to enable unique-chat mode in.
     ///   - completion: A closure to be called when the command succeeds or fails.
-    open func followersOnly(enable: Bool,
-                            in channel: String,
-                            duration: ChatDuration? = nil,
-                            completion: Completion? = nil) {
-        var message: String
-        if enable {
-            message = "/followers"
-            if let duration = duration {
-                message += " " + duration.rawValue
-            }
-        } else {
-            message = "/followersoff"
-        }
+    open func enableUniqueChatMode(in channel: String, completion: Completion? = nil) {
+        send(message: "/uniquechat", to: channel, completion: completion)
+    }
+    
+    /// Disables unique-chat mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - channel: The name of a channel to disable unique-chat mode in.
+    ///   - completion: A closure to be called when the command succeeds or fails.
+    open func disableUniqueChatMode(in channel: String, completion: Completion? = nil) {
+        send(message: "/uniquechatoff", to: channel, completion: completion)
+    }
+    
+    /// Enables followers-only mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - channel: The name of a channel in which to enable followers-only mode.
+    ///   - duration: The duration a user must be following `channel` before being able to chat. Default: nil
+    ///   - completion: A closure to be called when the command succeeds or fails.
+    open func enableFollowersOnlyMode(in channel: String,
+                                      duration: ChatDuration? = nil,
+                                      completion: Completion? = nil) {
+        let message = ["/followers", duration?.rawValue]
+            .compactMap { $0 }
+            .joined(separator: " ")
         
         send(message: message, to: channel, completion: completion)
     }
     
-    /// Enables or disables subscribers-only mode in a channel.
+    /// Disables followers-only mode in a channel.
     ///
     /// - Parameters:
-    ///   - enable: Whether to enable or disable subscribers-only mode in `channel`.
-    ///   - channel: The name of a channel in which to enable/disable subscribers-only mode.
+    ///   - channel: The name of a channel in which to disable followers-only mode.
     ///   - completion: A closure to be called when the command succeeds or fails.
-    open func subscribersOnly(enable: Bool, in channel: String, completion: Completion? = nil) {
-        send(message: enable ? "/subscribers" : "/subscribersoff", to: channel, completion: completion)
+    open func disableFollowersOnlyMode(in channel: String, completion: Completion? = nil) {
+        send(message: "/followersoff", to: channel, completion: completion)
+    }
+    
+    /// Enables subscribers-only mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - channel: The name of a channel in which to enable subscribers-only mode.
+    ///   - completion: A closure to be called when the command succeeds or fails.
+    open func enableSubscribersOnlyMode(in channel: String, completion: Completion? = nil) {
+        send(message: "/subscribers", to: channel, completion: completion)
+    }
+    
+    /// Disables subscribers-only mode in a channel.
+    ///
+    /// - Parameters:
+    ///   - channel: The name of a channel in which to disable subscribers-only mode.
+    ///   - completion: A closure to be called when the command succeeds or fails.
+    open func disableSubscribersOnlyMode(in channel: String, completion: Completion? = nil) {
+        send(message: "/subscribersoff", to: channel, completion: completion)
     }
     
     /// Clears all chat in a channel.
@@ -673,7 +700,7 @@ open class Chatbot {
             }
             
             guard let lines = String(data: data, encoding: .utf8) else {
-                let error = Error.invalidData(data)
+                let error = Error.invalidData(.init(data))
                 self.didFailToReceiveData(with: error)
                 self.tryExecutingOnDelegateQueue {
                     self.delegate?.chatbot(self, didFailToReceiveDataWith: error)
@@ -855,7 +882,7 @@ extension Chatbot {
     /// Connects the chatbot to Twitch. You must call this before you can have the bot interact with channels.
     open func connect() async throws -> HTTPURLResponse? {
         try await withCheckedThrowingContinuation { continuation in
-            self.connect { result in
+            connect { result in
                 continuation.resume(with: result)
             }
         }
@@ -866,7 +893,7 @@ extension Chatbot {
     /// - Parameter channel: The name of a channel to join.
     open func join(channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.join(channel: channel) { error in
+            join(channel: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -883,7 +910,7 @@ extension Chatbot {
     ///            occurred for each channel.
     open func join(channels: [String]) async -> [(channel: String, error: Swift.Error)] {
         await withCheckedContinuation { continuation in
-            self.join(channels: channels) { errors in
+            join(channels: channels) { errors in
                 continuation.resume(returning: errors)
             }
         }
@@ -894,7 +921,7 @@ extension Chatbot {
     /// - Parameter channel: The name of a channel to leave.
     open func leave(channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.leave(channel: channel) { error in
+            leave(channel: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -911,7 +938,7 @@ extension Chatbot {
     ///            occurred for each channel.
     open func leave(channels: [String]) async -> [(channel: String, error: Swift.Error)] {
         await withCheckedContinuation { continuation in
-            self.leave(channels: channels) { errors in
+            leave(channels: channels) { errors in
                 continuation.resume(returning: errors)
             }
         }
@@ -923,7 +950,7 @@ extension Chatbot {
     ///            occurred for each channel.
     open func leaveAllChannels() async -> [(channel: String, error: Swift.Error)] {
         await withCheckedContinuation { continuation in
-            self.leaveAllChannels { errors in
+            leaveAllChannels { errors in
                 continuation.resume(returning: errors)
             }
         }
@@ -936,7 +963,7 @@ extension Chatbot {
     ///   - channel: The name of a channel to send the message to.
     open func send(message: String, to channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.send(message: message, to: channel) { error in
+            send(message: message, to: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -955,20 +982,18 @@ extension Chatbot {
     ///            occurred for each channel.
     open func send(messages: [String], to channel: String) async -> [(channel: String, error: Swift.Error)] {
         await withCheckedContinuation { continuation in
-            self.send(messages: messages, to: channel) { errors in
+            send(messages: messages, to: channel) { errors in
                 continuation.resume(returning: errors)
             }
         }
     }
     
-    /// Enables or disables emote-only mode in a channel.
+    /// Enables emote-only mode in a channel.
     ///
-    /// - Parameters:
-    ///   - enable: Whether to enable or disable emote-only mode in `channel`.
-    ///   - channel: The name of a channel to enable/disable emote-only mode in.
-    open func emoteOnly(enable: Bool, in channel: String) async throws {
+    /// - Parameter channel: The name of a channel to enable emote-only mode in.
+    open func enableEmoteOnlyMode(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.emoteOnly(enable: enable, in: channel) { error in
+            enableEmoteOnlyMode(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -978,15 +1003,12 @@ extension Chatbot {
         }
     }
     
-    /// Enables or disables slow mode in a channel.
+    /// Disables emote-only mode in a channel.
     ///
-    /// - Parameters:
-    ///   - enable: Whether to enable or disable slow mode in `channel`.
-    ///   - channel: The name of a channel to enable/disable slow mode in.
-    ///   - duration: When `enable` is `true`, the duration a user must wait between sending chat messages.
-    open func slowMode(enable: Bool, in channel: String, duration: Int? = nil) async throws {
+    /// - Parameter channel: The name of a channel to disable emote-only mode in.
+    open func disableEmoteOnlyMode(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.slowMode(enable: enable, in: channel, duration: duration) { error in
+            disableEmoteOnlyMode(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -996,14 +1018,14 @@ extension Chatbot {
         }
     }
     
-    /// Enables or disables unique-chat mode in a channel.
+    /// Enables slow mode in a channel.
     ///
     /// - Parameters:
-    ///   - enable: Whether to enable or disable unique-chat mode in `channel`.
-    ///   - channel: The name of a channel to enable/disable unique-chat mode in.
-    open func uniqueChatMode(enable: Bool, in channel: String) async throws {
+    ///   - channel: The name of a channel to enable slow mode in.
+    ///   - duration: The duration (in seconds) a user must wait between sending chat messages. Default: nil.
+    open func enableSlowMode(in channel: String, duration: Int? = nil) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.uniqueChatMode(enable: enable, in: channel) { error in
+            enableSlowMode(in: channel, duration: duration) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1013,14 +1035,12 @@ extension Chatbot {
         }
     }
     
-    /// Enables or disables subscribers-only mode in a channel.
+    /// Disables slow mode in a channel.
     ///
-    /// - Parameters:
-    ///   - enable: Whether to enable or disable subscribers-only mode in `channel`.
-    ///   - channel: The name of a channel in which to enable/disable subscribers-only mode.
-    open func followersOnly(enable: Bool, in channel: String, duration: ChatDuration? = nil) async throws {
+    /// - Parameter channel: The name of a channel to enable slow mode in.
+    open func disableSlowMode(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.followersOnly(enable: enable, in: channel, duration: duration) { error in
+            disableSlowMode(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1030,14 +1050,89 @@ extension Chatbot {
         }
     }
     
-    /// Enables or disables subscribers-only mode in a channel.
+    /// Enables unique-chat mode in a channel.
+    ///
+    /// - Parameter channel: The name of a channel to enable unique-chat mode in.
+    open func enableUniqueChatMode(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            enableUniqueChatMode(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Disables unique-chat mode in a channel.
+    ///
+    /// - Parameter channel: The name of a channel to disable unique-chat mode in.
+    open func disableUniqueChatMode(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            disableUniqueChatMode(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Enables followers-only mode in a channel.
     ///
     /// - Parameters:
-    ///   - enable: Whether to enable or disable subscribers-only mode in `channel`.
-    ///   - channel: The name of a channel in which to enable/disable subscribers-only mode.
-    open func subscribersOnly(enable: Bool, in channel: String) async throws {
+    ///   - channel: The name of a channel in which to enable followers-only mode.
+    ///   - duration: The duration a user must be following `channel` before being able to chat. Default: nil
+    open func enableFollowersOnlyMode(in channel: String, duration: ChatDuration? = nil) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.subscribersOnly(enable: enable, in: channel) { error in
+            enableFollowersOnlyMode(in: channel, duration: duration) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Disables followers-only mode in a channel.
+    ///
+    /// - Parameter channel: The name of a channel in which to disable followers-only mode.
+    open func disableFollowersOnlyMode(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            disableFollowersOnlyMode(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Enables subscribers-only mode in a channel.
+    ///
+    /// - Parameter channel: The name of a channel in which to enable subscribers-only mode.
+    open func enableSubscribersOnlyMode(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            enableSubscribersOnlyMode(in: channel) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    /// Disables subscribers-only mode in a channel.
+    ///
+    /// - Parameter channel: The name of a channel in which to disable subscribers-only mode.
+    open func disableSubscribersOnlyMode(in channel: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            disableSubscribersOnlyMode(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1052,7 +1147,7 @@ extension Chatbot {
     /// - Parameter channel: The name of a channel to clear chat in.
     open func clearChat(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.clearChat(in: channel) { error in
+            clearChat(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1069,7 +1164,7 @@ extension Chatbot {
     ///   - channel: The name of the channel in which to delete the message.
     open func deleteMessage(messageId: String, in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.deleteMessage(messageId: messageId, in: channel) { error in
+            deleteMessage(messageId: messageId, in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1091,7 +1186,7 @@ extension Chatbot {
                       duration: ChatDuration? = nil,
                       reason: String? = nil) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.timeout(user: user, in: channel, duration: duration, reason: reason) { error in
+            timeout(user: user, in: channel, duration: duration, reason: reason) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1108,7 +1203,7 @@ extension Chatbot {
     ///   - channel: The name of a channel in which to remove the timeout for `user`.
     open func untimeout(user: String, in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.untimeout(user: user, in: channel) { error in
+            untimeout(user: user, in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1126,7 +1221,7 @@ extension Chatbot {
     ///   - reason: An optional reason string to show to the user why they were banned.
     open func ban(user: String, in channel: String, reason: String? = nil) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.ban(user: user, in: channel, reason: reason) { error in
+            ban(user: user, in: channel, reason: reason) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1143,7 +1238,7 @@ extension Chatbot {
     ///   - channel: The channel in which to unban `user`.
     open func unban(user: String, in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.unban(user: user, in: channel) { error in
+            unban(user: user, in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1160,7 +1255,7 @@ extension Chatbot {
     ///   - hostingChannel: The name of the channel doing the hosting (your channel).
     open func host(channel: String, from hostingChannel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.host(channel: channel, from: hostingChannel) { error in
+            host(channel: channel, from: hostingChannel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1175,7 +1270,7 @@ extension Chatbot {
     /// - Parameter channel: The name of the channel you want to turn off host mode for (your channel).
     open func unhost(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.unhost(in: channel) { error in
+            unhost(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1192,7 +1287,7 @@ extension Chatbot {
     ///   - hostingChannel: The name of the channel doing the raiding (your channel).
     open func raid(channel: String, from hostingChannel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.raid(channel: channel, from: hostingChannel) { error in
+            raid(channel: channel, from: hostingChannel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1207,7 +1302,7 @@ extension Chatbot {
     /// - Parameter channel: The name of the channel you want to cancel the raid in (your channel).
     open func unraid(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.unraid(in: channel) { error in
+            unraid(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1222,7 +1317,7 @@ extension Chatbot {
     /// - Parameter channel: The name of a channel to create the stream marker for.
     open func createMarker(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.createMarker(in: channel) { error in
+            createMarker(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1239,7 +1334,7 @@ extension Chatbot {
     ///   - channel: The name of the channel in which to grant `user` moderator status.
     open func mod(user: String, in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.mod(user: user, in: channel) { error in
+            mod(user: user, in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1256,7 +1351,7 @@ extension Chatbot {
     ///   - channel: The name of the channel in which to grant `user` VIP status.
     open func unmod(user: String, in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.unmod(user: user, in: channel) { error in
+            unmod(user: user, in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1273,7 +1368,7 @@ extension Chatbot {
     ///   - channel: The name of the channel in which to grant `user` VIP status.
     open func vip(user: String, in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.vip(user: user, in: channel) { error in
+            vip(user: user, in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1290,7 +1385,7 @@ extension Chatbot {
     ///   - channel: The name of the channel in which to revoke `user`'s VIP status.
     open func unvip(user: String, in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.unvip(user: user, in: channel) { error in
+            unvip(user: user, in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1311,7 +1406,7 @@ extension Chatbot {
     ///              specified, this change affects the bot's username color across all of Twitch!
     open func changeUsernameColor(to color: ChatColor, in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.changeUsernameColor(to: color, in: channel) { error in
+            changeUsernameColor(to: color, in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1328,7 +1423,7 @@ extension Chatbot {
     /// - Parameter channel: The name of a channel to list moderators for.
     open func listModerators(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.listModerators(in: channel) { error in
+            listModerators(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1345,7 +1440,7 @@ extension Chatbot {
     /// - Parameter channel: The name of a channel to list VIPs for.
     open func listVIPs(in channel: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.listVIPs(in: channel) { error in
+            listVIPs(in: channel) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1365,7 +1460,7 @@ extension Chatbot {
     ///   - message: The message to send to the user.
     open func whisper(user: String, message: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            self.whisper(user: user, message: message) { error in
+            whisper(user: user, message: message) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {

@@ -4317,6 +4317,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "-warn-concurrency";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tylerprevost.TwitchKit.ios;
 				PRODUCT_MODULE_NAME = TwitchKit;
 				PRODUCT_NAME = TwitchKit;
@@ -4348,6 +4349,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "-warn-concurrency";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tylerprevost.TwitchKit.ios;
 				PRODUCT_MODULE_NAME = TwitchKit;
 				PRODUCT_NAME = TwitchKit;
@@ -4421,6 +4423,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15.4;
+				OTHER_SWIFT_FLAGS = "-warn-concurrency";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tylerprevost.TwitchKit.mac;
 				PRODUCT_MODULE_NAME = TwitchKit;
 				PRODUCT_NAME = TwitchKit;
@@ -4454,6 +4457,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15.4;
+				OTHER_SWIFT_FLAGS = "-warn-concurrency";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tylerprevost.TwitchKit.mac;
 				PRODUCT_MODULE_NAME = TwitchKit;
 				PRODUCT_NAME = TwitchKit;

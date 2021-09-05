@@ -80,6 +80,7 @@ open class TwitchWebView: PlatformIndependentView {
         ///   - window: The window in which to show the dialog.
         ///   - completion: A closure called after the user has selected a choice from the dialog. This is called
         ///                 synchronously _after_ `completionHandler` is called. Default: nil.
+        @MainActor
         open func show(in window: NSWindow, completion: (() -> Void)? = nil) {
             let completionHandler = self.completionHandler
             

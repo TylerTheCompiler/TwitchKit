@@ -22,7 +22,7 @@ public enum PubSub {
             
             /// Thrown when sending data that cannot be encoded properly or when receiving data that cannot be
             /// decoded properly.
-            case invalidData(Data)
+            case invalidData([UInt8])
             
             /// Thrown when receiving an unknown response type.
             case unknownResponseType
@@ -219,7 +219,9 @@ public enum PubSub {
             
             do {
                 let data = try JSONEncoder.camelCaseToSnakeCase.encode(encodable)
-                guard let string = String(data: data, encoding: .utf8) else { throw Error.invalidData(data) }
+                guard let string = String(data: data, encoding: .utf8) else {
+                    throw Error.invalidData(.init(data))
+                }
                 
                 task.send(.string(string)) { [weak self] error in
                     completion?(error)
@@ -255,7 +257,7 @@ public enum PubSub {
                     do {
                         guard let dictionary = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
                               let type = dictionary["type"] as? String else {
-                            throw Error.invalidData(jsonData)
+                            throw Error.invalidData(.init(jsonData))
                         }
                         
                         switch type {
@@ -291,7 +293,7 @@ public enum PubSub {
                                   let topicString = data["topic"] as? String,
                                   let topic = Topic(rawValue: topicString),
                                   let messageString = (data["message"] ?? data["data"]) as? String else {
-                                throw Error.invalidData(jsonData)
+                                throw Error.invalidData(.init(jsonData))
                             }
                             
                             let messageData = Data(messageString.utf8)

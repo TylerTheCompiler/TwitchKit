@@ -76,31 +76,41 @@ public enum TwitchAppDeepLink {
     /// - Parameter completion: A closure to be called when the deep link finishes opening or fails to open.
     ///                         The `Bool` parameter indicates whether the deep link was successfully opened
     ///                         or not.
+    @MainActor
     public func open(_ completion: ((_ success: Bool) -> Void)? = nil) {
         #if os(macOS)
-        let didOpen = Self.workspace.open(url)
+        let didOpen = (Self.injectedWorkspace ?? NSWorkspace.shared).open(url)
         completion?(didOpen)
         #else
-        Self.application.open(url, options: [:], completionHandler: completion)
-        #endif
-    }
-    
-    /// Whether the native Twitch app is installed or not.
-    ///
-    /// - Important: (iOS only) In order for this to ever return `true`, you must declare the "twitch" URL scheme
-    ///              in your app's Info.plist file. If you do not, then this always returns `false`.
-    public static var isTwitchAppInstalled: Bool {
-        #if os(macOS)
-        return Self.workspace.urlForApplication(toOpen: login.url) != nil
-        #else
-        return Self.application.canOpenURL(login.url)
+        (Self.injectedApplication ?? UIApplication.shared).open(
+            url,
+            options: [:],
+            completionHandler: completion
+        )
         #endif
     }
     
     #if os(macOS)
-    internal static var workspace: WorkspaceProtocol = NSWorkspace.shared
+    /// Whether the native Twitch app is installed or not.
+    public static var isTwitchAppInstalled: Bool {
+        (Self.injectedWorkspace ?? NSWorkspace.shared).urlForApplication(toOpen: login.url) != nil
+    }
     #else
-    internal static var application: ApplicationProtocol = UIApplication.shared
+    
+    /// Whether the native Twitch app is installed or not.
+    ///
+    /// - Important: In order for this to ever return `true`, you must declare the "twitch" URL scheme
+    ///              in your app's Info.plist file. If you do not, then this always returns `false`.
+    @MainActor
+    public static var isTwitchAppInstalled: Bool {
+        (Self.injectedApplication ?? UIApplication.shared).canOpenURL(login.url)
+    }
+    #endif
+    
+    #if os(macOS)
+    internal static var injectedWorkspace: WorkspaceProtocol?
+    #else
+    internal static var injectedApplication: ApplicationProtocol?
     #endif
 }
 

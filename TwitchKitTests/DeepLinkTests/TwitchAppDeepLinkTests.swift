@@ -29,12 +29,12 @@ class TwitchAppDeepLinkTests: XCTestCase {
     
     override func setUp() {
         workspace = MockWorkspace()
-        TwitchAppDeepLink.workspace = workspace
+        TwitchAppDeepLink.injectedWorkspace = workspace
     }
     
     override func tearDown() {
         workspace = nil
-        TwitchAppDeepLink.workspace = NSWorkspace.shared
+        TwitchAppDeepLink.injectedWorkspace = NSWorkspace.shared
     }
     #else
     class MockApplication: ApplicationProtocol {
@@ -58,12 +58,12 @@ class TwitchAppDeepLinkTests: XCTestCase {
     
     override func setUp() {
         application = MockApplication()
-        TwitchAppDeepLink.application = application
+        TwitchAppDeepLink.injectedApplication = application
     }
     
     override func tearDown() {
         application = nil
-        TwitchAppDeepLink.application = UIApplication.shared
+        TwitchAppDeepLink.injectedApplication = UIApplication.shared
     }
     #endif
     
@@ -84,6 +84,7 @@ class TwitchAppDeepLinkTests: XCTestCase {
                        URL(string: "twitch://directory/all/tags/TestLiveStreamTag")!)
     }
     
+    @MainActor
     func test_open_works() throws {
         let openToBeCalled = expectation(description: "Expected open to be called")
         #if os(macOS)
@@ -104,6 +105,7 @@ class TwitchAppDeepLinkTests: XCTestCase {
         wait(for: [openToBeCalled], timeout: 1.0)
     }
     
+    @MainActor
     func test_isTwitchAppInstalled_works() throws {
         #if os(macOS)
         XCTAssertFalse(workspace.wasURLForApplicationCalled, "Expected urlForApp to not be called yet")

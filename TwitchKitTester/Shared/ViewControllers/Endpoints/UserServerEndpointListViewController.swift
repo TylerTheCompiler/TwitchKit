@@ -18,7 +18,7 @@ class UserServerEndpointListViewController: PlatformIndependentTableViewControll
             let apiSession = ServerUserAPISession(authSession: authSession)
             self.apiSession = apiSession
             
-            guard #available(iOS 15, *) else { return }
+            guard #available(iOS 15, macOS 12, *) else { return }
             
             Task {
                 do {

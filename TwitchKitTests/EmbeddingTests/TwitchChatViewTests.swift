@@ -186,6 +186,7 @@ class TwitchChatViewTests: XCTestCase {
     // MARK: - Chat Confirmation Dialog
     
     #if os(macOS)
+    @MainActor
     func test_chatConfirmationDialog_showsInWindow_andOKIsPressed() {
         class MockAlertThatPressesOK: NSAlert {
             override func beginSheetModal(
@@ -213,6 +214,7 @@ class TwitchChatViewTests: XCTestCase {
         wait(for: [dialogToBeDismissed, completionToBeCalled], timeout: 1.0, enforceOrder: true)
     }
     
+    @MainActor
     func test_chatConfirmationDialog_showsInWindow_andCancelIsPressed() {
         class MockAlertThatPressesCancel: NSAlert {
             override func beginSheetModal(

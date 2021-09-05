@@ -6,7 +6,6 @@
 //
 
 import TwitchKit
-import UIKit
 
 class AppServerEndpointListViewController: PlatformIndependentTableViewController {
     var authSession: ServerAppAuthSession? {
@@ -19,7 +18,7 @@ class AppServerEndpointListViewController: PlatformIndependentTableViewControlle
             let apiSession = ServerAppAPISession(authSession: authSession)
             self.apiSession = apiSession
             
-            guard #available(iOS 15, *) else { return }
+            guard #available(iOS 15, macOS 12, *) else { return }
             
             Task {
                 do {
@@ -36,6 +35,8 @@ class AppServerEndpointListViewController: PlatformIndependentTableViewControlle
     private var apiSession: ServerAppAPISession?
 }
 
+#if os(iOS)
+import UIKit
 import Combine
 
 class ImageCell: UICollectionViewCell {
@@ -327,3 +328,4 @@ extension Emote.Scale {
         }
     }
 }
+#endif
