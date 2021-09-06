@@ -164,7 +164,7 @@ extension ChatMessage {
                 case "sub", "resub":
                     let subInfo = SubInfo(
                         cumulativeMonths: dictionary["msg-param-cumulative-months"].flatMap { Int($0) } ?? 0,
-                        shouldShareStreak: dictionary["msg-param-cumulative-months"] == "1",
+                        shouldShareStreak: dictionary["msg-param-should-share-streak"] == "true",
                         streakMonths: dictionary["msg-param-streak-months"].flatMap { Int($0) } ?? 0,
                         subPlan: dictionary["msg-param-sub-plan"].map { SubPlan(rawValue: $0) } ?? .unknown,
                         subPlanName: dictionary["msg-param-sub-plan-name"] ?? ""
