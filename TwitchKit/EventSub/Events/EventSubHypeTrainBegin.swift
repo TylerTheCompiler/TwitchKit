@@ -7,7 +7,7 @@
 
 extension EventSub.Event {
     
-    /// <#Description#>
+    /// A Hype Train begin event.
     public struct HypeTrainBegin: Decodable {
         
         /// The requested broadcaster ID.

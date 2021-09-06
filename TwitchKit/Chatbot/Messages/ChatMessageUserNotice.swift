@@ -186,7 +186,7 @@ extension ChatMessage {
                         ),
                         subPlan: dictionary["msg-param-sub-plan"].map { SubPlan(rawValue: $0) } ?? .unknown,
                         subPlanName: dictionary["msg-param-sub-plan-name"] ?? "",
-                        giftMonths: dictionary["msg-params-gift-months"].flatMap { Int($0) } ?? 0
+                        giftMonths: dictionary["msg-param-gift-months"].flatMap { Int($0) } ?? 0
                     )
                     
                     if type == "subgift" {

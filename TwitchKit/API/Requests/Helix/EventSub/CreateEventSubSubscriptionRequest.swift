@@ -24,6 +24,9 @@ public struct CreateEventSubSubscriptionRequest: APIRequest {
         /// Object containing notification delivery specific configuration including a `method` type (currently only
         /// `.webhook`), `callback` URL, and `secret`.
         public let transport: Transport
+        
+        /// Needs to be true for some subscription types.
+        internal let isBatchingEnabled: Bool
     }
     
     public struct ResponseBody: Decodable {
@@ -89,7 +92,8 @@ public struct CreateEventSubSubscriptionRequest: APIRequest {
             type: condition.subscriptionType,
             version: version,
             condition: condition,
-            transport: transport
+            transport: transport,
+            isBatchingEnabled: condition.subscriptionType.isBatchingEnabled
         )
     }
     

@@ -7,7 +7,10 @@
 
 extension EventSub.Event {
     
-    /// <#Description#>
+    /// A Hype Train progress event.
+    ///
+    /// Contains Hype Train information like the level, goal, top contributors, last contribution,
+    /// start time, and expiration time.
     public struct HypeTrainProgress: Decodable {
         
         /// The requested broadcaster ID.
@@ -21,6 +24,9 @@ extension EventSub.Event {
         
         /// Total points contributed to hype train.
         public let total: Int
+        
+        /// The number of points contributed to the Hype Train at the current level.
+        public let progress: Int
         
         /// The number of points required to reach the next level.
         public let goal: Int

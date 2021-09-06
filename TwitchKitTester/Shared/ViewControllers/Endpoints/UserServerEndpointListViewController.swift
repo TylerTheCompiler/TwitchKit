@@ -22,8 +22,8 @@ class UserServerEndpointListViewController: PlatformIndependentTableViewControll
             
             Task {
                 do {
-                    let req = GetCreatorGoalsRequest()
-                    print(try await apiSession.perform(req).body.goals)
+                    let req = GetIngestServersRequest()
+                    print(try await apiSession.perform(req).body.ingests)
                 } catch {
                     print("Error:", error)
                 }

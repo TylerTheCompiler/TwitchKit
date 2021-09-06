@@ -451,7 +451,7 @@ extension ChatMessage {
             /// Usage: "/unraid" Cancel the Raid.
             case usageUnraid = "usage_unraid"
 
-            /// Usage: "/raid <username>" Removes a timeout on a user.
+            /// Usage: "/untimeout <username>" Removes a timeout on a user.
             case usageUntimeout = "usage_untimeout"
 
             /// You have been banned from sending whispers.

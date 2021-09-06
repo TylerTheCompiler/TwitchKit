@@ -163,8 +163,16 @@ extension URLSession {
         
         var components = URLComponents()
         components.scheme = "https"
-        components.host = "api.twitch.tv"
-        components.path = "/\(request.apiVersion.rawValue)" + (request.path.hasPrefix("/") ? "" : "/") + request.path
+        components.host = request.host
+        
+        switch request.apiVersion {
+        case .helix, .kraken:
+            components.path = "/\(request.apiVersion.rawValue)" + (request.path.hasPrefix("/") ? "" : "/") + request.path
+            
+        case .none:
+            components.path = (request.path.hasPrefix("/") ? "" : "/") + request.path
+        }
+        
         components.queryItems = request.queryParams.compactMap {
             let name = $0.0
             return $0.1.flatMap { .init(name: name.rawValue, value: $0) }
@@ -191,7 +199,7 @@ extension URLSession {
         
         urlRequest.addValue(clientId, forHTTPHeaderField: "Client-Id")
         
-        if let rawAccessToken = rawAccessToken {
+        if let rawAccessToken = rawAccessToken, request.apiVersion != .none {
             urlRequest.addValue("\(request.apiVersion.authorizationHeaderPrefix) \(rawAccessToken)",
                                 forHTTPHeaderField: "Authorization")
         }
@@ -423,8 +431,16 @@ extension URLSession {
         
         var components = URLComponents()
         components.scheme = "https"
-        components.host = "api.twitch.tv"
-        components.path = "/\(request.apiVersion.rawValue)" + (request.path.hasPrefix("/") ? "" : "/") + request.path
+        components.host = request.host
+        
+        switch request.apiVersion {
+        case .helix, .kraken:
+            components.path = "/\(request.apiVersion.rawValue)" + (request.path.hasPrefix("/") ? "" : "/") + request.path
+            
+        case .none:
+            components.path = (request.path.hasPrefix("/") ? "" : "/") + request.path
+        }
+        
         components.queryItems = request.queryParams.compactMap {
             let name = $0.0
             return $0.1.flatMap { .init(name: name.rawValue, value: $0) }
@@ -446,7 +462,7 @@ extension URLSession {
         
         urlRequest.addValue(clientId, forHTTPHeaderField: "Client-Id")
         
-        if let rawAccessToken = rawAccessToken {
+        if let rawAccessToken = rawAccessToken, request.apiVersion != .none {
             urlRequest.addValue("\(request.apiVersion.authorizationHeaderPrefix) \(rawAccessToken)",
                                 forHTTPHeaderField: "Authorization")
         }

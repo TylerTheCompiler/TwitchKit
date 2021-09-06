@@ -61,6 +61,10 @@
 		2F07535725808FF7008AFFD1 /* LegacyUpdateVideoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8368A6257FF072000EEFF2 /* LegacyUpdateVideoRequest.swift */; };
 		2F07535C2580914C008AFFD1 /* LegacyDeleteVideoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8368A4257FF04C000EEFF2 /* LegacyDeleteVideoRequest.swift */; };
 		2F0753612580914C008AFFD1 /* LegacyDeleteVideoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8368A4257FF04C000EEFF2 /* LegacyDeleteVideoRequest.swift */; };
+		2F1B180E26E5FEB400AB9A47 /* GetIngestServersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B180D26E5FEB400AB9A47 /* GetIngestServersRequest.swift */; };
+		2F1B180F26E5FEB400AB9A47 /* GetIngestServersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B180D26E5FEB400AB9A47 /* GetIngestServersRequest.swift */; };
+		2F1B181226E600D500AB9A47 /* IngestServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B181126E600D500AB9A47 /* IngestServer.swift */; };
+		2F1B181326E600D500AB9A47 /* IngestServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B181126E600D500AB9A47 /* IngestServer.swift */; };
 		2F1B1C86257F2AC9006425D2 /* ClientAuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B1C85257F2AC9006425D2 /* ClientAuthSession.swift */; };
 		2F1B1C87257F2AC9006425D2 /* ClientAuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B1C85257F2AC9006425D2 /* ClientAuthSession.swift */; };
 		2F1B1C95257F2CA7006425D2 /* ServerUserAuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B1C94257F2CA7006425D2 /* ServerUserAuthSession.swift */; };
@@ -181,6 +185,44 @@
 		2F47B368258ADC2300CADB1F /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F47B366258ADC2300CADB1F /* SafeURL.swift */; };
 		2F4D1021258DD8CD0000A080 /* ChatbotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */; };
 		2F4D1022258DD8CD0000A080 /* ChatbotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */; };
+		2F52A1B526E5E80600C86A9B /* EventSubChannelSubscriptionGift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1B426E5E80600C86A9B /* EventSubChannelSubscriptionGift.swift */; };
+		2F52A1B626E5E80600C86A9B /* EventSubChannelSubscriptionGift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1B426E5E80600C86A9B /* EventSubChannelSubscriptionGift.swift */; };
+		2F52A1B826E5EB0A00C86A9B /* EventSubChannelSubscriptionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1B726E5E95700C86A9B /* EventSubChannelSubscriptionMessage.swift */; };
+		2F52A1B926E5EB0A00C86A9B /* EventSubChannelSubscriptionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1B726E5E95700C86A9B /* EventSubChannelSubscriptionMessage.swift */; };
+		2F52A1BB26E5EE2800C86A9B /* EventSubChannelRaid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1BA26E5ED8B00C86A9B /* EventSubChannelRaid.swift */; };
+		2F52A1BC26E5EE2900C86A9B /* EventSubChannelRaid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1BA26E5ED8B00C86A9B /* EventSubChannelRaid.swift */; };
+		2F52A1BE26E5EEA100C86A9B /* EventSubChannelModeratorAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1BD26E5EEA100C86A9B /* EventSubChannelModeratorAdd.swift */; };
+		2F52A1BF26E5EEA100C86A9B /* EventSubChannelModeratorAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1BD26E5EEA100C86A9B /* EventSubChannelModeratorAdd.swift */; };
+		2F52A1C126E5EFC800C86A9B /* EventSubChannelPollBegin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1C026E5EFC800C86A9B /* EventSubChannelPollBegin.swift */; };
+		2F52A1C226E5EFC800C86A9B /* EventSubChannelPollBegin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1C026E5EFC800C86A9B /* EventSubChannelPollBegin.swift */; };
+		2F52A1C526E5F2A100C86A9B /* EventSubChannelPollEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1C426E5F2A100C86A9B /* EventSubChannelPollEnd.swift */; };
+		2F52A1C626E5F2A100C86A9B /* EventSubChannelPollEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1C426E5F2A100C86A9B /* EventSubChannelPollEnd.swift */; };
+		2F52A1C826E5F31800C86A9B /* EventSubChannelModeratorRemove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1C726E5F31800C86A9B /* EventSubChannelModeratorRemove.swift */; };
+		2F52A1C926E5F31800C86A9B /* EventSubChannelModeratorRemove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1C726E5F31800C86A9B /* EventSubChannelModeratorRemove.swift */; };
+		2F52A1CB26E5F3D100C86A9B /* EventSubChannelSubscriptionEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1CA26E5F3D100C86A9B /* EventSubChannelSubscriptionEnd.swift */; };
+		2F52A1CC26E5F3D100C86A9B /* EventSubChannelSubscriptionEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1CA26E5F3D100C86A9B /* EventSubChannelSubscriptionEnd.swift */; };
+		2F52A1CD26E5F46B00C86A9B /* EventSubChannelPollProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1C326E5F27800C86A9B /* EventSubChannelPollProgress.swift */; };
+		2F52A1CE26E5F46B00C86A9B /* EventSubChannelPollProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1C326E5F27800C86A9B /* EventSubChannelPollProgress.swift */; };
+		2F52A1D026E5F49E00C86A9B /* EventSubChannelPredictionBegin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1CF26E5F49E00C86A9B /* EventSubChannelPredictionBegin.swift */; };
+		2F52A1D126E5F49E00C86A9B /* EventSubChannelPredictionBegin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1CF26E5F49E00C86A9B /* EventSubChannelPredictionBegin.swift */; };
+		2F52A1D426E5F4D000C86A9B /* EventSubChannelPredictionLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1D326E5F4D000C86A9B /* EventSubChannelPredictionLock.swift */; };
+		2F52A1D526E5F4D000C86A9B /* EventSubChannelPredictionLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1D326E5F4D000C86A9B /* EventSubChannelPredictionLock.swift */; };
+		2F52A1D726E5F4D200C86A9B /* EventSubChannelPredictionEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1D626E5F4D100C86A9B /* EventSubChannelPredictionEnd.swift */; };
+		2F52A1D826E5F4D200C86A9B /* EventSubChannelPredictionEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1D626E5F4D100C86A9B /* EventSubChannelPredictionEnd.swift */; };
+		2F52A1D926E5F4D700C86A9B /* EventSubChannelPredictionProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1D226E5F4CF00C86A9B /* EventSubChannelPredictionProgress.swift */; };
+		2F52A1DA26E5F4D800C86A9B /* EventSubChannelPredictionProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1D226E5F4CF00C86A9B /* EventSubChannelPredictionProgress.swift */; };
+		2F52A1DC26E5F52900C86A9B /* EventSubDropEntitlementGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1DB26E5F52800C86A9B /* EventSubDropEntitlementGrant.swift */; };
+		2F52A1DD26E5F52900C86A9B /* EventSubDropEntitlementGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1DB26E5F52800C86A9B /* EventSubDropEntitlementGrant.swift */; };
+		2F52A1DF26E5F5E100C86A9B /* EventSubExtensionBitsTransactionCreate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1DE26E5F5E100C86A9B /* EventSubExtensionBitsTransactionCreate.swift */; };
+		2F52A1E026E5F5E100C86A9B /* EventSubExtensionBitsTransactionCreate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1DE26E5F5E100C86A9B /* EventSubExtensionBitsTransactionCreate.swift */; };
+		2F52A1E226E5F66900C86A9B /* EventSubChannelGoalsBegin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1E126E5F64D00C86A9B /* EventSubChannelGoalsBegin.swift */; };
+		2F52A1E326E5F66A00C86A9B /* EventSubChannelGoalsBegin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1E126E5F64D00C86A9B /* EventSubChannelGoalsBegin.swift */; };
+		2F52A1E526E5F66C00C86A9B /* EventSubChannelGoalsProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1E426E5F66C00C86A9B /* EventSubChannelGoalsProgress.swift */; };
+		2F52A1E626E5F66C00C86A9B /* EventSubChannelGoalsProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1E426E5F66C00C86A9B /* EventSubChannelGoalsProgress.swift */; };
+		2F52A1E826E5F66E00C86A9B /* EventSubChannelGoalsEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1E726E5F66E00C86A9B /* EventSubChannelGoalsEnd.swift */; };
+		2F52A1E926E5F66E00C86A9B /* EventSubChannelGoalsEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1E726E5F66E00C86A9B /* EventSubChannelGoalsEnd.swift */; };
+		2F52A1EB26E5F6A000C86A9B /* EventSubUserAuthorizationGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1EA26E5F6A000C86A9B /* EventSubUserAuthorizationGrant.swift */; };
+		2F52A1EC26E5F6A000C86A9B /* EventSubUserAuthorizationGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F52A1EA26E5F6A000C86A9B /* EventSubUserAuthorizationGrant.swift */; };
 		2F5DA50626E06EB00090C179 /* GetCreatorGoalsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5DA50526E06EB00090C179 /* GetCreatorGoalsRequest.swift */; };
 		2F5DA50726E06EB00090C179 /* GetCreatorGoalsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5DA50526E06EB00090C179 /* GetCreatorGoalsRequest.swift */; };
 		2F5DA50A26E06FC30090C179 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5DA50926E06FC30090C179 /* Goal.swift */; };
@@ -898,6 +940,8 @@
 		2F041F3A25631B680076639C /* ChatMessageHostMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageHostMode.swift; sourceTree = "<group>"; };
 		2F041F4525631B9B0076639C /* ChatMessageUnhostMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageUnhostMode.swift; sourceTree = "<group>"; };
 		2F041F4625631BC00076639C /* ChatMessageNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageNotice.swift; sourceTree = "<group>"; };
+		2F1B180D26E5FEB400AB9A47 /* GetIngestServersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIngestServersRequest.swift; sourceTree = "<group>"; };
+		2F1B181126E600D500AB9A47 /* IngestServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngestServer.swift; sourceTree = "<group>"; };
 		2F1B1C85257F2AC9006425D2 /* ClientAuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthSession.swift; sourceTree = "<group>"; };
 		2F1B1C94257F2CA7006425D2 /* ServerUserAuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerUserAuthSession.swift; sourceTree = "<group>"; };
 		2F1B1C9F257F2CCC006425D2 /* ServerAppAuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAppAuthSession.swift; sourceTree = "<group>"; };
@@ -959,6 +1003,25 @@
 		2F4163D725730C2800E94D2A /* TesterAppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesterAppData.swift; sourceTree = "<group>"; };
 		2F47B366258ADC2300CADB1F /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
 		2F4D1020258DD8CD0000A080 /* ChatbotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotTests.swift; sourceTree = "<group>"; };
+		2F52A1B426E5E80600C86A9B /* EventSubChannelSubscriptionGift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelSubscriptionGift.swift; sourceTree = "<group>"; };
+		2F52A1B726E5E95700C86A9B /* EventSubChannelSubscriptionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelSubscriptionMessage.swift; sourceTree = "<group>"; };
+		2F52A1BA26E5ED8B00C86A9B /* EventSubChannelRaid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelRaid.swift; sourceTree = "<group>"; };
+		2F52A1BD26E5EEA100C86A9B /* EventSubChannelModeratorAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelModeratorAdd.swift; sourceTree = "<group>"; };
+		2F52A1C026E5EFC800C86A9B /* EventSubChannelPollBegin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelPollBegin.swift; sourceTree = "<group>"; };
+		2F52A1C326E5F27800C86A9B /* EventSubChannelPollProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelPollProgress.swift; sourceTree = "<group>"; };
+		2F52A1C426E5F2A100C86A9B /* EventSubChannelPollEnd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelPollEnd.swift; sourceTree = "<group>"; };
+		2F52A1C726E5F31800C86A9B /* EventSubChannelModeratorRemove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelModeratorRemove.swift; sourceTree = "<group>"; };
+		2F52A1CA26E5F3D100C86A9B /* EventSubChannelSubscriptionEnd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelSubscriptionEnd.swift; sourceTree = "<group>"; };
+		2F52A1CF26E5F49E00C86A9B /* EventSubChannelPredictionBegin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelPredictionBegin.swift; sourceTree = "<group>"; };
+		2F52A1D226E5F4CF00C86A9B /* EventSubChannelPredictionProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelPredictionProgress.swift; sourceTree = "<group>"; };
+		2F52A1D326E5F4D000C86A9B /* EventSubChannelPredictionLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelPredictionLock.swift; sourceTree = "<group>"; };
+		2F52A1D626E5F4D100C86A9B /* EventSubChannelPredictionEnd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelPredictionEnd.swift; sourceTree = "<group>"; };
+		2F52A1DB26E5F52800C86A9B /* EventSubDropEntitlementGrant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubDropEntitlementGrant.swift; sourceTree = "<group>"; };
+		2F52A1DE26E5F5E100C86A9B /* EventSubExtensionBitsTransactionCreate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubExtensionBitsTransactionCreate.swift; sourceTree = "<group>"; };
+		2F52A1E126E5F64D00C86A9B /* EventSubChannelGoalsBegin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelGoalsBegin.swift; sourceTree = "<group>"; };
+		2F52A1E426E5F66C00C86A9B /* EventSubChannelGoalsProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelGoalsProgress.swift; sourceTree = "<group>"; };
+		2F52A1E726E5F66E00C86A9B /* EventSubChannelGoalsEnd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubChannelGoalsEnd.swift; sourceTree = "<group>"; };
+		2F52A1EA26E5F6A000C86A9B /* EventSubUserAuthorizationGrant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSubUserAuthorizationGrant.swift; sourceTree = "<group>"; };
 		2F5DA50526E06EB00090C179 /* GetCreatorGoalsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCreatorGoalsRequest.swift; sourceTree = "<group>"; };
 		2F5DA50926E06FC30090C179 /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
 		2F60B75C2551151A003C6941 /* TwitchKitTester-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TwitchKitTester-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1453,6 +1516,7 @@
 				2F7DBC79255C91E00022E56E /* Games */,
 				2F5DA50826E06FB60090C179 /* Goals */,
 				2F7DBC7A255C91F40022E56E /* HypeTrain */,
+				2F1B181026E600C600AB9A47 /* Ingests */,
 				2F7DBC6A255C90AF0022E56E /* Moderation */,
 				2FCAA97826D9AF8900520B21 /* Polls */,
 				2FCAA98726D9E03700520B21 /* Predictions */,
@@ -1468,6 +1532,22 @@
 				2F7DBC7F255C930B0022E56E /* Webhooks */,
 			);
 			path = Helix;
+			sourceTree = "<group>";
+		};
+		2F1B180C26E5FE9300AB9A47 /* Ingests */ = {
+			isa = PBXGroup;
+			children = (
+				2F1B180D26E5FEB400AB9A47 /* GetIngestServersRequest.swift */,
+			);
+			path = Ingests;
+			sourceTree = "<group>";
+		};
+		2F1B181026E600C600AB9A47 /* Ingests */ = {
+			isa = PBXGroup;
+			children = (
+				2F1B181126E600D500AB9A47 /* IngestServer.swift */,
+			);
+			path = Ingests;
 			sourceTree = "<group>";
 		};
 		2F1CB9E425750AFD00A9BCB9 /* Embedding */ = {
@@ -2260,6 +2340,7 @@
 				2FF81B6625544047009DE6B2 /* Games */,
 				2F5DA50426E06E830090C179 /* Goals */,
 				2FF81B672554404A009DE6B2 /* HypeTrain */,
+				2F1B180C26E5FE9300AB9A47 /* Ingests */,
 				2F60B7D525536FEB003C6941 /* Moderation */,
 				2F98A31926D93CB000076B2E /* Polls */,
 				2FCAA98326D9DF9100520B21 /* Predictions */,
@@ -2616,21 +2697,40 @@
 		2FD78155257264CE00257026 /* Events */ = {
 			isa = PBXGroup;
 			children = (
-				2FD7814E2572645A00257026 /* EventSubEvent.swift */,
 				2FD781862572678F00257026 /* EventSubChannelBan.swift */,
 				2FD781772572677100257026 /* EventSubChannelCheer.swift */,
 				2FD781612572671900257026 /* EventSubChannelFollow.swift */,
+				2F52A1BD26E5EEA100C86A9B /* EventSubChannelModeratorAdd.swift */,
+				2F52A1C726E5F31800C86A9B /* EventSubChannelModeratorRemove.swift */,
 				2FD7819C2572680700257026 /* EventSubChannelPointsCustomReward.swift */,
 				2FD781A72572683500257026 /* EventSubChannelPointsCustomRewardRedemption.swift */,
+				2F52A1C026E5EFC800C86A9B /* EventSubChannelPollBegin.swift */,
+				2F52A1C426E5F2A100C86A9B /* EventSubChannelPollEnd.swift */,
+				2F52A1C326E5F27800C86A9B /* EventSubChannelPollProgress.swift */,
+				2F52A1CF26E5F49E00C86A9B /* EventSubChannelPredictionBegin.swift */,
+				2F52A1D626E5F4D100C86A9B /* EventSubChannelPredictionEnd.swift */,
+				2F52A1D326E5F4D000C86A9B /* EventSubChannelPredictionLock.swift */,
+				2F52A1D226E5F4CF00C86A9B /* EventSubChannelPredictionProgress.swift */,
+				2F52A1BA26E5ED8B00C86A9B /* EventSubChannelRaid.swift */,
 				2FD781622572673F00257026 /* EventSubChannelSubscribe.swift */,
+				2F52A1CA26E5F3D100C86A9B /* EventSubChannelSubscriptionEnd.swift */,
+				2F52A1B426E5E80600C86A9B /* EventSubChannelSubscriptionGift.swift */,
+				2F52A1B726E5E95700C86A9B /* EventSubChannelSubscriptionMessage.swift */,
 				2FD78191257267A800257026 /* EventSubChannelUnban.swift */,
 				2FD78156257266F300257026 /* EventSubChannelUpdate.swift */,
+				2F52A1DB26E5F52800C86A9B /* EventSubDropEntitlementGrant.swift */,
+				2FD7814E2572645A00257026 /* EventSubEvent.swift */,
+				2F52A1DE26E5F5E100C86A9B /* EventSubExtensionBitsTransactionCreate.swift */,
+				2F52A1E126E5F64D00C86A9B /* EventSubChannelGoalsBegin.swift */,
+				2F52A1E426E5F66C00C86A9B /* EventSubChannelGoalsProgress.swift */,
+				2F52A1E726E5F66E00C86A9B /* EventSubChannelGoalsEnd.swift */,
 				2FD781BD2572688600257026 /* EventSubHypeTrainBegin.swift */,
 				2FD781B22572686200257026 /* EventSubHypeTrainContribution.swift */,
 				2FD781D42572690D00257026 /* EventSubHypeTrainEnd.swift */,
 				2FD781C9257268E500257026 /* EventSubHypeTrainProgress.swift */,
 				2FD781E62572695300257026 /* EventSubStreamOffline.swift */,
 				2FD781D52572692D00257026 /* EventSubStreamOnline.swift */,
+				2F52A1EA26E5F6A000C86A9B /* EventSubUserAuthorizationGrant.swift */,
 				2FD781F12572696B00257026 /* EventSubUserAuthorizationRevoke.swift */,
 				2FD781FC2572698700257026 /* EventSubUserUpdate.swift */,
 			);
@@ -3300,6 +3400,7 @@
 				2FA62AC2256B41CD00D66483 /* PubSubConnectionDelegate.swift in Sources */,
 				2F98A31B26D93CCE00076B2E /* GetPollsRequest.swift in Sources */,
 				2FC4F67E25633604002ECE17 /* ChatEmoteRanges.swift in Sources */,
+				2F52A1C826E5F31800C86A9B /* EventSubChannelModeratorRemove.swift in Sources */,
 				2F1CB9F8257598C000A9BCB9 /* TwitchWebView.swift in Sources */,
 				2F836A3C25802F1B000EEFF2 /* LegacyGetAllChatEmoticonSetsRequest.swift in Sources */,
 				2F8369E125801B87000EEFF2 /* LegacyGetChannelVideosRequest.swift in Sources */,
@@ -3325,6 +3426,7 @@
 				2F041EF9256319A30076639C /* ChatMessageClearMessage.swift in Sources */,
 				2F29AA3226DB70BF0007607D /* GetTeamRequest.swift in Sources */,
 				2F836BDC25808711000EEFF2 /* LegacyCreateUserConnectionToViewerHeartbeatServiceRequest.swift in Sources */,
+				2F52A1DC26E5F52900C86A9B /* EventSubDropEntitlementGrant.swift in Sources */,
 				2F041F2525631B3A0076639C /* ChatMessageRoomState.swift in Sources */,
 				2F7DBC48255C8FB30022E56E /* User.swift in Sources */,
 				2FF65400255BBB81004D59EA /* GetStreamTagsRequest.swift in Sources */,
@@ -3341,7 +3443,9 @@
 				2F60B87C25538E85003C6941 /* URLComponents+Extensions.swift in Sources */,
 				2F60B87F25538E85003C6941 /* ServerUserAPISession.swift in Sources */,
 				2F836B9625807E46000EEFF2 /* LegacyGetUserFollowsRequest.swift in Sources */,
+				2F52A1C526E5F2A100C86A9B /* EventSubChannelPollEnd.swift in Sources */,
 				2F83696725800AF3000EEFF2 /* LegacyGetChannelByIdRequest.swift in Sources */,
+				2F52A1B526E5E80600C86A9B /* EventSubChannelSubscriptionGift.swift in Sources */,
 				2F7DBAE4255C85AE0022E56E /* ExtensionType.swift in Sources */,
 				2F7DBC8F255C98CB0022E56E /* UpdateUserExtensionsRequest.swift in Sources */,
 				2F836B1125805AA6000EEFF2 /* LegacyGameInfo.swift in Sources */,
@@ -3354,6 +3458,7 @@
 				2F389CAE256A164800028BF0 /* PubSubConnection.swift in Sources */,
 				2F29AA1826DB5DE50007607D /* Editor.swift in Sources */,
 				2FF653CF255BB0C0004D59EA /* GetStreamMarkersRequest.swift in Sources */,
+				2F52A1E226E5F66900C86A9B /* EventSubChannelGoalsBegin.swift in Sources */,
 				2FC714AB258465220044A051 /* Optional+Extensions.swift in Sources */,
 				2F7DBA82255C6BF90022E56E /* EmptyQueryParamKey.swift in Sources */,
 				2F7DBBCA255C8B960022E56E /* Moderator.swift in Sources */,
@@ -3374,6 +3479,7 @@
 				2FA62AF8256B437600D66483 /* PubSubModerationEvent.swift in Sources */,
 				2F7DBB53255C88480022E56E /* EntitlementGrant.swift in Sources */,
 				2F7DBACD255C82930022E56E /* GetUserExtensionsRequest.swift in Sources */,
+				2F52A1D926E5F4D700C86A9B /* EventSubChannelPredictionProgress.swift in Sources */,
 				2F60B88025538E85003C6941 /* ClientAuthSessionPresentationContextProviding.swift in Sources */,
 				2FCAA98C26D9E9D900520B21 /* EmptyIfNull.swift in Sources */,
 				2F98A30126D8860000076B2E /* GetChannelEmotesRequest.swift in Sources */,
@@ -3383,6 +3489,7 @@
 				2FD781FD2572699E00257026 /* EventSubUserUpdate.swift in Sources */,
 				2F29AA1026DB59EA0007607D /* GetFollowedStreamsRequest.swift in Sources */,
 				2FA9C9DA255F79550091A077 /* Chatbot.swift in Sources */,
+				2F52A1CD26E5F46B00C86A9B /* EventSubChannelPollProgress.swift in Sources */,
 				2F7DBC23255C8E1F0022E56E /* ChannelInformation.swift in Sources */,
 				2FD781EC2572695E00257026 /* EventSubStreamOffline.swift in Sources */,
 				2F02BD6526DC63AF00CA29B9 /* PubSubUserModerationNotificationEvent.swift in Sources */,
@@ -3412,7 +3519,9 @@
 				2FF81B7A25545421009DE6B2 /* StartCommercialRequest.swift in Sources */,
 				2F836AF1258057C2000EEFF2 /* LegacyDeleteItemFromCollectionRequest.swift in Sources */,
 				2F60B88325538E85003C6941 /* CheckAutoModStatusRequest.swift in Sources */,
+				2F1B180E26E5FEB400AB9A47 /* GetIngestServersRequest.swift in Sources */,
 				2FD781E12572694000257026 /* EventSubHypeTrainEnd.swift in Sources */,
+				2F52A1D726E5F4D200C86A9B /* EventSubChannelPredictionEnd.swift in Sources */,
 				2F836A9A25804D54000EEFF2 /* LegacyCollection.swift in Sources */,
 				2F7DBC9E255CA13B0022E56E /* ExtensionUpdate.swift in Sources */,
 				2F041EEE2563196B0076639C /* ChatMessageClearChat.swift in Sources */,
@@ -3430,11 +3539,13 @@
 				2F83696125800A90000EEFF2 /* LegacyCurrentChannel.swift in Sources */,
 				2F83698A25800F32000EEFF2 /* LegacyGetChannelEditorsRequest.swift in Sources */,
 				2F7DBB32255C872D0022E56E /* ExtensionTransaction.swift in Sources */,
+				2F52A1D026E5F49E00C86A9B /* EventSubChannelPredictionBegin.swift in Sources */,
 				2F836B5A258061CD000EEFF2 /* LegacyGetLiveStreamsRequest.swift in Sources */,
 				2F47B367258ADC2300CADB1F /* SafeURL.swift in Sources */,
 				2F041F4B25631BF90076639C /* ChatMessageNotice.swift in Sources */,
 				2F836AE7258056F0000EEFF2 /* LegacyAddItemToCollectionRequest.swift in Sources */,
 				2F7DBCC7255CA7740022E56E /* GetWebhookSubscriptionsRequest.swift in Sources */,
+				2F52A1C226E5EFC800C86A9B /* EventSubChannelPollBegin.swift in Sources */,
 				2FF65373255B9888004D59EA /* GetModeratorsRequest.swift in Sources */,
 				2FF0A98E2558B170002FA9E8 /* KeychainAppAccessTokenStore.swift in Sources */,
 				2F836AD32580547F000EEFF2 /* LegacyCreateCollectionThumbnailRequest.swift in Sources */,
@@ -3455,6 +3566,7 @@
 				2F98A30E26D8B53D00076B2E /* GetEmoteSetsRequest.swift in Sources */,
 				2F07535225808FF7008AFFD1 /* LegacyUpdateVideoRequest.swift in Sources */,
 				2F60B88C25538E85003C6941 /* AppAccessToken.swift in Sources */,
+				2F52A1E526E5F66C00C86A9B /* EventSubChannelGoalsProgress.swift in Sources */,
 				2F02BD5F26DC29D500CA29B9 /* UpdateDropsEntitlementsRequest.swift in Sources */,
 				2F60B87225538E85003C6941 /* URLSession+TwitchExtensions.swift in Sources */,
 				2F7DBB3D255C878D0022E56E /* CreatedClip.swift in Sources */,
@@ -3494,6 +3606,7 @@
 				2F1FA045255B3F40005FE5D9 /* CreateClipRequest.swift in Sources */,
 				2FCAA97E26D9AFE700520B21 /* CreatePollRequest.swift in Sources */,
 				2F29AA1B26DB60CC0007607D /* ManageHeldAutoModMessageRequest.swift in Sources */,
+				2F1B181226E600D500AB9A47 /* IngestServer.swift in Sources */,
 				2FA62AFF256B439400D66483 /* PubSubWhisperEvent.swift in Sources */,
 				2F7DBC0A255C8CB40022E56E /* StreamMarker.swift in Sources */,
 				2F836AAF25805057000EEFF2 /* LegacyCollectionItem.swift in Sources */,
@@ -3501,6 +3614,7 @@
 				2F7DBC14255C8DD20022E56E /* StreamMarkersContainer.swift in Sources */,
 				2F7DBB71255C89280022E56E /* DropsEntitlement.swift in Sources */,
 				2FD781632572674600257026 /* EventSubChannelSubscribe.swift in Sources */,
+				2F52A1EB26E5F6A000C86A9B /* EventSubUserAuthorizationGrant.swift in Sources */,
 				2FD781782572677600257026 /* EventSubChannelCheer.swift in Sources */,
 				2F836AC9258053B1000EEFF2 /* LegacyUpdateCollectionRequest.swift in Sources */,
 				2F7DBAA0255C7BE30022E56E /* GetUsersRequest.swift in Sources */,
@@ -3537,6 +3651,7 @@
 				2F83698025800CD5000EEFF2 /* LegacyUpdateChannelRequest.swift in Sources */,
 				2F60B88125538E85003C6941 /* ClientAPISession.swift in Sources */,
 				2F60B87925538E85003C6941 /* APIVersion.swift in Sources */,
+				2F52A1B826E5EB0A00C86A9B /* EventSubChannelSubscriptionMessage.swift in Sources */,
 				2F7DBCFD255CD0E40022E56E /* ImageTemplateURLStrategy.swift in Sources */,
 				2FF6538C255BA0DE004D59EA /* SearchCategoriesRequest.swift in Sources */,
 				2F83697325800B62000EEFF2 /* LegacyChannel.swift in Sources */,
@@ -3553,6 +3668,7 @@
 				2F836BE625808812000EEFF2 /* LegacyCheckUserConnectionToViewerHeartbeatServiceRequest.swift in Sources */,
 				2F02BD4F26DB8F1900CA29B9 /* GetChanneliCalendarRequest.swift in Sources */,
 				2F1B1C95257F2CA7006425D2 /* ServerUserAuthSession.swift in Sources */,
+				2F52A1CC26E5F3D100C86A9B /* EventSubChannelSubscriptionEnd.swift in Sources */,
 				2FF653E5255BB682004D59EA /* ModifyChannelInformationRequest.swift in Sources */,
 				2FA62AD8256B42B800D66483 /* PubSubBitsEvent.swift in Sources */,
 				2F836A7D2580470D000EEFF2 /* LegacyGetFollowedClipsRequest.swift in Sources */,
@@ -3610,12 +3726,14 @@
 				2F8E1F7A257F650D00BDF800 /* EventSubServer.swift in Sources */,
 				2F41636225728C0E00E94D2A /* CreateCustomRewardRequest.swift in Sources */,
 				2FF653DA255BB587004D59EA /* GetChannelInformationRequest.swift in Sources */,
+				2F52A1BB26E5EE2800C86A9B /* EventSubChannelRaid.swift in Sources */,
 				2F7DBB80255C897A0022E56E /* Game.swift in Sources */,
 				2F836ADD25805528000EEFF2 /* LegacyDeleteCollectionRequest.swift in Sources */,
 				2F29AA2B26DB6A5D0007607D /* GetChannelTeamsRequest.swift in Sources */,
 				2F836A53258031F1000EEFF2 /* LegacyChatBadge.swift in Sources */,
 				2FADFB9B25813D79007011FC /* ClientIdAuthSession.swift in Sources */,
 				2F1B1C86257F2AC9006425D2 /* ClientAuthSession.swift in Sources */,
+				2F52A1E826E5F66E00C86A9B /* EventSubChannelGoalsEnd.swift in Sources */,
 				2FF65367255B94EC004D59EA /* GetBanEventsRequest.swift in Sources */,
 				2F7DBB09255C86760022E56E /* GameReport.swift in Sources */,
 				2FCAA98926D9E04B00520B21 /* Prediction.swift in Sources */,
@@ -3624,8 +3742,11 @@
 				2F4163AB2572F0CD00E94D2A /* CustomChannelPointsRewardRedemption.swift in Sources */,
 				2F7DBAF6255C86230022E56E /* ExtensionReport.swift in Sources */,
 				2F041F3B25631B680076639C /* ChatMessageHostMode.swift in Sources */,
+				2F52A1BF26E5EEA100C86A9B /* EventSubChannelModeratorAdd.swift in Sources */,
 				2F1FA0D8255B6947005FE5D9 /* GetGamesRequest.swift in Sources */,
+				2F52A1DF26E5F5E100C86A9B /* EventSubExtensionBitsTransactionCreate.swift in Sources */,
 				2F60B87125538E85003C6941 /* APIError.swift in Sources */,
+				2F52A1D426E5F4D000C86A9B /* EventSubChannelPredictionLock.swift in Sources */,
 				2FF81BA5255468BE009DE6B2 /* OptionalCodableDate.swift in Sources */,
 				2F1FA055255B42D3005FE5D9 /* GetClipsRequest.swift in Sources */,
 				2F7DBC2E255C8F100022E56E /* BroadcasterSubscription.swift in Sources */,
@@ -3679,6 +3800,7 @@
 				2FC4F68325633604002ECE17 /* ChatEmoteRanges.swift in Sources */,
 				2F29AA1926DB5DE50007607D /* Editor.swift in Sources */,
 				2F98A30F26D8B53D00076B2E /* GetEmoteSetsRequest.swift in Sources */,
+				2F52A1DA26E5F4D800C86A9B /* EventSubChannelPredictionProgress.swift in Sources */,
 				2FCAA98626D9DFB700520B21 /* GetPredictionsRequest.swift in Sources */,
 				2F1CB9F9257598C000A9BCB9 /* TwitchWebView.swift in Sources */,
 				2F836A3725802F1A000EEFF2 /* LegacyGetAllChatEmoticonSetsRequest.swift in Sources */,
@@ -3735,6 +3857,7 @@
 				2F1FA0C9255B6576005FE5D9 /* TemplateURL.swift in Sources */,
 				2FF81B5C25543A80009DE6B2 /* DateFormatter+Extensions.swift in Sources */,
 				2F83693B257FFE31000EEFF2 /* LegacyUser.swift in Sources */,
+				2F52A1B626E5E80600C86A9B /* EventSubChannelSubscriptionGift.swift in Sources */,
 				2F389CB3256A164900028BF0 /* PubSubConnection.swift in Sources */,
 				2FF653D4255BB0C1004D59EA /* GetStreamMarkersRequest.swift in Sources */,
 				2F29AA3026DB6B510007607D /* Team.swift in Sources */,
@@ -3765,7 +3888,9 @@
 				2FD782022572699E00257026 /* EventSubUserUpdate.swift in Sources */,
 				2FA9C9DB255F79550091A077 /* Chatbot.swift in Sources */,
 				2F7DBC24255C8E1F0022E56E /* ChannelInformation.swift in Sources */,
+				2F52A1D826E5F4D200C86A9B /* EventSubChannelPredictionEnd.swift in Sources */,
 				2FD781E72572695E00257026 /* EventSubStreamOffline.swift in Sources */,
+				2F52A1E326E5F66A00C86A9B /* EventSubChannelGoalsBegin.swift in Sources */,
 				2F1CBA0C2575995200A9BCB9 /* TwitchClipView.swift in Sources */,
 				2FCAA98226D9DC9300520B21 /* EndPollRequest.swift in Sources */,
 				2F02BD5826DC1F9F00CA29B9 /* UpdateChannelStreamScheduleSegmentRequest.swift in Sources */,
@@ -3792,6 +3917,7 @@
 				2FF653F9255BB847004D59EA /* GetBroadcasterSubscriptionsRequest.swift in Sources */,
 				2FC4F65E25633508002ECE17 /* ChatEmote.swift in Sources */,
 				2FF65386255B9AF9004D59EA /* GetModeratorEventsRequest.swift in Sources */,
+				2F1B180F26E5FEB400AB9A47 /* GetIngestServersRequest.swift in Sources */,
 				2FF81B7B25545421009DE6B2 /* StartCommercialRequest.swift in Sources */,
 				2F836AF6258057C3000EEFF2 /* LegacyDeleteItemFromCollectionRequest.swift in Sources */,
 				2FCAA99026D9EBAE00520B21 /* CreatePredictionRequest.swift in Sources */,
@@ -3832,11 +3958,14 @@
 				2FADCA732577B0C30085D9F9 /* ReplaceStreamTagsRequest.swift in Sources */,
 				2F98A31526D8BA6C00076B2E /* GetChannelChatBadgesRequest.swift in Sources */,
 				2F29AA0E26DB53C60007607D /* CheckUserSubscriptionRequest.swift in Sources */,
+				2F52A1E926E5F66E00C86A9B /* EventSubChannelGoalsEnd.swift in Sources */,
 				2F836A78258043F5000EEFF2 /* LegacyGetTopClipsRequest.swift in Sources */,
 				2F1FA09E255B525F005FE5D9 /* GetDropsEntitlementsRequest.swift in Sources */,
 				2F60B89D25538E86003C6941 /* Claim.swift in Sources */,
+				2F52A1C626E5F2A100C86A9B /* EventSubChannelPollEnd.swift in Sources */,
 				2F83699925800F9D000EEFF2 /* LegacyGetChannelFollowersRequest.swift in Sources */,
 				2F41635B2572734100E94D2A /* GetEventSubSubscriptionsRequest.swift in Sources */,
+				2F52A1B926E5EB0A00C86A9B /* EventSubChannelSubscriptionMessage.swift in Sources */,
 				2FADFBB725815001007011FC /* IncompatibleAccessToken.swift in Sources */,
 				2FCA4C792574461C00EB7F99 /* ServerAppAPISession.swift in Sources */,
 				2F836945257FFEC5000EEFF2 /* LegacyGetUserByIdRequest.swift in Sources */,
@@ -3864,14 +3993,18 @@
 				2FD781162572569A00257026 /* InternetDateWithOptionalFractionalSecondsConvertingStrategy.swift in Sources */,
 				2F041F04256319C30076639C /* ChatMessageGlobalUserState.swift in Sources */,
 				2FF653AB255BA628004D59EA /* GetStreamKeyRequest.swift in Sources */,
+				2F52A1D126E5F49E00C86A9B /* EventSubChannelPredictionBegin.swift in Sources */,
 				2F7DBCB6255CA1AD0022E56E /* Video.swift in Sources */,
 				2F0753612580914C008AFFD1 /* LegacyDeleteVideoRequest.swift in Sources */,
 				2FC4F68E25634625002ECE17 /* ChatbotDelegate.swift in Sources */,
+				2F52A1EC26E5F6A000C86A9B /* EventSubUserAuthorizationGrant.swift in Sources */,
 				2F041EDB2563179E0076639C /* DispatchQueue.swift in Sources */,
 				2FD781C32572689400257026 /* EventSubHypeTrainBegin.swift in Sources */,
+				2F52A1BE26E5EEA100C86A9B /* EventSubChannelModeratorAdd.swift in Sources */,
 				2F1F9FE0255ABFF4005FE5D9 /* OptionalCodableDateInterval.swift in Sources */,
 				2FCAA98D26D9E9D900520B21 /* EmptyIfNull.swift in Sources */,
 				2F836833257F873D000EEFF2 /* LegacyGetUsersRequest.swift in Sources */,
+				2F1B181326E600D500AB9A47 /* IngestServer.swift in Sources */,
 				2FD7813B2572626C00257026 /* CreateEventSubSubscriptionRequest.swift in Sources */,
 				2F041F3025631B4E0076639C /* ChatMessageUserChannelMembership.swift in Sources */,
 				2F29AA1126DB59EA0007607D /* GetFollowedStreamsRequest.swift in Sources */,
@@ -3879,7 +4012,9 @@
 				2F02BD6626DC63B000CA29B9 /* PubSubUserModerationNotificationEvent.swift in Sources */,
 				2F836BB9258082BD000EEFF2 /* LegacyUnfollowChannelRequest.swift in Sources */,
 				2F1FA04A255B3F41005FE5D9 /* CreateClipRequest.swift in Sources */,
+				2F52A1CB26E5F3D100C86A9B /* EventSubChannelSubscriptionEnd.swift in Sources */,
 				2FA62B00256B439400D66483 /* PubSubWhisperEvent.swift in Sources */,
+				2F52A1E626E5F66C00C86A9B /* EventSubChannelGoalsProgress.swift in Sources */,
 				2F7DBC09255C8CB40022E56E /* StreamMarker.swift in Sources */,
 				2F836AB025805057000EEFF2 /* LegacyCollectionItem.swift in Sources */,
 				2FA62B07256B43F200D66483 /* PubSubWhisperThreadEvent.swift in Sources */,
@@ -3930,6 +4065,7 @@
 				2F836BC3258083FF000EEFF2 /* LegacyGetUserBlockListRequest.swift in Sources */,
 				2F836BEB25808813000EEFF2 /* LegacyCheckUserConnectionToViewerHeartbeatServiceRequest.swift in Sources */,
 				2F29AA2826DB69250007607D /* BlockUserRequest.swift in Sources */,
+				2F52A1C926E5F31800C86A9B /* EventSubChannelModeratorRemove.swift in Sources */,
 				2F1B1C96257F2CA7006425D2 /* ServerUserAuthSession.swift in Sources */,
 				2FF653EA255BB683004D59EA /* ModifyChannelInformationRequest.swift in Sources */,
 				2FA62AD9256B42B800D66483 /* PubSubBitsEvent.swift in Sources */,
@@ -3940,6 +4076,7 @@
 				2FC7153B25846A280044A051 /* EventSubMessage.swift in Sources */,
 				2F7DBCEB255CC9BB0022E56E /* LegacyGetIngestServersRequest.swift in Sources */,
 				2F041F0E25631A220076639C /* ChatMessagePlainMessage.swift in Sources */,
+				2F52A1DD26E5F52900C86A9B /* EventSubDropEntitlementGrant.swift in Sources */,
 				2FF653C1255BAE3B004D59EA /* CreateStreamMarkerRequest.swift in Sources */,
 				2FF65359255B927D004D59EA /* GetBannedUsersRequest.swift in Sources */,
 				2F8369B225801332000EEFF2 /* LegacyTeam.swift in Sources */,
@@ -3954,11 +4091,13 @@
 				2F041EE62563191E0076639C /* ChatMessage.swift in Sources */,
 				2F1FA015255AC95F005FE5D9 /* GetBitsLeaderboardRequest.swift in Sources */,
 				2F7DBCDB255CA8890022E56E /* WebhookSubscription.swift in Sources */,
+				2F52A1D526E5F4D000C86A9B /* EventSubChannelPredictionLock.swift in Sources */,
 				2F1F9FC6255AB773005FE5D9 /* GetExtensionAnalyticsRequest.swift in Sources */,
 				2F1CB9E725750B1A00A9BCB9 /* TwitchPlayerView.swift in Sources */,
 				2F60B89B25538E86003C6941 /* HTTPMethod.swift in Sources */,
 				2F8369CB258018E2000EEFF2 /* LegacySortDirection.swift in Sources */,
 				2FF81BC025546A0F009DE6B2 /* InternetDateWithFractionalSecondsConvertingStrategy.swift in Sources */,
+				2F52A1E026E5F5E100C86A9B /* EventSubExtensionBitsTransactionCreate.swift in Sources */,
 				2F836B3B25805E10000EEFF2 /* LegacySearchStreamsRequest.swift in Sources */,
 				2F02BD5D26DC246C00CA29B9 /* DeleteChannelStreamScheduleSegmentRequest.swift in Sources */,
 				2F98A30226D8860000076B2E /* GetChannelEmotesRequest.swift in Sources */,
@@ -3974,6 +4113,7 @@
 				2F1FA0A9255B5861005FE5D9 /* RedeemCodeRequest.swift in Sources */,
 				2FF81B9A255468A2009DE6B2 /* CodableDate.swift in Sources */,
 				2FD781D62572693D00257026 /* EventSubStreamOnline.swift in Sources */,
+				2F52A1CE26E5F46B00C86A9B /* EventSubChannelPollProgress.swift in Sources */,
 				2F836BA5258080E1000EEFF2 /* LegacyCheckUserFollowsByChannelRequest.swift in Sources */,
 				2F60B8A925538E86003C6941 /* Pagination.swift in Sources */,
 				2F1B1CA1257F2CCC006425D2 /* ServerAppAuthSession.swift in Sources */,
@@ -3986,6 +4126,7 @@
 				2FCAA98A26D9E04B00520B21 /* Prediction.swift in Sources */,
 				2F836A4D2580309E000EEFF2 /* LegacyEmoteDetail.swift in Sources */,
 				2F8E1F7B257F650D00BDF800 /* EventSubServer.swift in Sources */,
+				2F52A1BC26E5EE2900C86A9B /* EventSubChannelRaid.swift in Sources */,
 				2F41636725728C0E00E94D2A /* CreateCustomRewardRequest.swift in Sources */,
 				2FF653DF255BB587004D59EA /* GetChannelInformationRequest.swift in Sources */,
 				2F02BD5026DB8F1900CA29B9 /* GetChanneliCalendarRequest.swift in Sources */,
@@ -4002,6 +4143,7 @@
 				2F836BFF258089B3000EEFF2 /* LegacyGetVideoRequest.swift in Sources */,
 				2F4163AA2572F0CD00E94D2A /* CustomChannelPointsRewardRedemption.swift in Sources */,
 				2F7DBAF7255C86230022E56E /* ExtensionReport.swift in Sources */,
+				2F52A1C126E5EFC800C86A9B /* EventSubChannelPollBegin.swift in Sources */,
 				2F041F3C25631B680076639C /* ChatMessageHostMode.swift in Sources */,
 				2F1FA0D9255B6947005FE5D9 /* GetGamesRequest.swift in Sources */,
 				2F60B89425538E86003C6941 /* APIError.swift in Sources */,

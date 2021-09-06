@@ -40,6 +40,9 @@ public protocol APIRequest {
     /// The HTTP method of the request. Default: `.get`.
     var method: HTTPMethod { get }
     
+    /// The URL host of the request type's endpoint. Default: `"api.twitch.tv"`.
+    var host: String { get }
+    
     /// The URL path of the request type's endpoint.
     ///
     /// This is the part of the endpoint that comes after "https://api.twitch.tv/(helix-or-kraken)" (but does not
@@ -67,6 +70,9 @@ extension APIRequest {
     
     /// The default implementation of `method`. Returns `.get`.
     public var method: HTTPMethod { .get }
+    
+    /// The default implementation of `host`. Returns `"api.twitch.tv"`.
+    public var host: String { "api.twitch.tv" }
     
     /// The default implementation of `queryParams`. Returns an empty array.
     public var queryParams: [(key: QueryParamKey, value: String?)] { [] }
