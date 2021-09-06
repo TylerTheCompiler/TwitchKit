@@ -11,11 +11,11 @@ public class ClientAuthSession: InternalAuthSession {
     /// Error type for client auth sessions.
     public enum Error: Swift.Error {
         
-        /// An error that denotes that an authorization flow was attempted,
+        /// An error that occurs when an authorization flow is attempted,
         /// but there is already an authorization flow in progress.
         case operationInProgress
         
-        /// <#description#>
+        /// An error that occurs when an auth session deallocates before an operation completes.
         case authSessionDeallocated
     }
     

@@ -5,16 +5,18 @@
 //  Created by Tyler Prevost on 12/16/20.
 //
 
-/// <#Description#>
+/// A property wrapper wrapping an optional URL.
+///
+/// The wrapped URL will be nil if decoding fails for any reason.
 @propertyWrapper
 public struct SafeURL: Codable {
     
-    /// <#Description#>
+    /// The wrapped URL.
     public var wrappedValue: URL?
     
-    /// <#Description#>
+    /// Creates a new `SafeURL` instance.
     ///
-    /// - Parameter wrappedValue: <#wrappedValue description#>
+    /// - Parameter wrappedValue: The wrapped URL.
     public init(wrappedValue: URL?) {
         self.wrappedValue = wrappedValue
     }
