@@ -84,7 +84,7 @@ extension URLSession {
     ) -> URLSessionDataTask where AccessTokenType: AccessToken {
         var request = URLRequest(url: URL(string: "https://id.twitch.tv/oauth2/validate")!)
         // swiftlint:disable:previous force_unwrapping
-        request.addValue("OAuth \(token.stringValue)", forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(token.stringValue)", forHTTPHeaderField: "Authorization")
         
         return dataTask(with: request) { data, response, error in
             completion(.init { try self.parse(data: data, response: response, error: error) })
@@ -362,7 +362,7 @@ extension URLSession {
     where AccessTokenType: AccessToken {
         var request = URLRequest(url: URL(string: "https://id.twitch.tv/oauth2/validate")!)
         // swiftlint:disable:previous force_unwrapping
-        request.addValue("OAuth \(token.stringValue)", forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(token.stringValue)", forHTTPHeaderField: "Authorization")
         
         let (data, response) = try await self.data(for: request)
         return try self.parse(data: data, response: response, error: nil)
