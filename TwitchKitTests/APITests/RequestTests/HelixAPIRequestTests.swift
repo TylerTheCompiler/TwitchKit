@@ -721,7 +721,8 @@ class HelixAPIEventSubRequestTests: XCTestCase {
             type: condition.subscriptionType,
             version: version,
             condition: condition,
-            transport: transport
+            transport: transport,
+            isBatchingEnabled: false
         ))
     }
     
@@ -749,7 +750,8 @@ class HelixAPIEventSubRequestTests: XCTestCase {
             type: condition.subscriptionType,
             version: version,
             condition: condition,
-            transport: transport
+            transport: transport,
+            isBatchingEnabled: false
         ))
     }
     
@@ -1645,24 +1647,6 @@ class HelixAPIVideoRequestTests: XCTestCase {
         XCTAssertEqual(req.path, "/videos")
         XCTAssertEqual(req.equatableQueryParams, [
             .init(.before, backwardCursor.backwardRawValue!),
-            .init(.first, first.description)
-        ])
-        XCTAssertEqual(req.body, nil)
-    }
-}
-
-class HelixAPIWebhookRequestTests: XCTestCase {
-    func test_GetWebhookSubscriptionsRequest() {
-        let req = GetWebhookSubscriptionsRequest(
-            after: cursor,
-            first: first
-        )
-        
-        XCTAssertEqual(req.apiVersion, .helix)
-        XCTAssertEqual(req.method, .get)
-        XCTAssertEqual(req.path, "/webhooks/subscriptions")
-        XCTAssertEqual(req.equatableQueryParams, [
-            .init(.after, cursor.rawValue),
             .init(.first, first.description)
         ])
         XCTAssertEqual(req.body, nil)

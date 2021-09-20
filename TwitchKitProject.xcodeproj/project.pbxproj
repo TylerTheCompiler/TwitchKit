@@ -391,10 +391,6 @@
 		2F7DBCB6255CA1AD0022E56E /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCB0255CA1A40022E56E /* Video.swift */; };
 		2F7DBCBC255CA3780022E56E /* GetVideosRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCBB255CA36B0022E56E /* GetVideosRequest.swift */; };
 		2F7DBCC1255CA3780022E56E /* GetVideosRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCBB255CA36B0022E56E /* GetVideosRequest.swift */; };
-		2F7DBCC7255CA7740022E56E /* GetWebhookSubscriptionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCC6255CA7710022E56E /* GetWebhookSubscriptionsRequest.swift */; };
-		2F7DBCCC255CA7740022E56E /* GetWebhookSubscriptionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCC6255CA7710022E56E /* GetWebhookSubscriptionsRequest.swift */; };
-		2F7DBCD6255CA8880022E56E /* WebhookSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCD5255CA8810022E56E /* WebhookSubscription.swift */; };
-		2F7DBCDB255CA8890022E56E /* WebhookSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCD5255CA8810022E56E /* WebhookSubscription.swift */; };
 		2F7DBCE6255CC9BA0022E56E /* LegacyGetIngestServersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCE4255CC98E0022E56E /* LegacyGetIngestServersRequest.swift */; };
 		2F7DBCEB255CC9BB0022E56E /* LegacyGetIngestServersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCE4255CC98E0022E56E /* LegacyGetIngestServersRequest.swift */; };
 		2F7DBCF2255CD0A60022E56E /* TemplateURLStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7DBCF1255CD0A60022E56E /* TemplateURLStrategy.swift */; };
@@ -1120,8 +1116,6 @@
 		2F7DBC9D255CA1390022E56E /* ExtensionUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionUpdate.swift; sourceTree = "<group>"; };
 		2F7DBCB0255CA1A40022E56E /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		2F7DBCBB255CA36B0022E56E /* GetVideosRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetVideosRequest.swift; sourceTree = "<group>"; };
-		2F7DBCC6255CA7710022E56E /* GetWebhookSubscriptionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWebhookSubscriptionsRequest.swift; sourceTree = "<group>"; };
-		2F7DBCD5255CA8810022E56E /* WebhookSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebhookSubscription.swift; sourceTree = "<group>"; };
 		2F7DBCE4255CC98E0022E56E /* LegacyGetIngestServersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyGetIngestServersRequest.swift; sourceTree = "<group>"; };
 		2F7DBCF1255CD0A60022E56E /* TemplateURLStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateURLStrategy.swift; sourceTree = "<group>"; };
 		2F7DBCFC255CD0E40022E56E /* ImageTemplateURLStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTemplateURLStrategy.swift; sourceTree = "<group>"; };
@@ -1529,7 +1523,6 @@
 				2F7DBCF0255CD0940022E56E /* TemplateURLs */,
 				2F7DBC69255C90990022E56E /* Users */,
 				2F7DBC7E255C93060022E56E /* Videos */,
-				2F7DBC7F255C930B0022E56E /* Webhooks */,
 			);
 			path = Helix;
 			sourceTree = "<group>";
@@ -2052,14 +2045,6 @@
 			path = Videos;
 			sourceTree = "<group>";
 		};
-		2F7DBC7F255C930B0022E56E /* Webhooks */ = {
-			isa = PBXGroup;
-			children = (
-				2F7DBCD5255CA8810022E56E /* WebhookSubscription.swift */,
-			);
-			path = Webhooks;
-			sourceTree = "<group>";
-		};
 		2F7DBCE5255CC9900022E56E /* Ingests */ = {
 			isa = PBXGroup;
 			children = (
@@ -2352,7 +2337,6 @@
 				2F29AA2D26DB6B3B0007607D /* Teams */,
 				2FF81B6B25544082009DE6B2 /* Users */,
 				2FF81B6C25544089009DE6B2 /* Videos */,
-				2FF81B6D25544090009DE6B2 /* Webhooks */,
 			);
 			path = Helix;
 			sourceTree = "<group>";
@@ -2885,14 +2869,6 @@
 				2F29AA0926DB52200007607D /* DeleteVideosRequest.swift */,
 			);
 			path = Videos;
-			sourceTree = "<group>";
-		};
-		2FF81B6D25544090009DE6B2 /* Webhooks */ = {
-			isa = PBXGroup;
-			children = (
-				2F7DBCC6255CA7710022E56E /* GetWebhookSubscriptionsRequest.swift */,
-			);
-			path = Webhooks;
 			sourceTree = "<group>";
 		};
 		2FF81B9725546893009DE6B2 /* PropertyWrappers */ = {
@@ -3544,7 +3520,6 @@
 				2F47B367258ADC2300CADB1F /* SafeURL.swift in Sources */,
 				2F041F4B25631BF90076639C /* ChatMessageNotice.swift in Sources */,
 				2F836AE7258056F0000EEFF2 /* LegacyAddItemToCollectionRequest.swift in Sources */,
-				2F7DBCC7255CA7740022E56E /* GetWebhookSubscriptionsRequest.swift in Sources */,
 				2F52A1C226E5EFC800C86A9B /* EventSubChannelPollBegin.swift in Sources */,
 				2FF65373255B9888004D59EA /* GetModeratorsRequest.swift in Sources */,
 				2FF0A98E2558B170002FA9E8 /* KeychainAppAccessTokenStore.swift in Sources */,
@@ -3694,7 +3669,6 @@
 				2F041EE52563191E0076639C /* ChatMessage.swift in Sources */,
 				2F1FA014255AC95F005FE5D9 /* GetBitsLeaderboardRequest.swift in Sources */,
 				2FCAA97B26D9AFC100520B21 /* Poll.swift in Sources */,
-				2F7DBCD6255CA8880022E56E /* WebhookSubscription.swift in Sources */,
 				2F1F9FC1255AB772005FE5D9 /* GetExtensionAnalyticsRequest.swift in Sources */,
 				2F1CB9E625750B1A00A9BCB9 /* TwitchPlayerView.swift in Sources */,
 				2F60B87825538E85003C6941 /* HTTPMethod.swift in Sources */,
@@ -3947,7 +3921,6 @@
 				2F836B5F258061CE000EEFF2 /* LegacyGetLiveStreamsRequest.swift in Sources */,
 				2F041F5225631BFA0076639C /* ChatMessageNotice.swift in Sources */,
 				2F836AEC258056F0000EEFF2 /* LegacyAddItemToCollectionRequest.swift in Sources */,
-				2F7DBCCC255CA7740022E56E /* GetWebhookSubscriptionsRequest.swift in Sources */,
 				2FF65372255B9888004D59EA /* GetModeratorsRequest.swift in Sources */,
 				2FF0A98F2558B170002FA9E8 /* KeychainAppAccessTokenStore.swift in Sources */,
 				2F836AD825805480000EEFF2 /* LegacyCreateCollectionThumbnailRequest.swift in Sources */,
@@ -4090,7 +4063,6 @@
 				2FD781882572678F00257026 /* EventSubChannelBan.swift in Sources */,
 				2F041EE62563191E0076639C /* ChatMessage.swift in Sources */,
 				2F1FA015255AC95F005FE5D9 /* GetBitsLeaderboardRequest.swift in Sources */,
-				2F7DBCDB255CA8890022E56E /* WebhookSubscription.swift in Sources */,
 				2F52A1D526E5F4D000C86A9B /* EventSubChannelPredictionLock.swift in Sources */,
 				2F1F9FC6255AB773005FE5D9 /* GetExtensionAnalyticsRequest.swift in Sources */,
 				2F1CB9E725750B1A00A9BCB9 /* TwitchPlayerView.swift in Sources */,
