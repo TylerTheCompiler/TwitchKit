@@ -602,7 +602,7 @@ extension ClientAuthSession {
             throw Error.operationInProgress
         }
         
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withUnsafeThrowingContinuation { continuation in
             webAuthSession = WebAuthenticationSession(
                 clientId: clientId,
                 redirectURL: redirectURL,
@@ -691,7 +691,7 @@ extension ClientAuthSession {
             throw Error.operationInProgress
         }
         
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withUnsafeThrowingContinuation { continuation in
             webAuthSession = WebAuthenticationSession(
                 clientId: clientId,
                 redirectURL: redirectURL,
@@ -727,7 +727,7 @@ extension ClientAuthSession {
             throw Error.operationInProgress
         }
         
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withUnsafeThrowingContinuation { continuation in
             webAuthSession = WebAuthenticationSession(
                 clientId: clientId,
                 redirectURL: redirectURL,

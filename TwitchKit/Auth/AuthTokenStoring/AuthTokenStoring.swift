@@ -51,7 +51,7 @@ extension AuthTokenStoring {
     ///
     /// - Parameter userId: The user ID of the auth token to fetch, or nil if the auth token type does not apply to a user.
     public func authToken(forUserId userId: String?) async throws -> Token {
-        try await withCheckedThrowingContinuation { continuation in
+        try await withUnsafeThrowingContinuation { continuation in
             self.fetchAuthToken(forUserId: userId) { result in
                 continuation.resume(with: result)
             }
@@ -64,7 +64,7 @@ extension AuthTokenStoring {
     ///   - token: The auth token to store, or nil to remove the auth token from storage.
     ///   - userId: The user ID of the auth token to store or remove, or nil if the auth token type does not apply to a user.
     public func store(authToken: Token?, forUserId userId: String?) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+        try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<Void, Error>) in
             self.store(authToken: authToken, forUserId: userId) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
